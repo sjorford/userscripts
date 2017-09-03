@@ -1,20 +1,16 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        6.0
+// @version        2017-09-03
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        http://en.wikipedia.org/wiki/*
 // @include        https://en.wikipedia.org/wiki/*
 // @run-at         document-end
-// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
-// @grant          unsafeWindow
+// @grant          none
 // ==/UserScript==
 
 $(function() {
-
-	//var uEnDash = '\u2013';
-	//var uMinus = '\u2212';
 
 	var tweakCountry = {
 		'China PR': 'China',
@@ -38,7 +34,6 @@ $(function() {
 	};
 
 	var events = $('.vevent')
-	window.console.log(events);
 	if (events.length > 0) {
 
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').click(function() {selectRange('.sjotable');}).hide().appendTo('body');
@@ -59,39 +54,30 @@ $(function() {
 			} else {
 
 				var matchWrapper = $(this);
-				//window.console.log(matchWrapper);
 
 				var dateWrapper = matchWrapper.children('table:first-of-type');
 				var date = dateWrapper.text().trim().replace(/\n/g, ' ').replace(/\[/g, ' ').split(/\s+/);
-				window.console.log(date);
 				if (date.length >= 3) date = [date[0], date[1].substr(0, 3), date[2]];
 				date = date.join(' ');
-				window.console.log(date);
 
 				var resultWrapper = matchWrapper.children('table:nth-of-type(2)');
-				//window.console.log(resultWrapper);
 
 				var teams = [];
 				teams[0] = resultWrapper.find('.attendee:first-of-type, .vcard:first-of-type').text().trim();
 				teams[1] = resultWrapper.find('.attendee:last-of-type, .vcard:last-of-type').text().trim();
 				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
 				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
-				//window.console.log(teams[0], teams[1]);
 
 				var scoreWrapper = resultWrapper.find('th:not(.attendee, .vcard)');
-				//var score = scoreWrapper.text().replace('\n', '-').replace(uEnDash, '-').replace(uMinus, '-').trim().split('-');
-				//score = (score.length >= 2 && score[0] != 'Match') ? score.slice(0, 2) : ['', ''];
 				var scoreText = scoreWrapper.text().trim();
 				var scoreMatches = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
 				var score = (scoreMatches && scoreMatches.length >= 4) ? [scoreMatches[1], scoreMatches[3]] : ['', ''];
-				//window.console.log(scoreText, scoreMatches, score);
 
 				var stadium = '', city = '', country = '', neutral = '';
 				var miscWrapper = matchWrapper.children('table:last-of-type');
 				var misc = miscWrapper.text().trim().split('\n');
 				var venueParts = misc[0].match(/^([^,\[]*)(, (.*?)( \((.*)\))?(\[.*\])?)?$/);
 				if (venueParts) {
-					//window.console.log(venueParts);
 
 					stadium = venueParts[1];
 					city = (venueParts[3] ? venueParts[3].replace(/^St. /, 'St ') : '');
@@ -99,7 +85,6 @@ $(function() {
 					country = (venueParts[5] ? venueParts[5] : '');
 					if (country == '' && tweakCityCountry[city]) country = tweakCityCountry[city];
 					if (tweakCountry[country]) country = tweakCountry[country];
-					//window.console.log(stadium, city, country);
 
 					if (country == teams[1]) {
 						teams = [teams[1], teams[0]];
@@ -112,7 +97,6 @@ $(function() {
 
 				}
 				var att = (misc.length < 2) ? '' : ((misc[1].indexOf('Attendance: ') == 0) ? misc[1].replace('[', ' ').split(' ')[1] : '');
-				//window.console.log(stadium + ' - ' + city + ' - ' + country + ' - ' + neutral + ' - ' + att);
 
 				if (addBreak) {
 					if (table.find('tr').length > 0) {
@@ -138,7 +122,6 @@ $(function() {
 		});
 
 		if ($('th > abbr[title="Points"]').length == 0) {
-			window.console.log(1);
 			$('<tr></tr>').append('<td></td>'.repeat(9)).appendTo(table);
 			$('tr:nth-of-type(even)', table).appendTo(table);
 		}
