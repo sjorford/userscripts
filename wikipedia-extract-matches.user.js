@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 $(function() {
-
+	
 	var tweakCountry = {
 		'China PR': 'China',
 		'Chinese Taipei': 'Taiwan',
@@ -23,17 +23,19 @@ $(function() {
 		'Saint Vincent and the Grenadines': 'St Vincent and the Gren.',
 		'São Tomé and Príncipe': 'Sao Tome and Principe',
 		'Timor-Leste': 'East Timor',
-		'U.S. Virgin Islands': 'US Virgin Islands'
+		'U.S. Virgin Islands': 'US Virgin Islands',
 	};
-
+	
 	var tweakCity = {
-		'São Tomé': 'Sao Tome'
+		'São Tomé': 'Sao Tome',
 	};
-
+	
+	// Hack to identify host venues
 	var tweakCityCountry = {
-		"Nuku'alofa": 'Tonga'
+		"Nuku'alofa": "Tonga",
+		"Port Moresby": "Papua New Guinea",
 	};
-
+	
 	var events = $('.vevent')
 	if (events.length > 0) {
 
