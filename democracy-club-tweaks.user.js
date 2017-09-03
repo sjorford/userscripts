@@ -3,7 +3,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-09-01
+// @version     2017-09-03
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -93,13 +93,6 @@ $(`<style>
 	.sjo-bulkadd-listitem input {margin-bottom: 0 !important}
 	.sjo-bulkadd-data {font-size: 0.75rem; xxxcolor: #aaa; margin-bottom: 0rem !important; list-style-type: none;}
 	.sjo-bulkadd-link {font-weight: bold;}
-	
-	/* http://stackoverflow.com/a/26637893/1741429 */
-	.sjo-posts-listcolumns {column-width: 250px; -moz-column-width: 250px;}
-	.sjo-post {border: 1px solid white; overflow: hidden; page-break-inside: avoid;}
-	.sjo-post-incomplete {background-color: #fdd;}
-	.sjo-post-complete {background-color: #ffb;}
-	.sjo-post-verified {background-color: #bbf7bb;}
 	
 	.show-new-candidate-form {display: none;}
 	
@@ -197,6 +190,57 @@ $(function() {
 
 function formatPostsList() {
 	
+	/* http://stackoverflow.com/a/26637893/1741429 */
+	$(`<style>
+		xxx.sjo-posts-listcolumns {column-width: 250px; -moz-column-width: 250px;}
+		xxx.sjo-post {border: 1px solid white; overflow: hidden; page-break-inside: avoid;}
+		.sjo-posts {table-layout: fixed;}
+		.sjo-posts td:nth-of-type(1) {width: 1.5rem;}
+		.sjo-posts td:nth-of-type(2) {width: 10rem;}
+		.sjo-posts td:nth-of-type(3) {width: 20rem;}
+		.sjo-posts td {padding: .25rem; vertical-align: top;}
+		.sjo-post-incomplete {background-color: #fdd !important;}
+		.sjo-post-complete {background-color: #ffb !important;}
+		.sjo-post-verified {background-color: #bbf7bb !important;}
+	</style>`).appendTo('head');
+	
+	$('.content h3').each((index, element) => {
+		var heading = $(element);
+		
+		var table = $('<table class="sjo-posts"></table>').insertAfter(heading);
+		
+		heading.nextUntil('h2, h3', 'ul').each((index, element) => {
+			var list = $(element).hide();
+			
+			var subHeading = list.prev('h4').hide();
+			var election = subHeading.text().replace(/ local election$/, '');
+			var electionUrl = subHeading.find('a').attr('href');
+			
+			list.find('li').each((index, element) => {
+				var listItem = $(element);
+				
+				var post = listItem.find('a').text();
+				var postUrl = listItem.find('a').attr('href');
+				var lock = listItem.find('abbr').text();
+				
+				$('<tr></tr>')
+					.addCell(lock)
+					.addCellHTML(`<a href="${electionUrl}">${election}</a>`)
+					.addCellHTML(`<a href="${postUrl}">${post}</a>`)
+					.addClass(
+						lock == '\u{1f513}' ? 'sjo-post-complete' : 
+						lock == '\u{1f512}' ? 'sjo-post-verified' : 
+						'sjo-post-incomplete')
+					.appendTo(table);
+				
+			});
+		});
+		
+		heading.append(` (${table.find('tr').length})`);
+		
+	});
+	
+	/*
 	var lists = $('.content ul');
 	//lists = lists.filter(':has(li+li)');
 	lists.addClass('sjo-posts-listcolumns');
@@ -206,8 +250,7 @@ function formatPostsList() {
 	$('abbr:contains("\u{1f513}")').closest('li').addClass('sjo-post-complete');
 	$('abbr:contains("\u{1f512}")').closest('li').addClass('sjo-post-verified');
 	$('li', lists).addClass('sjo-post').not('.sjo-post-complete, .sjo-post-verified').addClass('sjo-post-incomplete');
-	
-	// TODO: format headings
+	*/
 	
 }
 
