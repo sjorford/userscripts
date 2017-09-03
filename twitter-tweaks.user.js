@@ -30,7 +30,7 @@ $(function() {
 		<a class="sjo-list-link" href="/sjorford/lists/birding">Birding</a>
 		<a class="sjo-list-link" href="/sjorford/lists/democracy">Democracy</a>
 		<a class="sjo-list-link" href="/sjorford/lists/random">Random</a>
-		<a class="sjo-list-link" href="/sjorford/lists/random">US Politics</a>
+		<a class="sjo-list-link" href="/sjorford/lists/us-politics">US Politics</a>
 	</div>`).insertAfter('.ProfileCardStats');
 	
 });
