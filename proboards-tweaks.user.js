@@ -9,8 +9,9 @@
 $(function() {
 	
 	$(`<style>
-		div.ui-form-error + img + style + div[id$="-banner"] 
-		div.ui-dialog.ui-widget.ui-widget-content + img + style + div[id$="-overlay"] 
+		div.ui-form-error + img + style + div[id$="-banner"],
+		div.ui-dialog.ui-widget.ui-widget-content + img + style + div[id$="-overlay"],
+		#support-message
 			{display: none !important;}
 	</style>`).appendTo('head');
 	
