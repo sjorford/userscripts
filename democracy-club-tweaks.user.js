@@ -3,13 +3,16 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-09-03
+// @version     2017-09-10
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/fun-with-elections/master/dc-lib.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
 // ==/UserScript==
+
+// Restore correct line numbers in console log
+var console = Raven && Raven.p && Raven.p.log ? Raven.p : console;
 
 // Parameters
 var rootUrl = 'https://candidates.democracyclub.org.uk/';
@@ -1316,35 +1319,34 @@ function formatLockSuggestions() {
 function formatStatistics() {
 	
 	$('.statistics-elections').each(function(index, element) {
-		console.log(element);
+		var wrapper = $(element);
 		
 		var table = $('<table class="sjo-stats"></table>')
-			.appendTo(element)
+			.insertAfter(wrapper.find('h2'))
 			.click(function(event) {
 				if (event.target.tagName == 'A') return;
 				table.selectRange();
 			});
 		
-		$('div', element).each(function(index, element) {
+		$('div', wrapper).each(function(index, element) {
 			
 			var div = $(element);
-			//console.log(div);
 			
-			var matchId = element.id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
-			//console.log(element.id, matchId);
+			var id = div.attr('id');
+			id = id == 'statistics-election-2010' ? 'statistics-election-parl-2010-05-06' : id == 'statistics-election-2015' ? 'statistics-election-parl-2015-05-07' : id;
+			
+			var matchId = id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
+			console.log(id, matchId);
 			
 			var headerText = div.find('h4').text();
 			var matchHeader = headerText.match(/^Statistics for the (\d{4} )?(.+?)( (local|Mayoral))?( [Ee]lection|by-election: (.*) (ward|constituency))?( \((.+)\))?$/, '');
-			//console.log(headerText, matchHeader);
 			
 			if (matchId && matchHeader) {
-				//console.log(matchId, matchHeader);
 				
 				var key = matchId[2] + (matchId[3] ? '.' + matchId[4] : '') + (matchId[5] ? '.' + matchId[6] : '');
 				var type = matchId[2];
 				var date = matchId[7];
 				var area = matchHeader[2] + (matchHeader[8] ? matchHeader[8] : '');
-				//console.log(key, type, date, area);
 				
 				var bullets = div.find('li');
 				var candidates = bullets.eq(0).text().replace(/^Total candidates: /, '');
@@ -1388,13 +1390,17 @@ function formatStatistics() {
 				
 				$('.sjo-remove').remove();
 				if (div.find('li').length === 0) {
-					div.hide();
-					div.prev('h3').hide();
+					div.remove();
 				}
 				
 			}
 			
 		});
+		
+		$('h3, h4', wrapper).filter((index, element) => {
+			var heading = $(element);
+			return heading.next().length == 0 || heading.next('h3, h4').length > 0;
+		}).hide();
 		
 	});
 	
