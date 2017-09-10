@@ -113,9 +113,6 @@ $(function() {
 	
 	var url = location.href;
 	
-	// Clean up pasted names
-	$('body').on('paste', 'input', event => setTimeout(() => cleanInputValue(event.target), 0));
-	
 	// Fix broken EC links
 	$('.party__primary a[href^="http://search.electoralcommission.org.uk/"]').each(function(index, element) {
 		element.href = element.href.replace(/electoral-commission:%20/, '');
@@ -1361,52 +1358,6 @@ function formatSearchResults() {
 // ================================================================
 // General functions
 // ================================================================
-
-// Trim an inputted value and fix upper case names
-// TODO: fix entries like "JOHN SMITH"?
-function cleanInputValue(input) {
-	console.log('cleanInputValue', input);
-	
-	// Trim all values
-	var value = input.value.trim().replace(/\s+/g, ' ');
-	
-	if (input.name == 'q' || input.id == 'id_name' || input.id == 'alt-name' || input.id.match(/^id_form-\d+-name$/)) {
-		value = parseInputValue(value);
-	}
-	
-	input.value = value;
-	
-}
-
-// Reformat names
-// TODO: handle hyphens properly
-function parseInputValue(value) {
-	
-	var match = value.match(/^(([-'A-Z]{3,})(\s*,)?)\s+(.*)$/);
-	if (match) {
-		if (match[2].match(/^MC[A-Z]{2,}/)) {
-			return match[4] + ' ' + match[2][0] + match[2][1].toLowerCase() + match[2][2] + match[2].slice(3).toLowerCase();	
-		} else {
-			return match[4] + ' ' + match[2][0] + match[2].slice(1).toLowerCase();	
-		}
-	}
-	
-		
-	match = value.match(/^([^,]+),\s+(.+)$/);
-	if (match) {
-		return value = match[2] + ' ' + match[1];
-	}
-	
-	if ($('#sjo-reverse').is(':checked')) {
-		match = value.match(/^(\S+)\s+(\S.*)$/);
-		if (match) {
-			return value = match[2] + ' ' + match[1];
-		}
-	}
-	
-	return value;
-
-}
 
 // Convert a raw URL to a formatted link
 function formatLinks(html, maxLength) {
