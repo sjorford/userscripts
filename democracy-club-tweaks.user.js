@@ -131,7 +131,7 @@ $(function() {
 	} else if (url.indexOf(rootUrl + 'person/') === 0 && $('.person__hero').length > 0) { // what was the second bit for again?
 		formatCandidatePage();
 	} else if (url.indexOf(rootUrl + 'bulk_adding/') === 0 && url.indexOf('/review/') >= 0) {
-		formatBulkAddReviewPage();
+		//formatBulkAddReviewPage();
 	} else if (url.indexOf(rootUrl + 'bulk_adding/') === 0 && url.indexOf('/review/') < 0) {
 		//formatBulkAddPage();
 	} else if (url == rootUrl + 'numbers/') {
@@ -1034,61 +1034,6 @@ function formatEditForm() {
 		'ynmp-party:2': 		'Ind',
 	};
 
-}
-
-// ================================================================
-// Bulk adding pages
-// ================================================================
-
-function formatBulkAddReviewPage() {
-	
-	$('form h2').each(addSearchLink);
-	
-	$('form input[type="radio"]').each(lookupBulkAddData);
-	
-	function addSearchLink(index, element) {
-		var nameMatch = element.innerText.trim().match(/^Candidate:\s+(\S+)\s+((.+)\s+)?(\S+)$/);
-		console.log('addSearchLink', index, element, nameMatch);
-		if (nameMatch && nameMatch[3]) {
-			var fullName = nameMatch[1] + ' ' + nameMatch[3] + ' ' + nameMatch[4];
-			var shortName = nameMatch[1] + ' ' + nameMatch[4];
-			element.innerHTML = 'Candidate: <a href="https://candidates.democracyclub.org.uk/search?q=' + encodeURIComponent(shortName) + '" target="_blank">' + fullName + '</a>';
-		}
-	}
-	
-	function lookupBulkAddData(index, element) {
-		
-		// Get ID of matching person
-		var input = $(element);
-		var link = input.closest('label').addClass('sjo-bulkadd-listitem').find('a').addClass('sjo-bulkadd-link');
-		if (link.length > 0) link.html(link.html().replace(/\(previously stood in .*? candidate\)/, ''));
-		var personID = input.val();
-		if (personID == '_new') return;
-		
-		// Call API
-		$.getJSON(`/api/v0.9/persons/${personID}/`, data => renderBulkAddData(input, data));
-
-	}
-	
-	function renderBulkAddData(input, data) {
-		input.closest('label')
-			.append('<ul class="sjo-bulkadd-data">' + data.memberships.map(member => 
-				`<li>${member.election.name} (${trimPost(member.post.label)}) - ${member.on_behalf_of.name}</li>`).join('') + '</ul>');
-	}
-	
-	function trimPost(postName) {
-		return postName.match(/^(Member of (the Scottish )?Parliament for )?(.*?)( ward)?$/)[3];
-	}
-	
-	// Highlight selected option
-	highlightSelected();
-	$('body').on('change', '.sjo-bulkadd-listitem input[type="radio"]', highlightSelected);
-	
-	function highlightSelected() {
-		$('.sjo-bulkadd-listitem').each((index, element) =>
-			$(element).toggleClass('sjo-bulkadd-selected', $('input[type="radio"]', element).is(':checked')));
-	}
-	
 }
 
 // ================================================================

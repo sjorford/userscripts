@@ -19,12 +19,6 @@ $(function() {
 		.form_group p {display: inline-block !important; vertical-align: top !important; width: 48% !important; padding-right: 1%; margin-bottom: 0 !important;}
 		.form_group p input {margin-bottom: 0.5rem !important;}
 		
-		.sjo-bulkadd-listitem {list-style-type: none; margin-top: 0.5rem;}
-		.sjo-bulkadd-selected {background-color: #fff1a3;}
-		.sjo-bulkadd-listitem input {margin-bottom: 0 !important}
-		.sjo-bulkadd-data {font-size: 0.75rem; xxxcolor: #aaa; margin-bottom: 0rem !important; list-style-type: none;}
-		.sjo-bulkadd-link {font-weight: bold;}
-		
 	</style>`).appendTo('head');
 	
 	// TODO: allow party dropdowns to be deselected
