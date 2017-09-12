@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     1.0
+// @version     2017-09-12
 // @grant       unsafeWindow
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -16,6 +16,6 @@ $(function() {
 		.live-blog__sticky-components-container.affix {position: static;}
 	</style>`).appendTo('head');
 	
-	$('.fc-item__byline').filter(':contains("Suzanne Moore"), :contains("Zoe Williams")').closest('.fc-item').hide();
+	$('.fc-item__byline').filter(':contains("Suzanne Moore"), :contains("Zoe Williams"), :contains("Tim Dowling")').closest('.fc-item').hide();
 	
 });
