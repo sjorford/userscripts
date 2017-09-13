@@ -2,7 +2,7 @@
 // @name        Demo Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2017-09-12
+// @version     2017-09-13
 // @grant       none
 // ==/UserScript==
 
@@ -10,7 +10,9 @@ $(function() {
 	
 	$(`<style>
 		.sjo-stats {font-size: 9pt;}
+		.sjo-stats tr {background-color: inherit !important;}
 		.sjo-stats td, .sjo-stats th, .sjo-lesspadding td, .sjo-lesspadding th {padding: 4px;}
+		.sjo-stats-break {border-top: solid 1px #ddd;}
 	</style>`).appendTo('head');
 	
 	$('.statistics-elections').each(function(index, element) {
@@ -22,6 +24,8 @@ $(function() {
 				if (event.target.tagName == 'A') return;
 				table.selectRange();
 			});
+		
+		var lastDate = null;
 		
 		$('div', wrapper).each(function(index, element) {
 			
@@ -61,6 +65,11 @@ $(function() {
 					.addCell(key)
 					.addCell(area)
 					.addCell(candidates, 'sjo-number');
+				
+				if (date != lastDate) {
+					row.addClass('sjo-stats-break');
+					lastDate = date;
+				}
 				
 				bullets.each(function(index, element) {
 					var bullet = $(element);
