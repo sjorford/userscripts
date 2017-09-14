@@ -3,7 +3,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2017-05-23
+// @version     2017-09-14
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -29,6 +29,7 @@ $(function() {
 		<a class="sjo-lists-header" href="/sjorford/lists">Lists</a>
 		<a class="sjo-list-link" href="/sjorford/lists/birding">Birding</a>
 		<a class="sjo-list-link" href="/sjorford/lists/democracy">Democracy</a>
+		<a class="sjo-list-link" href="/sjorford/lists/demo-club-plus">Demo Club Plus</a>
 		<a class="sjo-list-link" href="/sjorford/lists/random">Random</a>
 		<a class="sjo-list-link" href="/sjorford/lists/us-politics">US Politics</a>
 	</div>`).insertAfter('.ProfileCardStats');
