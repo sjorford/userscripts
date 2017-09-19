@@ -3,7 +3,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-09-10
+// @version     2017-09-19
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -470,8 +470,12 @@ function formatCandidatePage() {
 				if (fieldName == 'biography' && dataFrom && dataTo) {
 					
 					// Add highlighted diffs for biographies
+					// TODO: do the line splitting in the diffString function?
 					var diffMarkup = diffString(dataFrom, dataTo);
-					var diffParas = diffMarkup.split('\r\n');
+					var diffParas = diffMarkup
+							.replace(/<del>[\s\S]*?\r\n[\s\S]*?<\/del>/g, function(match) {return match.replace(/\r\n/g, '</del>\r\n<del>');})
+							.replace(/<ins>[\s\S]*?\r\n[\s\S]*?<\/ins>/g, function(match) {return match.replace(/\r\n/g, '</ins>\r\n<ins>');})
+							.split('\r\n');
 					
 					// Add first row
 					row.addCell('-', 'sjo-version-delete sjo-version-op')
