@@ -1,10 +1,9 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        5.0
+// @version        2017-09-21
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @description    
 // @include        http://stats.espncricinfo.com/ci/engine/stats/index.html?*
 // @include        http://stats.espncricinfo.com/ci/content/records/*
 // @include        http://stats.espncricinfo.com/*/engine/records/*
@@ -12,13 +11,12 @@
 // @include        http://stats.espnscrum.com/*
 // @run-at         document-end
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
-// @grant          unsafeWindow
+// @grant          none
 // ==/UserScript==
 
-// Greasemonkey does not work on local files?
-// @include        file:///C:/Users/Stuart/Downloads/DownThemAll/Cricinfo/*
+var debug = false;
 
-$(document).ready(function() {
+$(function() {
 	
 	var teamsMap = {
 		'AFR':		'',
@@ -51,6 +49,7 @@ $(document).ready(function() {
 	selectRange('.sjotable');
 
 	function processTable(mainTable) {
+		if (debug) console.log('processTable', mainTable);
 		
 		var exportTable;
 	
@@ -61,7 +60,7 @@ $(document).ready(function() {
 			tableHeaders.push(colName);
 		});
 		if (tableHeaders.length === 0) return;
-		window.console.log(tableHeaders);
+		if (debug) console.log('tableHeaders', tableHeaders);
 	
 		// Check if runs column should be parsed as total runs instead of a single score
 		var runsAreTotal = (
@@ -70,7 +69,7 @@ $(document).ready(function() {
 			tableHeaders.indexOf('wkts') >= 0);
 		
 		var teamStats = ($('guruNav active').text() == 'Team');
-		window.console.log('teamStats=' + teamStats + ', runsAreTotal=' + runsAreTotal);
+		if (debug) console.log('teamStats', teamStats, 'runsAreTotal', runsAreTotal);
 	
 		// Create a box to hold the export results
 		createExportBox();
@@ -82,7 +81,7 @@ $(document).ready(function() {
 			
 			// Add export table
 			exportTable = $('<table class="sjotable"></table>')
-				.appendTo('#ciHomeContent')
+				.appendTo('#ciHomeContent, #scrumContent')
 				.wrap('<div class="sjobox" style="display: inline-block; border: 1px solid blue; background-color: white; font-size: 8pt; overflow: scroll; max-height: 200px;"></div>')
 				.click(function() {
 					selectRange(this);
@@ -92,10 +91,11 @@ $(document).ready(function() {
 		}
 		
 		function processRow(index, element) {
+			if (debug) console.log('processRow', index, element);
 			
 			var results = [];
 		
-			var thisRow = $(this)
+			var thisRow = $(this);
 			
 			// Get data from each cell
 			thisRow.find('td').each(function(index, element) {
@@ -153,7 +153,7 @@ $(document).ready(function() {
 		function parseCell(index, element) {
 			
 			var td = $(element);
-			var a = td.find('a')
+			var a = td.find('a');
 			var href = a.first().attr('href');
 			var text = td.text();
 			
@@ -178,7 +178,7 @@ $(document).ready(function() {
 						return [
 							text.split(' (')[0],
 							parseTeams(text.split(' (')[1].replace(/[)]$/, ''))
-						]
+						];
 					}
 					
 				// Split out * indicator for not outs
