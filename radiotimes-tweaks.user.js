@@ -13,11 +13,11 @@ $(function() {
 		
 		link[href*="d7f3fb657c"] + script + script + script + script + div,
 		link[href*="d7f3fb657c"] + script + script + script + script + div + div,
-		
 		link[href*="d7f3fb657c"] + div,
 		link[href*="d7f3fb657c"] + div + div
-
 			{display: none !important;}
+			
+		html, body {overflow-y: auto !important;}
 			
 	</style>`).appendTo('head');
 	
