@@ -6,6 +6,8 @@
 // @grant       none
 // ==/UserScript==
 
+var debug = false;
+
 $(function() {
 	
 	// Clean pasted values
@@ -30,6 +32,7 @@ function cleanInputValue(input) {
 
 // Trim pasted names and fix upper case names
 function cleanInputName(value, reverse) {
+	if (debug) console.log('cleanInputName', value, reverse);
 	
 	var match;
 	
@@ -58,8 +61,9 @@ function cleanInputName(value, reverse) {
 }
 
 function properCaseName(name) {
+	if (debug) console.log('properCaseName', name, name.codePointAt(0));
 	
-	name = name.trim();
+	name = name.replace(/\u200B/g, ' ').trim();
 	
 	if (name.indexOf(' ') >= 0) return name.split(' ').map(value => properCaseName(value)).join(' ');
 	if (name.indexOf('-') >= 0) return name.split('-').map(value => properCaseName(value)).join('-');
