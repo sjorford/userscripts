@@ -91,7 +91,7 @@ $(`<style>
 	.header__nav {padding: 1em 0 0 0;}
 	h2 {font-size: 1.5rem;}
 	
-	.show-new-candidate-form {display: none;}
+	xxx.show-new-candidate-form {display: none;}
 	
 	.select2-result-label {font-size: 0.8rem;}
 	.person__actions__action {padding: 1em; margin-bottom: 1em;}
@@ -186,7 +186,7 @@ function formatPostsList() {
 		xxx.sjo-post {border: 1px solid white; overflow: hidden; page-break-inside: avoid;}
 		.sjo-posts {table-layout: fixed;}
 		.sjo-posts td:nth-of-type(1) {width: 1.5rem;}
-		.sjo-posts td:nth-of-type(2) {width: 10rem;}
+		.sjo-posts td:nth-of-type(2) {width: 12rem;}
 		.sjo-posts td:nth-of-type(3) {width: 20rem;}
 		.sjo-posts td {padding: .25rem; vertical-align: top;}
 		.sjo-post-incomplete {background-color: #fdd !important;}
