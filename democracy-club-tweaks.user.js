@@ -62,6 +62,7 @@ $(`<style>
 	.person__details dl {margin-bottom: 1em;}
 	h2 {margin-top: 0.5em !important; margin-bottom: 0.25em !important; padding-bottom: 0.25em !important;}
 	h3 {font-size: 1.2rem;}
+	h4 {font-size: 1.1rem;}
 	#add_election_button {margin-bottom: 0;}
 	.person__versions {padding-top: 0;}
 	

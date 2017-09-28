@@ -22,16 +22,25 @@ $(function() {
 	$('.content h3').each((index, element) => {
 		var heading = $(element);
 		
-		var table = $('<table class="sjo-posts"></table>').insertAfter(heading);
+		var mainTable = $('<table class="sjo-posts"></table>').insertAfter(heading);
 		
 		heading.nextUntil('h2, h3', 'ul').each((index, element) => {
-			var list = $(element).hide();
 			
-			var subHeading = list.prev('h4').hide();
+			var list = $(element).hide();
+			var items = list.find('li');
+			
+			var subHeading = list.prev('h4');
+			if (items.length > 5) {
+				var table = $('<table class="sjo-posts"></table>').insertAfter(subHeading);
+			} else {
+				var table = mainTable;
+				subHeading.hide();
+			}
+			
 			var election = subHeading.text().replace(/ local election$/, '');
 			var electionUrl = subHeading.find('a').attr('href');
 			
-			list.find('li').each((index, element) => {
+			items.each((index, element) => {
 				var listItem = $(element);
 				
 				var post = listItem.find('a').text();
@@ -51,7 +60,7 @@ $(function() {
 			});
 		});
 		
-		heading.append(` (${table.find('tr').length})`);
+		heading.append(` (${mainTable.find('tr').length})`);
 		
 	});
 	
