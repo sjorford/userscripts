@@ -105,8 +105,6 @@ $(`<style>
 	
 	.document_viewer {min-height: 600px;}
 	
-	#sjo-party-select-original, #sjo-party-select-trimmed {display: none;}
-	
 </style>`).appendTo('head');
 
 $(function() {
