@@ -20,7 +20,7 @@ $(function() {
 	// Display buttons for Thursdays
 	var wrapper = $('<div></div>').insertAfter('.form-date');
 	var thursday = moment().isoWeekday(4);
-	for (var i = 0; i < 5; i++) {
+	for (var i = 0; i < 6; i++) {
 		$(`<input class="sjo-polldate" type="button" value="${thursday.add(7, 'days').format('YYYY-MM-DD')}">`).appendTo(wrapper);
 	}
 	
