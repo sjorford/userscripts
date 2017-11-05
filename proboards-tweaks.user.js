@@ -14,7 +14,7 @@ $(function() {
 		div.ui-dialog.ui-widget.ui-widget-content + img + style + div[id$="-overlay"],
 		div#support-message
 			{display: none !important;}
-		tr.bookmarked {background-color: #ffd700b3 !important;}
+		tr.bookmarked.new {background-color: #ffd700b3 !important;}
 	</style>`).appendTo('head');
 	
 });
