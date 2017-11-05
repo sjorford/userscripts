@@ -2,8 +2,9 @@
 // @name        Demo Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2017-09-22
+// @version     2017-11-05
 // @grant       none
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // ==/UserScript==
 
 $(function() {
@@ -15,15 +16,18 @@ $(function() {
 		.sjo-stats-break {border-top: solid 1px #ddd;}
 	</style>`).appendTo('head');
 	
+	var futureTable = $('<table class="sjo-stats sjo-stats-future"></table>');
+	var cutoff = moment().add(30, 'days');
+	
 	$('.statistics-elections').each(function(index, element) {
 		var wrapper = $(element);
 		
 		var table = $('<table class="sjo-stats"></table>')
-			.insertAfter(wrapper.find('h2'))
-			.click(function(event) {
-				if (event.target.tagName == 'A') return;
-				table.selectRange();
-			});
+			.insertAfter(wrapper.find('h2'));
+		
+		if (wrapper.hasClass('current')) {
+			futureTable.insertAfter(wrapper).before('<h2>Future Elections</h2>');
+		}
 		
 		var lastDate = null;
 		
@@ -49,25 +53,10 @@ $(function() {
 				
 				var bullets = div.find('li');
 				
-				/*
-				var candidates = bullets.eq(0).text().replace(/^Total candidates: /, '');
-				bullets.eq(0).addClass('sjo-remove');
-				*/
-				
-				/*
-				var typeRows = table.find('[sjo-election-type="' + type + '"]');
-				var prevRows = typeRows.filter(function(index, element) {
-					return $(element).data('sjo-election-key') <= key;
-				});
-				*/
-				
 				var row = $('<tr></tr>')
-					//.data('sjo-election-type', type)
-					//.data('sjo-election-key', key)
 					.addCell(date)
 					.addCell(key)
 					.addCell(area);
-					//.addCell(candidates, 'sjo-number');
 				
 				if (date != lastDate) {
 					row.addClass('sjo-stats-break');
@@ -89,16 +78,11 @@ $(function() {
 					}
 				});
 				
-				/*
-				if (prevRows.length > 0) {
-					row.insertAfter(prevRows.last());
-				} else if (typeRows.length > 0) {
-					row.insertBefore(typeRows.first());
+				if (moment(date).isAfter(cutoff)) {
+					row.appendTo(futureTable);
 				} else {
 					row.appendTo(table);
 				}
-				*/
-				row.appendTo(table);
 				
 				$('.sjo-remove').remove();
 				if (div.find('li').length === 0) {
@@ -114,6 +98,12 @@ $(function() {
 			return heading.next().length == 0 || heading.next('h3, h4').length > 0;
 		}).hide();
 		
+	});
+	
+	$('body').on('click', '.sjo-stats', event => {
+		if (event.target.tagName != 'A') {
+			$(event.target).closest('.sjo-stats').selectRange();
+		}
 	});
 	
 });
