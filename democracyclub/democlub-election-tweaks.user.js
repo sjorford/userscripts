@@ -2,7 +2,7 @@
 // @name        Demo Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2017-11-03
+// @version     2017-11-05
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -17,6 +17,9 @@ $(`<style>
 </style>`).appendTo('head');
 
 $(function() {
+	
+	// Add link to radar
+	$('.menu').append('<li><a href="/election_radar/?status=new">Radar</a></li>');
 	
 	// Display buttons for Thursdays
 	var wrapper = $('<div></div>').insertAfter('.form-date');
