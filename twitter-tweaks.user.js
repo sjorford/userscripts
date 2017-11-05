@@ -13,6 +13,7 @@ $(`<style>
 	xxx.has-recap {display: none !important;}
 	
 	[data-trend-name="Katie Hopkins"],
+	[data-trend-name="Peter Hitchens"],
 	[data-trend-name="Piers Morgan"],
 	[data-trend-name="Toby Young"],
 	[data-trend-name="Tommy Robinson"] {display: none !important;}
