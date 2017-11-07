@@ -2,8 +2,9 @@
 // @name        Demo Club format posts list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/posts
-// @version     1
+// @version     2017-11-07
 // @grant       none
+// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
 $(`<style>
@@ -37,7 +38,7 @@ $(function() {
 				subHeading.hide();
 			}
 			
-			var election = subHeading.text().replace(/ local election$/, '');
+			var election = Utils.shortOrgName(subHeading.text().replace(/ local election$/, ''));
 			var electionUrl = subHeading.find('a').attr('href');
 			
 			items.each((index, element) => {
