@@ -94,7 +94,9 @@ $(`<style>
 	Utils.shortOrgName = shortOrgName;
 	
 	function shortOrgName(text) {
-		return text.trim().replace(/^(Borough of |Borough Council of |London Borough of |Royal Borough of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Borough| Metropolitan Borough| Metropolitan District| District| City and District| City)? Council| Combined Authority)?$/, '$2');
+		var shortName = text.trim();
+		shortName = shortName == 'City of London Corporation' ? 'City of London' : shortName;
+		return shortName.replace(/^(Borough of |Borough Council of |London Borough of |Royal Borough of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Borough| Metropolitan Borough| Metropolitan District| District| City and District| City)? Council| Combined Authority)?$/, '$2');
 	}
 	
 })();
