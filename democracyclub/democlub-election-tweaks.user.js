@@ -39,14 +39,12 @@ $(function() {
 	
 	// Trim council names
 	if (location.href.indexOf('id_creator/election_organisation/') >= 0) {
-	var oldNICouncils = ['Antrim', 'Ards', 'Armagh', 'Ballymena', 'Ballymoney', 'Banbridge', 'Carrickfergus', 'Castlereagh', 'Coleraine', 'Cookstown', 'Craigavon', 'Derry', 'Down', 'Dungannon and South Tyrone', 'Fermanagh', 'Larne', 'Limavady', 'Lisburn', 'Magherafelt', 'Moyle', 'Newry and Mourne', 'Newtownabbey', 'North Down', 'Omagh', 'Strabane'];
+		var oldNICouncils = ['Antrim', 'Ards', 'Armagh', 'Ballymena', 'Ballymoney', 'Banbridge', 'Carrickfergus', 'Castlereagh', 'Coleraine', 'Cookstown', 'Craigavon', 'Derry', 'Down', 'Dungannon and South Tyrone', 'Fermanagh', 'Larne', 'Limavady', 'Lisburn', 'Magherafelt', 'Moyle', 'Newry and Mourne', 'Newtownabbey', 'North Down', 'Omagh', 'Strabane'];
 		var labels = $('.block-label');
 		labels.contents()
 			.filter((index, element) => element.nodeType == 3)
 			.each((index, element) => {
-				var council = element.nodeValue;
-				council = council == 'City of London Corporation' ? 'City of London' : council.trim()
-					.replace(/^(Borough of |Borough Council of |London Borough of |Royal Borough of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Metropolitan Borough| Borough| Metropolitan District| District| City and District| City)? Council| Combined Authority)?$/, '$2');
+				var council = Utils.shortOrgName(element.nodeValue);
 				if (oldNICouncils.indexOf(council) >= 0) $(element).closest('.block-label').addClass('sjo-obsolete');
 				element.nodeValue = council;
 			})
