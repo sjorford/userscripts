@@ -3,7 +3,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2017-09-22
+// @version     2017-11-10
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -12,6 +12,7 @@ $(`<style>
 	
 	xxx.has-recap {display: none !important;}
 	
+	[data-trend-name="Giles Coren"],
 	[data-trend-name="Katie Hopkins"],
 	[data-trend-name="Peter Hitchens"],
 	[data-trend-name="Piers Morgan"],
