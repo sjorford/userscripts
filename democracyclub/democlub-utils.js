@@ -95,7 +95,7 @@ $(`<style>
 	
 	function shortOrgName(text) {
 		var shortName = text.trim();
-		shortName = shortName == 'City of London Corporation' ? 'City of London' : shortName;
+		if (shortName == 'City of London Corporation' || shortName == 'City of London') return 'City of London';
 		return shortName.replace(/^(Borough of |Borough Council of |London Borough of |Royal Borough of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Borough| Metropolitan Borough| Metropolitan District| District| City and District| City)? Council| Combined Authority)?$/, '$2');
 	}
 	
