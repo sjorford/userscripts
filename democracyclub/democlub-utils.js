@@ -1,4 +1,6 @@
 console.log('democlub-utils loading');
+console.log($);
+console.log('still here?');
 
 var Utils = {};
 
