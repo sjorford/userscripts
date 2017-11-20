@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name        Demo Club statistics
+// @name        Demo Club format statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
 // @version     2017-11-15
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
+// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
 $(function() {
@@ -15,6 +16,8 @@ $(function() {
 		.sjo-stats tr {background-color: inherit !important;}
 		.sjo-stats td, .sjo-stats th, .sjo-lesspadding td, .sjo-lesspadding th {padding: 4px;}
 		.sjo-stats-break {border-top: solid 1px #ddd;}
+		.sjo-number {text-align: center;}
+		.sjo-number-zero {background-color: rgb(255, 230, 153);}
 	</style>`).appendTo('head');
 	
 	var futureTable = $('<table class="sjo-stats sjo-stats-future"></table>');
@@ -40,17 +43,16 @@ $(function() {
 			id = id == 'statistics-election-2010' ? 'statistics-election-parl-2010-05-06' : id == 'statistics-election-2015' ? 'statistics-election-parl-2015-05-07' : id;
 			
 			var matchId = id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
-			console.log(id, matchId);
 			
 			var headerText = div.find('h4').text();
-			var matchHeader = headerText.match(/^Statistics for the (\d{4} )?(.+?)( (local|Mayoral))?( [Ee]lection|by-election: (.*) (ward|constituency))?( \((.+)\))?$/, '');
+			var matchHeader = headerText.match(/^Statistics for the (\d{4} )?(.+?)( (local|[Mm]ayoral))?( [Ee]lection|by-election: (.*) (ward|constituency))?( \((.+)\))?$/, '');
 			
 			if (matchId && matchHeader) {
 				
 				var key = matchId[2] + (matchId[3] ? '.' + matchId[4] : '') + (matchId[5] ? '.' + matchId[6] : '');
 				var type = matchId[2];
 				var date = matchId[7];
-				var area = matchHeader[2] + (matchHeader[8] ? matchHeader[8] : '');
+				var area = Utils.shortOrgName(matchHeader[2]) + (matchHeader[8] ? matchHeader[8] : '');
 				
 				var bullets = div.find('li');
 				
@@ -74,7 +76,8 @@ $(function() {
 						$('<td class="sjo-nowrap"></td>').append(link).appendTo(row);
 						bullet.addClass('sjo-remove');
 					} else if (bullet.text().indexOf(':') >= 0) {
-						row.addCell(bullet.text().split(':')[1].trim(), 'sjo-number');
+						var num = bullet.text().split(':')[1].trim();
+						row.addCell(num, 'sjo-number' + (num == '0' ? ' sjo-number-zero' : ''));
 						bullet.addClass('sjo-remove');
 					}
 				});
