@@ -10,7 +10,7 @@
 
 $(function() {
 
-	$('<style>.hidden {display: block;}</style>').appendTo('head');
+	$(`<style>.hidden {display: inline-block;}</style>`).appendTo('head');
 
 	$('td[rowspan]').each((index, element) => {
 		var td = $(element);
@@ -18,5 +18,7 @@ $(function() {
 		td.attr('rowspan', 1);
 		td.closest('tr').nextAll('tr').slice(0, rowspan - 1).append(td.clone());
 	});
-
+	
+	$('.tablecell20 img').attr('alt', '').attr('title', '');
+	
 });
