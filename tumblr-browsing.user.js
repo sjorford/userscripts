@@ -20,15 +20,14 @@ $(function() {
 	var body = $('body');
 
 	body.on('keypress', event => {
-		var topPost = $('.post_container').filter(':onScreen').first();
-		//console.log(topPost);
+		var topPost = $('.post_container').filter(':onScreen').eq(1);
 		if (event.originalEvent.key === 'ArrowDown') {
 			console.log(topPost.next('.post_container'));
-			body.scrollTo(topPost.nextAll('.post_container').first(), 0);
+			body.scrollTo(topPost.nextAll('.post_container').first(), 0, {offset: -60});
 			return false;
 		} else if (event.originalEvent.key === 'ArrowUp') {
 			console.log(topPost.prev('.post_container'));
-			body.scrollTo(topPost.prevAll('.post_container').first(), 0);
+			body.scrollTo(topPost.prevAll('.post_container').first(), 0, {offset: -60});
 			return false;
 		}
 	});
