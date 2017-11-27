@@ -111,7 +111,8 @@ $(`<style>
 	
 	function collapseSection(section, heading, expand) {
 		
-		var sectionWrapper = $('<div class="sjo-collapsiblesection"></div>');
+		var sectionWrapper = $('<div class="sjo-collapsiblesection"></div>').insertBefore(section);
+		sectionWrapper.append(section); // avoiding wrapAll because it creates a new wrapper element
 		
 		var buttonWrapper = $('<span class="sjo-collapsiblesection-buttons"></span>').appendTo(heading);
 		var expandButton = $('<a>[Expand]</a>').appendTo(buttonWrapper);
@@ -124,10 +125,8 @@ $(`<style>
 			sectionWrapper.hide();
 		}
 		
-		section.wrapAll(sectionWrapper); // wrapAll wraps the target in an HTML structure, not an existing element, so do this after making all changes to sectionWrapper
-		
 		var buttons = expandButton.add(collapseButton);
-		var toggleTargets = buttons.add(section);
+		var toggleTargets = buttons.add(sectionWrapper);
 		buttons.click(() => toggleTargets.toggle());
 		
 		return {sectionWrapper: sectionWrapper, buttonWrapper: buttonWrapper, expandButton: expandButton, collapseButton: collapseButton};
