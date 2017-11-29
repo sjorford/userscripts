@@ -2,11 +2,11 @@
 // @name        Demo Club format statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2017-11-15
+// @version     2017-11-27
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
-// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
+// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js?57348753478957
 // ==/UserScript==
 
 $(function() {
@@ -18,9 +18,10 @@ $(function() {
 		.sjo-stats-break {border-top: solid 1px #ddd;}
 		.sjo-number {text-align: center;}
 		.sjo-number-zero {background-color: rgb(255, 230, 153);}
+		.sjo-collapsiblesection-buttons {font-size: small;}
 	</style>`).appendTo('head');
 	
-	var futureTable = $('<table class="sjo-stats sjo-stats-future"></table>');
+	var futureTable = $('<table class="sjo-stats"></table>');
 	var cutoff = moment().add(30, 'days');
 	
 	$('.statistics-elections').each(function(index, element) {
@@ -30,7 +31,7 @@ $(function() {
 			.insertAfter(wrapper.find('h2'));
 		
 		if (wrapper.hasClass('current')) {
-			futureTable.insertAfter(wrapper).before('<h2>Future Elections</h2>');
+			futureTable.insertAfter(wrapper).wrap('<div class="statistics-elections">').before('<h2>Future Elections </h2>');
 		}
 		
 		var lastDate = null;
@@ -100,8 +101,13 @@ $(function() {
 		$('h3, h4', wrapper).filter((index, element) => {
 			var heading = $(element);
 			return heading.next().length == 0 || heading.next('h3, h4').length > 0;
-		}).hide();
+		}).remove();
 		
+	});
+	
+	$('.statistics-elections').each((index, element) => {
+		var wrapper = $(element);
+		Utils.collapseSection(wrapper.find('.sjo-stats'), wrapper.find('h2'), wrapper.hasClass('current'));
 	});
 	
 	$('body').on('click', '.sjo-stats', event => {

@@ -100,3 +100,37 @@ $(`<style>
 	}
 	
 })();
+
+// ================================================
+// Collapse a section
+// ================================================
+
+(function() {
+	
+	Utils.collapseSection = collapseSection;
+	
+	function collapseSection(section, heading, expand) {
+		
+		var sectionWrapper = $('<div class="sjo-collapsiblesection"></div>').insertBefore(section);
+		sectionWrapper.append(section); // avoiding wrapAll because it creates a new wrapper element
+		
+		var buttonWrapper = $('<span class="sjo-collapsiblesection-buttons"></span>').appendTo(heading);
+		var expandButton = $('<a>[Expand]</a>').appendTo(buttonWrapper);
+		var collapseButton = $('<a>[Collapse]</a>').appendTo(buttonWrapper);
+		
+		if (expand) {
+			expandButton.hide();
+		} else {
+			collapseButton.hide();
+			sectionWrapper.hide();
+		}
+		
+		var buttons = expandButton.add(collapseButton);
+		var toggleTargets = buttons.add(sectionWrapper);
+		buttons.click(() => toggleTargets.toggle());
+		
+		return {sectionWrapper: sectionWrapper, buttonWrapper: buttonWrapper, expandButton: expandButton, collapseButton: collapseButton};
+		
+	}
+	
+})();
