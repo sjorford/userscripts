@@ -12,6 +12,7 @@ $(`<style>
 	
 	xxx.has-recap {display: none !important;}
 	
+	[data-trend-name="Ann Coulter"],
 	[data-trend-name="Giles Coren"],
 	[data-trend-name="Katie Hopkins"],
 	[data-trend-name="Peter Hitchens"],
