@@ -32,6 +32,7 @@ $(function() {
 		'Democracy',
 		'Demo Club Plus',
 		'Late Night',
+		'Local councils',
 		'Random',
 		'US Politics',
 	];
