@@ -33,22 +33,21 @@ $(function() {
 	
 	function addListsModule() {
 		
-		var listsModule = $('#sjo-lists-module');
-		if (listsModule.length == 0) {
-			
-			listsModule = $(`<div class="module" id="sjo-lists-module"><div class="flex-module">
+		var target = $('.dashboard .module').first();
+		if (target.length == 0) {
+			setTimeout(addListsModule, 1000);
+			return;
+		}
+		
+		$(`<div class="module" id="sjo-lists-module"><div class="flex-module">
 				<h3>Lists <small class="view-all">· <a href="/sjorford/lists" data-nav="more_lists" class="js-nav">View all</a></small></h3>
 				<a class="sjo-list-link" href="/sjorford/lists/birding">Birding</a>
 				<a class="sjo-list-link" href="/sjorford/lists/democracy">Democracy</a>
 				<a class="sjo-list-link" href="/sjorford/lists/demo-club-plus">Demo Club Plus</a>
 				<a class="sjo-list-link" href="/sjorford/lists/random">Random</a>
 				<a class="sjo-list-link" href="/sjorford/lists/us-politics">US Politics</a>
-			</div></div>`);
-			$('.dashboard .module').first().after(listsModule);
-			
-		}
+			</div></div>`).insertAfter(target);
 		
-		setTimeout(addListsModule, 1000);
 	}
 	
 });
