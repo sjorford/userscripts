@@ -29,6 +29,15 @@ $(`<style>
 
 $(function() {
 	
+	var lists = [
+		'Birding',
+		'Democracy',
+		'Demo Club Plus',
+		'Late Night',
+		'Random',
+		'US Politics',
+	];
+	
 	addListsModule();
 	
 	function addListsModule() {
@@ -39,14 +48,9 @@ $(function() {
 			return;
 		}
 		
-		$(`<div class="module" id="sjo-lists-module"><div class="flex-module">
-				<h3>Lists <small class="view-all">· <a href="/sjorford/lists" data-nav="more_lists" class="js-nav">View all</a></small></h3>
-				<a class="sjo-list-link" href="/sjorford/lists/birding">Birding</a>
-				<a class="sjo-list-link" href="/sjorford/lists/democracy">Democracy</a>
-				<a class="sjo-list-link" href="/sjorford/lists/demo-club-plus">Demo Club Plus</a>
-				<a class="sjo-list-link" href="/sjorford/lists/random">Random</a>
-				<a class="sjo-list-link" href="/sjorford/lists/us-politics">US Politics</a>
-			</div></div>`).insertAfter(target);
+		var module = $('<div class="flex-module"></div>').insertAfter(target);
+		$.each(lists, (index, value) => module.append(`<a class="sjo-list-link" href="/sjorford/lists/${value.toLowerCase().replace(/ /g, '-')}">${value}</a>`));
+		module.insertAfter(target).wrap('<div class="module"></div>');
 		
 	}
 	
