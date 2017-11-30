@@ -47,7 +47,7 @@ $(function() {
 			return;
 		}
 		
-		var module = $('<div class="flex-module"></div>').insertAfter(target);
+		var module = $('<div class="flex-module"></div>').insertAfter(target).append('<h3>Lists <small class="view-all">· <a href="/sjorford/lists" data-nav="more_lists" class="js-nav">View all</a></small></h3>');
 		$.each(lists, (index, value) => module.append(`<a class="sjo-list-link" href="/sjorford/lists/${value.toLowerCase().replace(/ /g, '-')}">${value}</a>`));
 		module.insertAfter(target).wrap('<div class="module"></div>');
 		
