@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2017-09-03
+// @version        2017-12-07
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -17,14 +17,22 @@ $(function() {
 		console.log('reflist', reflist);
 		if ($('li', reflist).length > 20) {
 			$(reflist).hide();
-			var className = `sjo-reflist-button-${index}`;
-			$(`<a class="${className}">[Expand]</a>`).insertBefore(reflist).click(toggleReflist);
-			$(`<a class="${className}">[Collapse]</a>`).insertBefore(reflist).click(toggleReflist).hide();
-			function toggleReflist() {
-				$(reflist).toggle();
-				$(`.${className}`).toggle();
-			}
+			var wrapper = $('<span class="sjo-reflist-wrapper"></span>').insertBefore(reflist);
+			$(`<a class="sjo-reflist-button sjo-reflist-button-expand sjo-reflist-button-${index}">[Expand]</a>`).appendTo(wrapper);
+			$(`<a class="sjo-reflist-button sjo-reflist-button-collapse sjo-reflist-button-${index}">[Collapse]</a>`).appendTo(wrapper).hide();
 		}
-	})
+	});
+	
+	$('.sjo-reflist-button').click(event => {
+		var wrapper = $(event.target).closest('.sjo-reflist-wrapper');
+		wrapper.find('.sjo-reflist-button').toggle();
+		wrapper.next('.reflist').toggle();
+	});
+	
+	$('.reference a').click(() => {
+		$('.reflist').show();
+		$('.sjo-reflist-button-expand').hide();
+		$('.sjo-reflist-button-collapse').show();
+	});
 	
 });
