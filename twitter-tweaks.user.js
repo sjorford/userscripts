@@ -3,7 +3,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2017-11-30
+// @version     2017-12-08
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -29,7 +29,7 @@ $(function() {
 	
 	var lists = [
 		'Birding',
-		'Democracy',
+		'Democracy Club',
 		'Demo Club Plus',
 		'Late Night',
 		'Local councils',
