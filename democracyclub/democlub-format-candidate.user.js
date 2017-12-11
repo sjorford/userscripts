@@ -4,6 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @version     2017-12-11
 // @grant       none
+// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
 $(function() {
@@ -95,7 +96,7 @@ $(function() {
 					dt.addClass('sjo-list-dt');
 					dd.addClass('sjo-list-dd');
 					if (dtText == 'Source') {
-						dd.html(formatLinks(dd.html()));
+						dd.html(Utils.formatLinks(dd.html()));
 					}
 					
 					// Hide reversion button to prevent accidental clicking
