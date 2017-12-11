@@ -134,3 +134,19 @@ $(`<style>
 	}
 	
 })();
+
+// ================================================
+// Create links from raw URLs
+// ================================================
+
+(function() {
+	
+	Utils.formatLinks = formatLinks;
+	
+	function formatLinks(html, maxLength) {
+		return html.replace(/https?:\/\/[^\s]+/g, function(match) {
+			return '<a href="' + match + '">' + (maxLength && match.length > maxLength ? (match.substr(0, maxLength) + '...') : match) + '</a>';
+		});
+	}
+	
+})();

@@ -573,13 +573,6 @@ function formatSearchResults() {
 // General functions
 // ================================================================
 
-// Convert a raw URL to a formatted link
-function formatLinks(html, maxLength) {
-	return html.replace(/https?:\/\/[^\s]+/g, function(match) {
-		return '<a href="' + match + '">' + (maxLength && match.length > maxLength ? (match.substr(0, maxLength) + '...') : match) + '</a>';
-	});
-}
-
 function getTableHeadings(element) {
 	var headings = {};
 	$(element).filter('table').eq(0).find('th').first().closest('tr').find('th').each(function(index, element) {
