@@ -278,7 +278,7 @@ $(function() {
 		
 		// Parse and flatten version JSON
 		var version = JSON.parse(element.innerText);
-		version = flattenObject(version);
+		//version = flattenObject(version);
 		
 		// Add version header
 		var div = $(element).closest('.version');
@@ -412,39 +412,6 @@ $(function() {
 			
 			
 		}
-	}
-	
-	// TODO: empty arays and objects are nullish
-	function isNullish(value) {return !value || (Array.isArray(value) && value.length == 0);}
-	
-	// http://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
-	function flattenObject(data) {
-
-		var result = {};
-
-		function recurse (cur, prop) {
-
-			if (Object(cur) !== cur) {
-				result[prop] = cur;
-			} else if (Array.isArray(cur)) {
-				for (var i = 0, l = cur.length; i < l; i++) {
-					recurse(cur[i], prop + "[" + i + "]");
-				}
-				if (l == 0) result[prop] = [];
-			} else {
-				var isEmpty = true;
-				for (var p in cur) {
-					isEmpty = false;
-					recurse(cur[p], prop ? prop + '/' + p : p);
-				}
-				if (isEmpty && prop) result[prop] = {};
-			}
-
-		}
-
-		recurse(data, '');
-		return result;
-
 	}
 	
 });
