@@ -389,25 +389,4 @@ $(function() {
 		button.addClass('sjo-tree-current');
 	});
 	
-	// TODO: apply widths using colgroups
-	function addChangeRow(table, fieldName, dataFrom, dataTo) {
-		if ((dataFrom && dataFrom.length > 0) || (dataTo && dataTo.length > 0)) {
-			var row = $('<tr></tr>').addHeader(fieldName.replace(/\//g, ' \u203A ')).appendTo(table);
-			
-			if (dataFrom && dataFrom.length > 0) {
-				row.addCell('-', 'sjo-version-delete sjo-version-op').addCell(dataFrom, 'sjo-version-delete');
-			} else {
-				row.addCell('', 'sjo-version-op').addCell('');
-			}
-			
-			if (dataTo && dataTo.length > 0) {
-				row.addCell('-', 'sjo-version-add sjo-version-op').addCell(dataTo, 'sjo-version-add');
-			} else {
-				row.addCell('', 'sjo-version-op').addCell('');
-			}
-			
-			
-		}
-	}
-	
 });
