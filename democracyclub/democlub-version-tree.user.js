@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Demo Club format post
+// @name        Demo Club version tree
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/election/*/post/*
-// @version     2017-11-20
+// @version     2017-12-11
 // @grant       none
 // ==/UserScript==
 
