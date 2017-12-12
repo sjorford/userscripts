@@ -28,6 +28,8 @@ $(function() {
 		
 	</style>`).appendTo('head');
 	
+	var Unicode = {COOKIE: '\u{1F36A}'};
+	
 	var labelMappings = {
 		'Statement to voters':							'Statement',
 		'Twitter username (e.g. democlub)': 			'Twitter',
@@ -37,8 +39,9 @@ $(function() {
 		'Wikipedia URL': 								'Wikipedia',
 		'LinkedIn URL': 								'LinkedIn',
 		"The party's candidate page for this person": 	'Party page',
-		"Favourite biscuit \u{1F36A}": 					'Biscuit \u{1F36A}',
+		"Favourite biscuit ${Unicode.COOKIE}": 			'Biscuit ${Unicode.COOKIE}',
 	};
+	
 	
 	$('dl').each(function(index, listElement) {
 		
