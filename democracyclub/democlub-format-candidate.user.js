@@ -4,6 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @version     2017-12-12a
 // @grant       none
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
@@ -11,6 +12,7 @@ $(function() {
 	
 	$(`<style>
 		
+		.sjo-heading-parenthetical {font-weight: normal; font-size: small;}
 		
 		.sjo-version {border: none !important;}
 		.sjo-version tr {background: transparent !important; border-top: 1px solid white; vertical-align: top;}
@@ -42,77 +44,78 @@ $(function() {
 		"Favourite biscuit ${Unicode.COOKIE}": 			'Biscuit ${Unicode.COOKIE}',
 	};
 	
-	
-	$('dl').each(function(index, listElement) {
+	// Candidate details
+	$('.person__details dt').each((index, element) => {
 		
-		var dl = $(listElement);
-		var headingText = dl.prev('h2').text();
-		var section = dl.parent('div');
+		var dt = $(element);
+		var dd = dt.next('dd');
 		
-		$('dt', listElement).each(function(index, termElement) {
+		var link = $('.constituency-value-standing-link a', dd);
+		if (link.length > 0) {
 			
-			var dt = $(termElement);
-			var dd = dt.next('dd');
-			var dtText = dt.text();
+			// Format election headers
+			var date = link.attr('href').match(/(\d{4}(-\d{2}-\d{2})?)\/post\//)[1];
+			var council = Utils.shortOrgName(dt.html().trim().replace(/^Contest(ed|ing) the (\d{4} )?| local election$/g, ''));
+			dt.html(council + ' <span class="sjo-heading-parenthetical">(' + (date.length > 4 ? moment(date).format("D MMM YYYY") : date) + ')</span>');
 			
-			// Candidate details
-			if (section.hasClass('person__details')) {
-				
-				// Format fields
-				if (headingText != 'Candidacies:') {
-					dt.addClass('sjo-list-dt');
-					dd.addClass('sjo-list-dd');
-					dd.nextUntil('dt', 'dd').addClass('sjo-list-dd');
-					if (dd.text().trim() == 'Unknown') dd.text('');
-				}
-				
-				// Trim labels
-				if (labelMappings[dt.text()]) dt.text(labelMappings[dt.text()]);
-				
-				// Remove duplicate votes
-				var result = {'votes': null, 'elected': null};
-				$('.vote-count', dd).each((index, element) => {
-					var votesSpan = $(element);
-					votesSpan.next('br').hide();
-					var electedSpan = votesSpan.prev('.candidate-result-confirmed');
-					if (votesSpan.text() == result.votes && electedSpan.text() == result.elected) {
-						votesSpan.hide();
-						electedSpan.hide().prev('br').hide();
-					} else {
-						result.votes = votesSpan.text();
-						result.elected = electedSpan.text();
-					}
-				});
-				
-			}
-			
-			// Previous versions
-			if (section.hasClass('version')) {
-				if (dtText.indexOf('Changes made') === 0) {
-					
-					// Format diff
-					formatVersionChanges(dd);
-					//dd.hide();
-					
+			// Remove duplicate votes
+			var result = {'votes': null, 'elected': null};
+			$('.vote-count', dd).each((index, element) => {
+				var votesSpan = $(element);
+				votesSpan.next('br').hide();
+				var electedSpan = votesSpan.prev('.candidate-result-confirmed');
+				if (votesSpan.text() == result.votes && electedSpan.text() == result.elected) {
+					votesSpan.hide();
+					electedSpan.hide().prev('br').hide();
 				} else {
-					
-					// Format version header
-					dt.addClass('sjo-list-dt');
-					dd.addClass('sjo-list-dd');
-					if (dtText == 'Source') {
-						dd.html(Utils.formatLinks(dd.html()));
-					}
-					
-					// Hide reversion button to prevent accidental clicking
-					if (dtText == 'Revert to this') {
-						dt.hide();
-						dd.hide();
-					}
-					
+					result.votes = votesSpan.text();
+					result.elected = electedSpan.text();
 				}
+			});
+			
+		} else {
+			
+			// Format fields
+			dt.addClass('sjo-list-dt');
+			dd.addClass('sjo-list-dd');
+			dd.nextUntil('dt', 'dd').addClass('sjo-list-dd');
+			if (dd.text().trim() == 'Unknown') dd.text('');
+			
+			// Trim labels
+			if (labelMappings[dt.text()]) dt.text(labelMappings[dt.text()]);
+			
+		}
+		
+	});
+	
+	// Previous versions
+	$('.person__versions dt').each((index, element) => {
+		
+		var dt = $(element);
+		var dd = dt.next('dd');
+		var label = dt.text();
+		
+		if (label.indexOf('Changes made') === 0) {
+			
+			// Format diff
+			formatVersionChanges(dd);
+			
+		} else {
+			
+			// Format version header
+			dt.addClass('sjo-list-dt');
+			dd.addClass('sjo-list-dd');
+			if (label == 'Source') {
+				dd.html(Utils.formatLinks(dd.html()));
 			}
 			
-		});
+			// Hide reversion button to prevent accidental clicking
+			if (label == 'Revert to this') {
+				dt.hide();
+				dd.hide();
+			}
+			
+		}
 		
 	});
 	
@@ -237,9 +240,11 @@ $(function() {
 		'Candidacy:':				'sjo-section-candidacies',
 		'Links and social media:':	'sjo-section-links',
 		'Demographics:':			'sjo-section-demographics',
+		'Additional information:':	'sjo-section-additional',
 		'All versions':				'sjo-section-versions',
 	};
 	
+	// Apply an ID to all headings
 	$('h2').each(function(index, element) {
 		var heading = $(element);
 		if (!heading.attr('id')) {
