@@ -2,7 +2,7 @@
 // @name        Demo Club format candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2017-12-11
+// @version     2017-12-12
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
