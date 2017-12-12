@@ -241,7 +241,7 @@ $(function() {
 		}
 		
 	}
-
+	
 	var headingMappings = {
 		'Personal details:':		'sjo-section-personal',
 		'Candidacy:':				'sjo-section-candidacies',
@@ -261,10 +261,12 @@ $(function() {
 	});
 	
 	// Remove blah
-	//$('.person__actions__edit h2').filter((i, e) => e.innerHTML.trim() == 'Improve this data!').hide();
-	$('.person__actions__edit p').filter((i, e) => e.innerHTML.trim() == 'Our database is built by people like you.').hide();
-	$('.person__actions__edit p').filter((i, e) => e.innerHTML.trim() == 'Please do add extra details about this candidate – it only takes a moment.').hide();
-	$('.person__actions__data p').filter((i, e) => e.innerHTML.trim() == 'Open data JSON API:').hide();
-	$('.person__actions__data p').filter((i, e) => e.innerHTML.trim() == 'More details about getting <a href="/help/api">the data</a> and <a href="/help/about">its licence</a>.').hide();
+	var blah = [
+		'Our database is built by people like you.',
+		'Please do add extra details about this candidate – it only takes a moment.',
+		'Open data JSON API:',
+		'More details about getting <a href="/help/api">the data</a> and <a href="/help/about">its licence</a>.',
+	];
+	$('.person__actions__action p').filter((i, e) => blah.indexOf(e.innerHTML) >= 0).hide();
 	
 });
