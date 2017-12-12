@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-12-11
+// @version     2017-12-12
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -316,7 +316,7 @@ function formatEditForm() {
 		
 		// Trim party selection
 		if (input.is('select.party-select')) {
-			formatPartySelects(input);
+			Utils.formatPartySelects(input);
 		}
 		
 	}
