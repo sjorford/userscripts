@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2017-12-22
+// @version        2017-12-22a
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        http://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -37,7 +37,7 @@ $(function() {
 		'SL':		'SL',
 		'UAE':		'UAE',
 		'WI':		'WI',
-		'World': 	'',
+		'WORLD': 	'',
 		'ZIM':		'Zim',
 	};
 	
