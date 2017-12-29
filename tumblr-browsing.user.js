@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2017-11-21
+// @version        2017-12-29
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @grant          none
@@ -9,27 +9,31 @@
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.js
 // ==/UserScript==
 
-// onScreen jQuery plugin v0.2.1
-// (c) 2011-2013 Ben Pickles
-// http://benpickles.github.io/onScreen
-// Released under MIT license.
-(function(a){a.expr[":"].onScreen=function(b){var c=a(window),d=c.scrollTop(),e=c.height(),f=d+e,g=a(b),h=g.offset().top,i=g.height(),j=h+i;return h>=d&&h<f||j>d&&j<=f||i>e&&h<=d&&j>=f;};})(jQuery);
-
 $(function() {
-
+	
+	var offset = 60;
+	
 	var body = $('body');
-
 	body.on('keypress', event => {
-		var topPost = $('.post_container').filter(':onScreen').eq(1);
+		
+		var line = $(window).scrollTop() + offset;
+		var posts = $('.post_container');
+		
 		if (event.originalEvent.key === 'ArrowDown') {
-			console.log(topPost.next('.post_container'));
-			body.scrollTo(topPost.nextAll('.post_container').first(), 0, {offset: -60});
+			
+			var nextPost = posts.filter((index, element) => $(element).offset().top > line + 1).first();
+			console.log(nextPost);
+			body.scrollTo(nextPost, 0, {offset: -offset});
 			return false;
+			
 		} else if (event.originalEvent.key === 'ArrowUp') {
-			console.log(topPost.prev('.post_container'));
-			body.scrollTo(topPost.prevAll('.post_container').first(), 0, {offset: -60});
+			
+			var prevPost = posts.filter((index, element) => $(element).offset().top < line - 1).last();
+			body.scrollTo(prevPost, 0, {offset: -offset});
 			return false;
+			
 		}
+		
 	});
 
 });
