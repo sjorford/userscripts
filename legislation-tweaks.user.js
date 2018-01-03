@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018-01-03
+// @version        2018-01-03a
 // @match          http://www.legislation.gov.uk/all?*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
 // @grant          none
@@ -21,7 +21,7 @@ $(function() {
 		.add('.LegTD strong, .LegTH strong').closest('tr');
 	rows.each((index, element) => {
 		var row = $(element);
-		var district = row.text().trim().replace(/^(In the )?(borough|district|city) of |^In | (District|City)$/ig, '');
+		var district = row.text().trim().replace(/^(In the )?(city|borough|district) of |^In | (City|Borough|District):?$/ig, '');
 		var followingRows = row.parent().is('thead') ? 
 			row.closest('table').find('tbody tr').first().nextUntil(rows, 'tr').andSelf() :
 			row.nextUntil(rows, 'tr');										
