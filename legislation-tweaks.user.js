@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018-01-03b
+// @version        2018-01-03c
 // @match          http://www.legislation.gov.uk/all?*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
 // @match          file:///C:/Users/Stuart/Google%20Drive/Personal/Politics/ECOs/*
@@ -14,6 +14,39 @@ $(function() {
 	// Highlight ECOs
 	$('<style>.sjo-electoral td {background-color: #ffc35bb3 !important;}</style>').appendTo('head');
 	$('#content tr:contains("Elect")').addClass('sjo-electoral');
+	
+	// Format "tables"
+	$('table .LegText').closest('tr').each((rowIndex, rowElement) => {
+		
+		var row = $(rowElement);
+		var lastRow = row;
+		var cells = row.find('.LegText').closest('td');
+		cells.each((cellIndex, cellElement) => {
+			
+			$(cellElement).find('p').each((paraIndex, paraElement) => {
+				if (paraElement == null) return;
+				
+				var para = $(paraElement);
+				var newCell = $('<td class="LegTD"></td>').html(para.html());
+				
+				if (cellIndex == 0) {
+					lastRow = $('<tr class="sjo-row"></tr>').insertAfter(lastRow);
+					if (para.find('strong').length > 0) {
+						newCell.attr('colspan', cells.length - cellIndex);
+						lastRow.removeClass('sjo-row');
+					}
+					lastRow.append(newCell);
+				} else {
+					row.nextAll('.sjo-row').eq(paraIndex).append(newCell);
+				}
+				
+			});
+			
+		});
+		
+		row.remove();
+		
+	});
 	
 	// Repeat district names on each row of county ECO
 	var rows = $('.LegTHplain')
