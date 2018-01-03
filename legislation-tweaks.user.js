@@ -2,9 +2,10 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018-01-03a
+// @version        2018-01-03b
 // @match          http://www.legislation.gov.uk/all?*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
+// @match          file:///C:/Users/Stuart/Google%20Drive/Personal/Politics/ECOs/*
 // @grant          none
 // ==/UserScript==
 
