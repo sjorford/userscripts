@@ -2,7 +2,7 @@
 // @name        Proboards tweaks
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
-// @version     2018-01-05
+// @version     2018-01-06
 // @grant       none
 // ==/UserScript==
 
@@ -16,6 +16,7 @@ $(function() {
 		div#support-message
 			{display: none !important;}
 		tr.bookmarked.new {background-color: #ffd700b3 !important;}
+		tr.new {background-color: #ffd70066 !important}
 	</style>`).appendTo('head');
 	
 });
