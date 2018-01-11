@@ -2,15 +2,13 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2017-11-15
+// @version     2018-01-11
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
-
-console.log(1);
 
 $(`<style>
 	.sjo-election-sublist {font-size: 10pt;}
@@ -91,6 +89,7 @@ function displayDatePicker() {
 	
 	var wrapper = $('<div class="sjo-date-picker"></div>').insertAfter('.form-date').wrap('<div></div>');
 	wrapper.datepicker({
+		defaultDate: moment(today).add(21, 'days').format('YYYY-MM-DD'),
 		dateFormat: 'yy-mm-dd',
 		showOtherMonths: true,
 		selectOtherMonths: true,
@@ -100,7 +99,6 @@ function displayDatePicker() {
 		},
 		onSelect: dateText => {
 			var date = moment(dateText);
-			console.log(date);
 			$('.form-group-year input').val(date.format('YYYY'));
 			$('.form-group-month input').val(date.format('M'));
 			$('.form-group-day input').val(date.format('D'));
