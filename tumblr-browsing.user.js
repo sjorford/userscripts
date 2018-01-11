@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018-01-07
+// @version        2018-01-11
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -14,6 +14,19 @@
 
 $(function() {
 	
+	if (location.href == 'https://www.tumblr.com/dashboard') {
+		$(`<style>
+			#posts.posts > .post_container {float: left; margin-right: 20px;}
+			#posts > li:nth-of-type(4n) {clear: both;}
+			.post_avatar.post-avatar--sticky {visibility: hidden;}
+			#right_column {display: none;}
+			.l-container.l-container--two-column, 
+			.l-container.l-container--two-column-dashboard {width: auto;}
+			.l-container.l-container--two-column-dashboard .left_column, 
+			.l-container.l-container--two-column .left_column {width: auto;}
+		</style>`).appendTo('head');
+	}
+	
 	var offset = 60;
 	
 	var body = $('body');
@@ -21,7 +34,7 @@ $(function() {
 		
 		// TODO: need to use window.top but not allowed by CORS?
 		var line = $(window).scrollTop() + offset;
-		var posts = $('li.post_container, article');
+		var posts = $('li.post_container, li.post, article, div[id="entry"], div[id="content"]');
 		//console.log(event, posts);
 		
 		if (event.originalEvent.key === 'ArrowDown') {
