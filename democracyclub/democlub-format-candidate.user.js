@@ -2,7 +2,7 @@
 // @name        Demo Club format candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018-01-12
+// @version     2018-01-12a
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
@@ -41,8 +41,8 @@ $(function() {
 		'Wikipedia URL': 								'Wikipedia',
 		'LinkedIn URL': 								'LinkedIn',
 		"The party's candidate page for this person": 	'Party page',
-		"Favourite biscuit ${Unicode.COOKIE}": 			'Biscuit ${Unicode.COOKIE}',
 	};
+	labelMappings[`Favourite biscuit ${Unicode.COOKIE}`] = `Biscuit ${Unicode.COOKIE}`;
 	
 	// Candidate details
 	$('.person__details dt').each((index, element) => {
