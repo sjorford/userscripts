@@ -2,7 +2,7 @@
 // @name        Demo Club format candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2017-12-12b
+// @version     2018-01-12
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
@@ -14,15 +14,15 @@ $(function() {
 		
 		.sjo-heading-parenthetical {font-weight: normal; font-size: small;}
 		
-		.sjo-version {border: none !important;}
+		.sjo-version {border: none !important; width: 100%;}
 		.sjo-version tr {background: transparent !important; border-top: 1px solid white; vertical-align: top;}
 		.sjo-version tr.sjo-version-row-biography {border: none; min-height: 1em; height: 1em;}
-		.sjo-version th {width: 32%; padding: 0.25em 0.5em 0.25em 0; font-weight: normal;}
-		.sjo-version td {width: 32%; padding: 0.25em 0.5em;}
-		.sjo-version td.sjo-version-op {width: 2%;}
+		.sjo-version th {width: 300px; max-width: 300px; padding: 0.25em 0.5em 0.25em 0; font-weight: normal;}
+		.sjo-version td {width: 300px; max-width: 300px; padding: 0.25em 0.5em;}
+		.sjo-version td.sjo-version-op {width: 20px;}
 		.sjo-version-delete {background-color: #fdd;}
 		.sjo-version-add {background-color: #dfd;}
-		.sjo-version-add.sjo-version-op {border-left: 1px solid white;}
+		.sjo-version-op {border-left: 1px solid white;}
 		.sjo-version-delete del {text-decoration: none; background-color: gold;}
 		.sjo-version-delete ins {display: none;} 
 		.sjo-version-add ins {text-decoration: none; background-color: gold;}
