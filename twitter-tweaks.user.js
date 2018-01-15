@@ -3,7 +3,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018-01-12
+// @version     2018-01-15
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -32,6 +32,7 @@ $(function() {
 	
 	var lists = [
 		'Birding',
+		'Bitcoin',
 		'Democracy Club',
 		'Demo Club Plus',
 		'Late Night',
