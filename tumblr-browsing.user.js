@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018-01-11
+// @version        2018-01-13
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -14,7 +14,7 @@
 
 $(function() {
 	
-	if (location.href == 'https://www.tumblr.com/dashboard') {
+	if (location.href.split('#')[0] == 'https://www.tumblr.com/dashboard') {
 		$(`<style>
 			#posts.posts > .post_container {float: left; margin-right: 20px;}
 			#posts > li:nth-of-type(4n) {clear: both;}
