@@ -2,7 +2,7 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018-01-14
+// @version     2018-01-16
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -13,7 +13,10 @@
 $(`<style>
 	.sjo-election-sublist {font-size: 10pt;}
 	.sjo-date-picker {clear: both; margin-bottom: 1em;}
-	.sjo-date-normal a {background: #7eeab5 !important;}
+	.sjo-date-normal a {background-color: #7eeab5 !important;}
+	.sjo-date-normal a.ui-state-active {background-color: #007fff !important;}
+
+
 	.block-label {background: inherit; border: none; margin: 0; padding: 0 0 0 30px; float: none;}
 	.block-label input {top: -2px; left: 0;}
 	.sjo-columns {column-width: 15em;}
