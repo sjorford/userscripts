@@ -3,9 +3,10 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018-01-15
+// @version     2018-01-16
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
 // ==/UserScript==
 
 $(`<style>
@@ -21,8 +22,7 @@ $(`<style>
 	[data-trend-name="Toby Young"],
 	[data-trend-name="Tommy Robinson"] {display: none !important;}
 	
-	.sjo-lists-header {display: block; color: #657786;}
-	.sjo-list-link {display: block; padding-top: 0.25em; font-size: 16px; font-weight: bold; color: #14171a;}
+	.sjo-list-link {display: block; margin-bottom: 0.25em; font-size: 14px; font-weight: bold; color: #14171a;}
 	.sjo-list-link:hover {color: #0084B4;}
 	.component[data-component-context="more_lists"] {display: none;}
 	
@@ -30,30 +30,73 @@ $(`<style>
 
 $(function() {
 	
-	var lists = [
-		'Birding',
-		'Bitcoin',
-		'Democracy Club',
-		'Demo Club Plus',
-		'Late Night',
-		'Local councils',
-		'Random',
-		'US Politics',
-	];
+	var dateFormatString = 'YYYY-MM-DD HH:mm:ss';
+	var target;
+	var lists;
 	
-	addListsModule();
+	// TODO: keep this running so that it reloads when internal links rewrite the page?
+	checkForDashboard();
+	
+	function checkForDashboard() {
+		
+		target = $('.dashboard .module');
+		if (target.length == 0) {
+			setTimeout(checkForDashboard, 1000);
+		} else {
+			getListOfLists();
+		}
+		
+	}
+	
+	function getListOfLists() {
+		
+		lists = localStorage.getItem('sjo-twitter-lists');
+		var lastChecked = localStorage.getItem('sjo-twitter-lists-update');
+		if (!lists || !lastChecked || moment(lastChecked, dateFormatString).isBefore(moment().subtract(1, 'days'))) {
+			refreshLists();
+		} else {
+			lists = JSON.parse(lists);
+			addListsModule();
+		}
+		
+	}
+	
+	function refreshLists() {
+		
+		console.log('refreshing list of lists');
+		$.get('https://twitter.com/sjorford/lists/', data => {
+			lists = [];
+			var regex = /<a class="[^"]*ProfileListItem-name[^"]*"[^<]*href="\/[^\/]+\/lists\/[^"]+">([^"]+)<\/a>/g;
+			var matches;
+			while (matches = regex.exec(data)) {
+				lists.push(matches[1]);
+			}
+			console.log('lists found:' + lists.join(', '));
+			localStorage.setItem('sjo-twitter-lists', JSON.stringify(lists));
+			localStorage.setItem('sjo-twitter-lists-update', moment().format(dateFormatString));
+			addListsModule();
+		});
+		
+	}
 	
 	function addListsModule() {
 		
-		var target = $('.dashboard .module').first();
-		if (target.length == 0) {
-			setTimeout(addListsModule, 1000);
-			return;
-		}
+		var module = $('<div class="module"></div>').insertAfter(target.first());
+		var flexModule = $('<div class="flex-module"></div>').appendTo(module);
+		var flexModuleHeader = $('<div class="flex-module-header"></div>').appendTo(flexModule)
+			.append('<h3>Lists</h3>')
+			.append('<small> · <button type="button" class="btn-link sjo-lists-refresh">Refresh</button></small>')
+			.append('<small> · <a href="/sjorford/lists/">View all</a></small>');
+		var flexModuleInner = $('<div class="flex-module-inner"></div>').appendTo(flexModule);
 		
-		var module = $('<div class="flex-module"></div>').insertAfter(target).append('<h3>Lists <small class="view-all">· <a href="/sjorford/lists" data-nav="more_lists" class="js-nav">View all</a></small></h3>');
-		$.each(lists, (index, value) => module.append(`<a class="sjo-list-link" href="/sjorford/lists/${value.toLowerCase().replace(/ /g, '-')}">${value}</a>`));
-		module.insertAfter(target).wrap('<div class="module"></div>');
+		$.each(lists.sort((a, b) => a > b), (index, value) => {
+			flexModuleInner.append(`<a class="sjo-list-link" href="/sjorford/lists/${value.toLowerCase().replace(/ /g, '-')}">${value}</a>`);
+		});
+		
+		$('#sjo-lists-refresh').click(() => {
+			refreshLists();
+			return false;
+		});
 		
 	}
 	
