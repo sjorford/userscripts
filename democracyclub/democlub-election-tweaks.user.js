@@ -2,7 +2,7 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018-01-16
+// @version     2018-01-18
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -93,7 +93,7 @@ function displayDatePicker() {
 	
 	var wrapper = $('<div class="sjo-date-picker"></div>').insertAfter('.form-date').wrap('<div></div>');
 	wrapper.datepicker({
-		defaultDate: moment(today).subtract(today.day(), 'days').add(25, 'days').format('YYYY-MM-DD'),
+		defaultDate: moment(today).subtract(today.day(), 'days').add(39, 'days').format('YYYY-MM-DD'),
 		dateFormat: 'yy-mm-dd',
 		showOtherMonths: true,
 		selectOtherMonths: true,
