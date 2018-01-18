@@ -2,7 +2,7 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018-01-18
+// @version     2018.01.18.a
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -15,7 +15,6 @@ $(`<style>
 	.sjo-date-picker {clear: both; margin-bottom: 1em;}
 	.sjo-date-normal a {background-color: #7eeab5 !important;}
 	.sjo-date-normal a.ui-state-active {background-color: #007fff !important;}
-
 
 	.block-label {background: inherit; border: none; margin: 0; padding: 0 0 0 30px; float: none;}
 	.block-label input {top: -2px; left: 0;}
@@ -90,10 +89,11 @@ function displayDatePicker() {
 	$('<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">').appendTo('head');
 	
 	var today = moment();
+	var defaultDate = moment(today).subtract(today.day(), 'days').add(39, 'days');
 	
 	var wrapper = $('<div class="sjo-date-picker"></div>').insertAfter('.form-date').wrap('<div></div>');
 	wrapper.datepicker({
-		defaultDate: moment(today).subtract(today.day(), 'days').add(39, 'days').format('YYYY-MM-DD'),
+		defaultDate: defaultDate.format('YYYY-MM-DD'),
 		dateFormat: 'yy-mm-dd',
 		showOtherMonths: true,
 		selectOtherMonths: true,
@@ -101,13 +101,17 @@ function displayDatePicker() {
 			var _date = moment(date);
 			return [true, _date.day() == 4 && _date.isAfter(today) ? 'sjo-date-normal' : '', ''];
 		},
-		onSelect: dateText => {
-			var date = moment(dateText);
-			$('.form-group-year input').val(date.format('YYYY'));
-			$('.form-group-month input').val(date.format('M'));
-			$('.form-group-day input').val(date.format('D'));
-		},
+		onSelect: datePicked,
 	});
+	
+	datePicked(defaultDate);
+	
+	function datePicked(dateInput) {
+		var date = moment(dateInput);
+		$('.form-group-year input').val(date.format('YYYY'));
+		$('.form-group-month input').val(date.format('M'));
+		$('.form-group-day input').val(date.format('D'));
+	}
 	
 }
 
