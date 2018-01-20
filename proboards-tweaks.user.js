@@ -21,6 +21,8 @@ $(function() {
 		tr.bookmarked.new {background-color: #ffd700b3 !important;}
 		tr.new            {background-color: #ffd70066 !important;}
 		
+		.message br {margin-bottom: 3px;}
+		
 	</style>`).appendTo('head');
 	
 });
