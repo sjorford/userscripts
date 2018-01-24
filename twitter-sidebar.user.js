@@ -2,11 +2,10 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.23
+// @version        2018.01.24
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          none
-// @require        https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @run-at         document-idle
 // ==/UserScript==
 
