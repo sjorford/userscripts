@@ -10,6 +10,13 @@
 // @run-at         document-idle
 // ==/UserScript==
 
+// TODO:
+// buttons to add separators
+// hide edit button while editing in another tab
+//    restore if editable tab is closed
+//    allow sidebar to be unlocked
+//    cancel editing if unlock is detected
+
 $(`<style>
 	
 	.sjo-sidebar-item {display: block; margin-bottom: 0.25em;}
@@ -17,6 +24,7 @@ $(`<style>
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator {display: block; height: 10px;}
 	
+	.sjo-sidebar-locked .sjo-sidebar-edit {display: none;}
 	.sjo-sidebar-editable .sjo-sidebar-edit {display: none;}
 	
 	.sjo-sidebar-delete {display: none; float: right;}
@@ -30,6 +38,7 @@ $(`<style>
 $(function() {
 	
 	var target, timer, sidebarItems, sidebarItemsTemp;
+	var pageID = Math.random();
 	
 	timer = setInterval(checkForDashboard, 1000);
 	window.sjoStopTimer = stopTimer;
@@ -41,11 +50,23 @@ $(function() {
 	function checkForDashboard() {
 		var myModule = $('.sjo-sidebar-module');
 		target = $('.dashboard, .SidebarCommonModules').find('.module');
-		//var fnCheck = $.fn.sortable;
 		if (myModule.length == 0 && target.length > 0) {
 			addSidebar();
+		} else if (myModule.length > 0 && !myModule.hasClass('sjo-editable')) {
+			checkEditStatus();
 		}
-		
+	}
+	
+	function checkEditStatus() {
+		var myModule = $('.sjo-sidebar-module');
+		var editingPageID = localStorage.getItem('sjoSidebarPageID');
+		if (editingPageID && editingPageID != pageId) {
+			console.log(1);
+			myModule.addClass('sjo-locked');
+			console.log(2);
+		} else {
+			myModule.removeClass('sjo-locked');
+		}
 	}
 	
 	function addSidebar() {
@@ -73,10 +94,13 @@ $(function() {
 		
 		// TODO: should this be update instead of stop?
 		// TODO: make this only active while in edit mode
+		// FIXME: this is failing with "this._addClass is not a function" sometimes
+		console.log(3);
 		sortableContainer.sortable({stop: (event, ui) => {
 			sidebarItems = $('.sjo-sidebar li').toArray().map(element => $(element).data('sjoSidebarItem'));
 			saveSidebar();
 		}});
+		console.log(4);
 		
 		var actionsWrapper = $('<div></div>').appendTo(flexModuleInner)
 			.append('<a href="" class="sjo-sidebar-edit">Edit</a>');
@@ -171,9 +195,6 @@ $(function() {
 		}
 		
 	}
-	
-	// TODO:
-	// buttons to add separators
 	
 });
 
