@@ -56,18 +56,6 @@ $(function() {
 		}
 	}
 	
-	function checkEditStatus() {
-		var myModule = $('.sjo-sidebar-module');
-		var editingPageID = localStorage.getItem('sjoSidebarPageID');
-		if (editingPageID && editingPageID != pageId) {
-			console.log(1);
-			myModule.addClass('sjo-locked');
-			console.log(2);
-		} else {
-			myModule.removeClass('sjo-locked');
-		}
-	}
-	
 	function addSidebar() {
 		console.debug('addSidebar');
 		
@@ -93,11 +81,10 @@ $(function() {
 		
 		// TODO: should this be update instead of stop?
 		// TODO: make this only active while in edit mode
-		// FIXME: this is failing with "this._addClass is not a function" sometimes
 		console.log(3);
 		sortableContainer.sortable({stop: (event, ui) => {
 			sidebarItems = $('.sjo-sidebar li').toArray().map(element => $(element).data('sjoSidebarItem'));
-			saveSidebar();
+			localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
 		}});
 		console.log(4);
 		
@@ -111,42 +98,66 @@ $(function() {
 			</div>`).appendTo(actionsWrapper);
 	}
 	
-	// Action handlers
-	$('body').on('click', '.sjo-sidebar-edit', event => {
+	// Check if another page has the sidebar locked
+	function checkEditStatus() {
+		var myModule = $('.sjo-sidebar-module');
+		var editingPageID = localStorage.getItem('sjoSidebarPageID');
+		if (editingPageID && editingPageID != pageId && !myModule.hasClass('sjo-locked')) {
+			if (myModule.hasClass('sjo-editable')) resetSidebar();
+			myModule.addClass('sjo-locked');
+		} else if (myModule.hasClass('sjo-locked')) {
+			myModule.removeClass('sjo-locked');
+		}
+	}
+	
+	// Button event handlers
+	$('body').on('click', '.sjo-sidebar-edit', editSidebar);
+	$('body').on('click', '.sjo-sidebar-done', saveSidebarChanges);
+	$('body').on('click', '.sjo-sidebar-cancel', resetSidebar);
+	$('body').on('click', '.sjo-sidebar-add', addSidebarItem);
+	$('body').on('click', '.sjo-sidebar-delete', deleteSidebarItem);
+	
+	// Switch to edit mode
+	function editSidebar() {
+		if (localStorage.getItem('sjoSidebarPageID')) return;
+		localStorage.setItem('sjoSidebarPageID', pageID);
 		sidebarItemsTemp = sidebarItems.slice(0);
 		$('.sjo-sidebar').addClass('sjo-sidebar-editable');
 		return false;
-	});
+	}
 	
-	$('body').on('click', '.sjo-sidebar-done', event => {
+	// Save changes and switch back to read mode
+	function saveSidebarChanges() {
 		sidebarItems = sidebarItemsTemp;
 		sidebarItemsTemp = null;
-		saveSidebar();
+		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
 		$('.sjo-sidebar ul').empty();
 		$.each(sidebarItems, (index, item) => renderItem(item));
 		$('.sjo-sidebar').removeClass('sjo-sidebar-editable');
 		return false;
-	});
+	}
 	
-	// TODO: only re-render if marked as dirty?
-	$('body').on('click', '.sjo-sidebar-cancel', event => {
+	// Cancel editing and switch back to read mode
+	function resetSidebar() {
 		sidebarItemsTemp = null;
 		$('.sjo-sidebar ul').empty();
 		$.each(sidebarItems, (index, item) => renderItem(item));
 		$('.sjo-sidebar').removeClass('sjo-sidebar-editable');
 		return false;
-	});
+	}
 	
+	// Add current page to sidebar
 	// TODO: add different types of items
-	$('body').on('click', '.sjo-sidebar-add', event => {
+	function addSidebarItem() {
 		var newItem = {type: 'url', href: window.location.href};
 		newItem.display = $('.SearchNavigation-titleText, .js-list-name, .ProfileHeaderCard-nameLink').text().trim() || 'TBA';
 		sidebarItemsTemp.push(newItem);
 		renderItem(newItem);
 		return false;
-	});
+	}
 	
-	$('body').on('click', '.sjo-sidebar-delete', event => {
+	// Delete a sidebar item
+	function deleteSidebarItem(event) {
 		var li = $(event.target).closest('li');
 		var data = li.data('sjoSidebarItem');
 		var index = sidebarItemsTemp.indexOf(data);
@@ -155,12 +166,9 @@ $(function() {
 			sidebarItemsTemp.splice(index, 1);
 		}
 		return false;
-	});
-	
-	function saveSidebar() {
-		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
 	}
 	
+	// Render an item
 	// TODO: hashtags
 	// TODO: properly escape list names etc.
 	function renderItem(item) {
