@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.24
+// @version        2018.01.25
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          none
@@ -15,6 +15,7 @@
 //    restore if editable tab is closed
 //    allow sidebar to be unlocked
 //    cancel editing if unlock is detected
+//    lock page on load
 
 $(`<style>
 	
@@ -23,40 +24,69 @@ $(`<style>
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator {display: block; height: 10px;}
 	
-	.sjo-sidebar-locked .sjo-sidebar-edit {display: none;}
-	.sjo-sidebar-editable .sjo-sidebar-edit {display: none;}
+	.sjo-sidebar-islocked .sjo-sidebar-edit {display: none;}
+	.sjo-sidebar-iseditable .sjo-sidebar-edit {display: none;}
+	
+	.sjo-sidebar-unlock {display: none;}
+	.sjo-sidebar-islocked .sjo-sidebar-unlock {display: inline-block;}
 	
 	.sjo-sidebar-delete {display: none; float: right;}
-	.sjo-sidebar-editable .sjo-sidebar-delete {display: block;}
+	.sjo-sidebar-iseditable .sjo-sidebar-delete {display: block;}
 	
 	.sjo-sidebar-edit-functions {display: none;}
-	.sjo-sidebar-editable .sjo-sidebar-edit-functions {display: block;}
+	.sjo-sidebar-iseditable .sjo-sidebar-edit-functions {display: block;}
 	
 </style>`).appendTo('head');
 
 $(function() {
 	
-	var target, timer, sidebarItems, sidebarItemsTemp;
+	var timer, sidebarItems, sidebarItemsTemp;
 	var pageID = Math.random();
 	
-	timer = setInterval(checkForDashboard, 1000);
-	window.sjoStopTimer = stopTimer;
+	// Poll status once a second
+	checkStatus();
+	timer = setInterval(checkStatus, 1000);
 	
-	function stopTimer() {
-		clearTimeout(timer);
-	}
+	// Allow the timer to be stopped from the console
+	window.sjoStopTimer = function() {clearTimeout(timer);};
 	
-	function checkForDashboard() {
+	function checkStatus() {
+		
+		// Check if sidebar has been added
 		var myModule = $('.sjo-sidebar-module');
-		target = $('.dashboard, .SidebarCommonModules').find('.module');
-		if (myModule.length == 0 && target.length > 0) {
+		if (myModule.length == 0) {
 			addSidebar();
-		} else if (myModule.length > 0 && !myModule.hasClass('sjo-editable')) {
-			checkEditStatus();
+		} else {
+			
+			var editingPageID = localStorage.getItem('sjoSidebarPageID');
+			//console.log(editingPageID);
+			
+			// Check if this page has lost editability
+			if (editingPageID != pageID && myModule.hasClass('sjo-sidebar-iseditable')) {
+				console.log(editingPageID, pageID, 'resetting sidebar');
+				resetSidebar();
+			}
+			
+			// Check if this page needs locking
+			if (editingPageID && editingPageID != pageID && !myModule.hasClass('sjo-sidebar-islocked')) {
+				console.log(editingPageID, typeof editingPageID, pageID, 'locking sidebar');
+				myModule.addClass('sjo-sidebar-islocked');
+			}
+			
+			// Check if this page can be unlocked
+			if (!editingPageID && myModule.hasClass('sjo-sidebar-islocked')) {
+				console.log(editingPageID, pageID, 'unlocking sidebar');
+				myModule.removeClass('sjo-sidebar-islocked');
+			}
+			
 		}
+		
 	}
 	
 	function addSidebar() {
+		
+		var twitterModules = $('.dashboard, .SidebarCommonModules').find('.module');
+		if (twitterModules.length == 0) return;
 		console.debug('addSidebar');
 		
 		// Add jQueryUI styles
@@ -70,7 +100,7 @@ $(function() {
 		sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
 		
 		// Add sidebar
-		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(target.first());
+		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(twitterModules.first());
 		var flexModule = $('<div class="flex-module"></div>').appendTo(module);
 		var flexModuleHeader = $('<div class="flex-module-header"><h3>More</h3></div>').appendTo(flexModule);
 		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule);
@@ -89,7 +119,9 @@ $(function() {
 		console.log(4);
 		
 		var actionsWrapper = $('<div></div>').appendTo(flexModuleInner)
-			.append('<a href="" class="sjo-sidebar-edit">Edit</a>');
+			.append(`
+				<a href="" class="sjo-sidebar-edit">Edit</a>
+				<a href="" class="sjo-sidebar-unlock">Unlock</a>`);
 		var editActionsWrapper = $(`
 			<div class="sjo-sidebar-edit-functions">
 				<a href="" class="sjo-sidebar-add">Add current page</a> • 
@@ -98,31 +130,26 @@ $(function() {
 			</div>`).appendTo(actionsWrapper);
 	}
 	
-	// Check if another page has the sidebar locked
-	function checkEditStatus() {
-		var myModule = $('.sjo-sidebar-module');
-		var editingPageID = localStorage.getItem('sjoSidebarPageID');
-		if (editingPageID && editingPageID != pageId && !myModule.hasClass('sjo-locked')) {
-			if (myModule.hasClass('sjo-editable')) resetSidebar();
-			myModule.addClass('sjo-locked');
-		} else if (myModule.hasClass('sjo-locked')) {
-			myModule.removeClass('sjo-locked');
-		}
-	}
-	
 	// Button event handlers
 	$('body').on('click', '.sjo-sidebar-edit', editSidebar);
 	$('body').on('click', '.sjo-sidebar-done', saveSidebarChanges);
 	$('body').on('click', '.sjo-sidebar-cancel', resetSidebar);
 	$('body').on('click', '.sjo-sidebar-add', addSidebarItem);
 	$('body').on('click', '.sjo-sidebar-delete', deleteSidebarItem);
+	$('body').on('click', '.sjo-sidebar-unlock', unlockSidebar);
 	
 	// Switch to edit mode
 	function editSidebar() {
-		if (localStorage.getItem('sjoSidebarPageID')) return;
 		localStorage.setItem('sjoSidebarPageID', pageID);
 		sidebarItemsTemp = sidebarItems.slice(0);
-		$('.sjo-sidebar').addClass('sjo-sidebar-editable');
+		$('.sjo-sidebar').addClass('sjo-sidebar-iseditable');
+		return false;
+	}
+	
+	// Unlock sidebar
+	function unlockSidebar() {
+		localStorage.setItem('sjoSidebarPageID', '');
+		$('.sjo-sidebar').removeClass('sjo-sidebar-islocked');
 		return false;
 	}
 	
@@ -133,7 +160,7 @@ $(function() {
 		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
 		$('.sjo-sidebar ul').empty();
 		$.each(sidebarItems, (index, item) => renderItem(item));
-		$('.sjo-sidebar').removeClass('sjo-sidebar-editable');
+		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
 		return false;
 	}
 	
@@ -142,7 +169,7 @@ $(function() {
 		sidebarItemsTemp = null;
 		$('.sjo-sidebar ul').empty();
 		$.each(sidebarItems, (index, item) => renderItem(item));
-		$('.sjo-sidebar').removeClass('sjo-sidebar-editable');
+		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
 		return false;
 	}
 	
