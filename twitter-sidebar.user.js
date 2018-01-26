@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.25
+// @version        2018.01.26
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          none
@@ -11,11 +11,7 @@
 
 // TODO:
 // buttons to add separators
-// hide edit button while editing in another tab
-//    restore if editable tab is closed
-//    allow sidebar to be unlocked
-//    cancel editing if unlock is detected
-//    lock page on load
+// synchronise between devices ¯\_(ツ)_/¯
 
 $(`<style>
 	
@@ -55,30 +51,31 @@ $(function() {
 		// Check if sidebar has been added
 		var myModule = $('.sjo-sidebar-module');
 		if (myModule.length == 0) {
-			addSidebar();
-		} else {
-			
-			var editingPageID = localStorage.getItem('sjoSidebarPageID');
-			//console.log(editingPageID);
-			
-			// Check if this page has lost editability
-			if (editingPageID != pageID && myModule.hasClass('sjo-sidebar-iseditable')) {
-				console.log(editingPageID, pageID, 'resetting sidebar');
-				resetSidebar();
-			}
-			
-			// Check if this page needs locking
-			if (editingPageID && editingPageID != pageID && !myModule.hasClass('sjo-sidebar-islocked')) {
-				console.log(editingPageID, typeof editingPageID, pageID, 'locking sidebar');
-				myModule.addClass('sjo-sidebar-islocked');
-			}
-			
-			// Check if this page can be unlocked
-			if (!editingPageID && myModule.hasClass('sjo-sidebar-islocked')) {
-				console.log(editingPageID, pageID, 'unlocking sidebar');
-				myModule.removeClass('sjo-sidebar-islocked');
-			}
-			
+			myModule = addSidebar();
+			myModule = $('.sjo-sidebar-module');
+		}
+		if (myModule.length == 0) return;
+		
+		var editingPageID = localStorage.getItem('sjoSidebarPageID');
+		//console.log(editingPageID);
+		
+		// Check if this page has lost editability
+		if (editingPageID != pageID && myModule.hasClass('sjo-sidebar-iseditable')) {
+			//console.log(editingPageID, pageID, 'resetting sidebar');
+			resetSidebar();
+		}
+		
+		// Check if this page needs locking
+		if (editingPageID && editingPageID != pageID && !myModule.hasClass('sjo-sidebar-islocked')) {
+			//console.log(editingPageID, pageID, 'locking sidebar');
+			myModule.addClass('sjo-sidebar-islocked');
+		}
+		
+		// Check if this page can be unlocked
+		if (!editingPageID && myModule.hasClass('sjo-sidebar-islocked')) {
+			//console.log(editingPageID, pageID, 'unlocking sidebar');
+			loadSidebarItems();
+			myModule.removeClass('sjo-sidebar-islocked');
 		}
 		
 	}
@@ -89,60 +86,63 @@ $(function() {
 		if (twitterModules.length == 0) return;
 		console.debug('addSidebar');
 		
-		// Add jQueryUI styles
-		//$('<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">').appendTo('head')
-		
-		// Add jQueryUI Sortable if missing
-		// Loading it with @require fails because of conflict with in-page scripts
-		if (!$.fn.sortable) uiSortable();
-		
-		// Get items from storage
-		sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
-		
 		// Add sidebar
 		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(twitterModules.first());
 		var flexModule = $('<div class="flex-module"></div>').appendTo(module);
 		var flexModuleHeader = $('<div class="flex-module-header"><h3>More</h3></div>').appendTo(flexModule);
 		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule);
-		var sortableContainer = $('<ul></ul>').appendTo(flexModuleInner);
 		
-		// Render items
-		$.each(sidebarItems, (index, item) => renderItem(item));
+		// Add jQueryUI Sortable if missing
+		// Loading it with @require fails because of conflict with in-page scripts
+		if (!$.fn.sortable) uiSortable();
 		
+		// Add sortable list
 		// TODO: should this be update instead of stop?
-		// TODO: make this only active while in edit mode
-		console.log(3);
-		sortableContainer.sortable({stop: (event, ui) => {
-			sidebarItems = $('.sjo-sidebar li').toArray().map(element => $(element).data('sjoSidebarItem'));
-			localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
-		}});
-		console.log(4);
+		var sortableContainer = $('<ul></ul>').appendTo(flexModuleInner).sortable({
+				disabled: true, 
+				stop: (event, ui) => {
+					sidebarItemsTemp = $('.sjo-sidebar li').toArray()
+						.map(element => $(element).data('sjoSidebarItem'));
+				}});
+		loadSidebarItems();
 		
-		var actionsWrapper = $('<div></div>').appendTo(flexModuleInner)
-			.append(`
+		// Add buttons
+		$(`<div>
 				<a href="" class="sjo-sidebar-edit">Edit</a>
-				<a href="" class="sjo-sidebar-unlock">Unlock</a>`);
-		var editActionsWrapper = $(`
-			<div class="sjo-sidebar-edit-functions">
-				<a href="" class="sjo-sidebar-add">Add current page</a> • 
-				<a href="" class="sjo-sidebar-done">Done</a> • 
-				<a href="" class="sjo-sidebar-cancel">Cancel</a>
-			</div>`).appendTo(actionsWrapper);
+				<a href="" class="sjo-sidebar-unlock">Unlock</a>
+				<div class="sjo-sidebar-edit-functions">
+					<a href="" class="sjo-sidebar-add">Add current page</a> • 
+					<a href="" class="sjo-sidebar-done">Done</a> • 
+					<a href="" class="sjo-sidebar-cancel">Cancel</a>
+				</div>
+			</div>`).appendTo(flexModuleInner);
+		
 	}
 	
 	// Button event handlers
 	$('body').on('click', '.sjo-sidebar-edit', editSidebar);
-	$('body').on('click', '.sjo-sidebar-done', saveSidebarChanges);
-	$('body').on('click', '.sjo-sidebar-cancel', resetSidebar);
+	$('body').on('click', '.sjo-sidebar-unlock', unlockSidebar);
 	$('body').on('click', '.sjo-sidebar-add', addSidebarItem);
 	$('body').on('click', '.sjo-sidebar-delete', deleteSidebarItem);
-	$('body').on('click', '.sjo-sidebar-unlock', unlockSidebar);
+	$('body').on('click', '.sjo-sidebar-done', saveSidebarChanges);
+	$('body').on('click', '.sjo-sidebar-cancel', resetSidebar);
+	
+	// Page handlers
+	$(window).on('unload beforeunload', event => {
+		console.log(event);
+		var editingPageID = localStorage.getItem('sjoSidebarPageID');
+		if (editingPageID == pageID) {
+			console.log('unlocking due to unload event');
+			localStorage.setItem('sjoSidebarPageID', '');
+		}
+	});
 	
 	// Switch to edit mode
 	function editSidebar() {
 		localStorage.setItem('sjoSidebarPageID', pageID);
 		sidebarItemsTemp = sidebarItems.slice(0);
-		$('.sjo-sidebar').addClass('sjo-sidebar-iseditable');
+		$('.sjo-sidebar').addClass('sjo-sidebar-iseditable')
+			.find('ul').sortable('option', 'disabled', false);
 		return false;
 	}
 	
@@ -158,8 +158,8 @@ $(function() {
 		sidebarItems = sidebarItemsTemp;
 		sidebarItemsTemp = null;
 		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
-		$('.sjo-sidebar ul').empty();
-		$.each(sidebarItems, (index, item) => renderItem(item));
+		renderSidebarItems();
+		localStorage.setItem('sjoSidebarPageID', '');
 		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
 		return false;
 	}
@@ -167,8 +167,7 @@ $(function() {
 	// Cancel editing and switch back to read mode
 	function resetSidebar() {
 		sidebarItemsTemp = null;
-		$('.sjo-sidebar ul').empty();
-		$.each(sidebarItems, (index, item) => renderItem(item));
+		renderSidebarItems();
 		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
 		return false;
 	}
@@ -193,6 +192,18 @@ $(function() {
 			sidebarItemsTemp.splice(index, 1);
 		}
 		return false;
+	}
+	
+	// Load sidebar items from storage
+	function loadSidebarItems() {
+		sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
+		renderSidebarItems();
+	}
+	
+	// Render all sidebar items
+	function renderSidebarItems() {
+		$('.sjo-sidebar ul').empty();
+		$.each(sidebarItems, (index, item) => renderItem(item));
 	}
 	
 	// Render an item
