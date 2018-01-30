@@ -12,31 +12,36 @@
 // TODO:
 // buttons to add separators
 // synchronise between devices ¯\_(ツ)_/¯
+// rename items
 
 $(`<style>
 	
 	.sjo-sidebar-item {display: block; margin-bottom: 0.25em;}
-	.sjo-sidebar-link {color: #14171a;font-size: 14px; font-weight: bold; }
+	.sjo-sidebar-link {color: #14171a; font-size: 14px; font-weight: bold; }
 	.sjo-sidebar-link:hover {color: #0084B4;}
-	.sjo-sidebar-separator {display: block; height: 10px;}
+	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
 	
-	.sjo-sidebar-islocked .sjo-sidebar-edit {display: none;}
-	.sjo-sidebar-iseditable .sjo-sidebar-edit {display: none;}
+	.sjo-sidebar-button-editkey    {display: none;}
+	.sjo-sidebar-functions-editkey {display: none;}
+	.sjo-sidebar-functions-read    {display: none;}
+	.sjo-sidebar-functions-edit    {display: none;}
+	.sjo-sidebar-functions-locked  {display: none;}
 	
-	.sjo-sidebar-unlock {display: none;}
-	.sjo-sidebar-islocked .sjo-sidebar-unlock {display: inline-block;}
+	.sjo-sidebar-status-nokey   .sjo-sidebar-button-editkey    {display: inline-block;}
+	.sjo-sidebar-status-editkey .sjo-sidebar-functions-editkey {display: inline-block;}
+	.sjo-sidebar-status-read    .sjo-sidebar-button-editkey    {display: inline-block;}
+	.sjo-sidebar-status-read    .sjo-sidebar-functions-read    {display: inline-block;}
+	.sjo-sidebar-status-edit    .sjo-sidebar-functions-edit    {display: inline-block;}
+	.sjo-sidebar-status-locked  .sjo-sidebar-functions-locked  {display: inline-block;}
 	
-	.sjo-sidebar-delete {display: none; float: right;}
-	.sjo-sidebar-iseditable .sjo-sidebar-delete {display: block;}
-	
-	.sjo-sidebar-edit-functions {display: none;}
-	.sjo-sidebar-iseditable .sjo-sidebar-edit-functions {display: block;}
+	.sjo-sidebar-input-key {display: block;}
+	.sjo-sidebar-item-delete {display: none; float: right;}
 	
 </style>`).appendTo('head');
 
 $(function() {
 	
-	var timer, sidebarItems, sidebarItemsTemp;
+	var timer, sidebarItems, sidebarItemsTemp, binID;
 	var pageID = Math.random();
 	
 	// Poll status once a second
@@ -60,25 +65,38 @@ $(function() {
 		//console.log(editingPageID);
 		
 		// Check if this page has lost editability
-		if (editingPageID != pageID && myModule.hasClass('sjo-sidebar-iseditable')) {
-			//console.log(editingPageID, pageID, 'resetting sidebar');
-			resetSidebar();
+		if (editingPageID != pageID && myModule.hasClass('sjo-sidebar-status-edit')) {
+			console.log(editingPageID, pageID, 'resetting sidebar');
+			sidebarItemsTemp = null;
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
 		}
 		
 		// Check if this page needs locking
-		if (editingPageID && editingPageID != pageID && !myModule.hasClass('sjo-sidebar-islocked')) {
-			//console.log(editingPageID, pageID, 'locking sidebar');
-			myModule.addClass('sjo-sidebar-islocked');
+		if (editingPageID && editingPageID != pageID && !myModule.hasClass('sjo-sidebar-status-locked')) {
+			console.log(editingPageID, pageID, 'locking sidebar');
+			setStatus('sjo-sidebar-status-locked');
 		}
 		
 		// Check if this page can be unlocked
-		if (!editingPageID && myModule.hasClass('sjo-sidebar-islocked')) {
-			//console.log(editingPageID, pageID, 'unlocking sidebar');
+		if (!editingPageID && myModule.hasClass('sjo-sidebar-status-locked')) {
+			console.log(editingPageID, pageID, 'unlocking sidebar');
 			loadSidebarItems();
-			myModule.removeClass('sjo-sidebar-islocked');
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
 		}
 		
 	}
+	
+	// Page event handlers
+	$(window).on('unload beforeunload', event => {
+		console.log('unload event');
+		var editingPageID = localStorage.getItem('sjoSidebarPageID');
+		if (editingPageID == pageID) {
+			console.log('unlocking due to unload event');
+			localStorage.setItem('sjoSidebarPageID', '');
+		}
+	});
 	
 	function addSidebar() {
 		
@@ -90,7 +108,7 @@ $(function() {
 		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(twitterModules.first());
 		var flexModule = $('<div class="flex-module"></div>').appendTo(module);
 		var flexModuleHeader = $('<div class="flex-module-header"><h3>More</h3></div>').appendTo(flexModule);
-		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule);
+		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule).addClass('sjo-sidebar-status-read');
 		
 		// Add jQueryUI Sortable if missing
 		// Loading it with @require fails because of conflict with in-page scripts
@@ -104,71 +122,96 @@ $(function() {
 					sidebarItemsTemp = $('.sjo-sidebar li').toArray()
 						.map(element => $(element).data('sjoSidebarItem'));
 				}});
-		loadSidebarItems();
 		
 		// Add buttons
-		$(`<div>
-				<a href="" class="sjo-sidebar-edit">Edit</a>
-				<a href="" class="sjo-sidebar-unlock">Unlock</a>
-				<div class="sjo-sidebar-edit-functions">
-					<a href="" class="sjo-sidebar-add">Add current page</a> • 
-					<a href="" class="sjo-sidebar-done">Done</a> • 
-					<a href="" class="sjo-sidebar-cancel">Cancel</a>
-				</div>
+		var buttonWrapper = $(`<div>
+				<a href="" class="sjo-sidebar-button-editkey">Key</a>
+				<span class="sjo-sidebar-functions-editkey">
+					<input type="text" class="sjo-sidebar-input-key">
+					<a href="" class="sjo-sidebar-button-setkey">Set</a>
+				  • <a href="" class="sjo-sidebar-button-cancelkey">Cancel</a>
+				</span>
+				<span class="sjo-sidebar-functions-read">
+				  • <a href="" class="sjo-sidebar-button-edit">Edit</a>
+				</span>
+				<span class="sjo-sidebar-functions-edit">
+					<a href="" class="sjo-sidebar-button-add">Add current page</a>
+				  • <a href="" class="sjo-sidebar-button-done">Done</a>
+				  • <a href="" class="sjo-sidebar-button-cancel">Cancel</a>
+				</span>
+				<span class="sjo-sidebar-functions-locked">
+					<a href="" class="sjo-sidebar-button-unlock">Unlock</a>
+				</span>
 			</div>`).appendTo(flexModuleInner);
+		
+		// Get data URL
+		binID = localStorage.getItem('sjoSidebarBinID');
+		console.log('storage key', binID);
+		if (binID) {
+			$('.sjo-sidebar-input-key').val(binID);
+			loadSidebarItems();
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
+		} else {
+			setStatus('sjo-sidebar-status-nokey');
+		}
 		
 	}
 	
 	// Button event handlers
-	$('body').on('click', '.sjo-sidebar-edit', editSidebar);
-	$('body').on('click', '.sjo-sidebar-unlock', unlockSidebar);
-	$('body').on('click', '.sjo-sidebar-add', addSidebarItem);
-	$('body').on('click', '.sjo-sidebar-delete', deleteSidebarItem);
-	$('body').on('click', '.sjo-sidebar-done', saveSidebarChanges);
-	$('body').on('click', '.sjo-sidebar-cancel', resetSidebar);
+	$('body').on('click', '.sjo-sidebar-button-editkey', enterStorageKey);
+	$('body').on('click', '.sjo-sidebar-button-setkey', setStorageKey);
+	$('body').on('click', '.sjo-sidebar-button-cancelkey', cancelStorageKey);
+	$('body').on('click', '.sjo-sidebar-button-edit', editSidebar);
+	$('body').on('click', '.sjo-sidebar-button-add', addSidebarItem);
+	$('body').on('click', '.sjo-sidebar-button-delete', deleteSidebarItem);
+	$('body').on('click', '.sjo-sidebar-button-done', saveSidebarChanges);
+	$('body').on('click', '.sjo-sidebar-button-cancel', cancelEditing);
+	$('body').on('click', '.sjo-sidebar-button-unlock', unlockSidebar);
 	
-	// Page handlers
-	$(window).on('unload beforeunload', event => {
-		console.log(event);
-		var editingPageID = localStorage.getItem('sjoSidebarPageID');
-		if (editingPageID == pageID) {
-			console.log('unlocking due to unload event');
-			localStorage.setItem('sjoSidebarPageID', '');
+	// Edit storage key
+	function enterStorageKey() {
+		console.log('enter storage key');
+		setStatus('sjo-sidebar-status-editkey');
+		$('.sjo-sidebar-input-key').focus();
+		return false;
+	}
+	
+	// Save storage key
+	function setStorageKey() {
+		binID = $('.sjo-sidebar-input-key').val();
+		console.log('set storage key', binID);
+		if (binID) {
+			localStorage.setItem('sjoSidebarBinID', binID);
+			resetSidebar();
+			loadSidebarItems();
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
+		} else {
+			localStorage.setItem('sjoSidebarBinID', '');
+			resetSidebar();
+			setStatus('sjo-sidebar-status-nokey');
 		}
-	});
+		return false;
+	}
+	
+	function cancelStorageKey() {
+		console.log('cancel storage key');
+		if (binID) {
+			setStatus('sjo-sidebar-status-read');
+		} else {
+			setStatus('sjo-sidebar-status-nokey');
+		}
+		return false;
+	}
 	
 	// Switch to edit mode
 	function editSidebar() {
+		console.log('edit sidebar');
 		localStorage.setItem('sjoSidebarPageID', pageID);
 		sidebarItemsTemp = sidebarItems.slice(0);
-		$('.sjo-sidebar').addClass('sjo-sidebar-iseditable')
-			.find('ul').sortable('option', 'disabled', false);
-		return false;
-	}
-	
-	// Unlock sidebar
-	function unlockSidebar() {
-		localStorage.setItem('sjoSidebarPageID', '');
-		$('.sjo-sidebar').removeClass('sjo-sidebar-islocked');
-		return false;
-	}
-	
-	// Save changes and switch back to read mode
-	function saveSidebarChanges() {
-		sidebarItems = sidebarItemsTemp;
-		sidebarItemsTemp = null;
-		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
-		renderSidebarItems();
-		localStorage.setItem('sjoSidebarPageID', '');
-		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
-		return false;
-	}
-	
-	// Cancel editing and switch back to read mode
-	function resetSidebar() {
-		sidebarItemsTemp = null;
-		renderSidebarItems();
-		$('.sjo-sidebar').removeClass('sjo-sidebar-iseditable');
+		$('.sjo-sidebar ul').sortable('option', 'disabled', false);
+		setStatus('sjo-sidebar-status-edit');
 		return false;
 	}
 	
@@ -194,14 +237,53 @@ $(function() {
 		return false;
 	}
 	
+	// Save changes and switch back to read mode
+	function saveSidebarChanges() {
+		console.log('save sidebar');
+		sidebarItems = sidebarItemsTemp;
+		sidebarItemsTemp = null;
+		console.log(JSON.stringify(sidebarItems));
+		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
+		renderSidebarItems();
+		localStorage.setItem('sjoSidebarPageID', '');
+		setStatus('sjo-sidebar-status-read');
+		return false;
+	}
+	
+	// Cancel editing and switch back to read mode
+	function cancelEditing() {
+		console.log('cancel editing');
+		sidebarItemsTemp = null;
+		renderSidebarItems();
+		localStorage.setItem('sjoSidebarPageID', '');
+		setStatus('sjo-sidebar-status-read');
+		return false;
+	}
+	
+	// Unlock sidebar
+	function unlockSidebar() {
+		console.log('unlock sidebar');
+		localStorage.setItem('sjoSidebarPageID', '');
+		setStatus('sjo-sidebar-status-read');
+		return false;
+	}
+	
+	
+	
+	
+	function resetSidebar() {
+		$('.sjo-sidebar ul').empty();
+	}
+	
 	// Load sidebar items from storage
 	function loadSidebarItems() {
+		console.log('load sidebar items from storage');
 		sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
-		renderSidebarItems();
 	}
 	
 	// Render all sidebar items
 	function renderSidebarItems() {
+		console.log('render sidebar items');
 		$('.sjo-sidebar ul').empty();
 		$.each(sidebarItems, (index, item) => renderItem(item));
 	}
@@ -217,7 +299,7 @@ $(function() {
 			li.addClass('sjo-sidebar-separator');
 			
 		} else {
-			li.addClass('sjo-sidebar-item').append('<a href="" class="sjo-sidebar-delete">X</a>');
+			li.addClass('sjo-sidebar-item').append('<a href="" class="sjo-sidebar-item-delete">X</a>');
 			var a = $('<a class="sjo-sidebar-link"></a>').appendTo(li).text(item.display);
 			
 			if (item.type == 'url') {
@@ -239,6 +321,12 @@ $(function() {
 			}
 		}
 		
+	}
+	
+	// Utility function to set status of sidebar
+	var classList = ['nokey', 'editkey', 'read', 'edit', 'locked'].map(value => 'sjo-sidebar-status-' + value).join(' ');
+	function setStatus(newClass) {
+		$('.sjo-sidebar').removeClass(classList).addClass(newClass);
 	}
 	
 });
