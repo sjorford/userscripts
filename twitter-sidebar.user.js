@@ -2,11 +2,13 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.26
+// @version        2018.01.30
 // @match          https://twitter.com
 // @match          https://twitter.com/*
-// @grant          none
+// @grant          GM_xmlhttpRequest
+// @connect        api.jsonbin.io
 // @run-at         document-idle
+// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
 // ==/UserScript==
 
 // TODO:
@@ -237,6 +239,10 @@ $(function() {
 		return false;
 	}
 	
+	
+	
+	
+	
 	// Save changes and switch back to read mode
 	function saveSidebarChanges() {
 		console.log('save sidebar');
@@ -244,6 +250,13 @@ $(function() {
 		sidebarItemsTemp = null;
 		console.log(JSON.stringify(sidebarItems));
 		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
+		GM_xmlhttpRequest({
+			method: 'PUT',
+			url: 'https://api.jsonbin.io/b/' + binID,
+			data: JSON.stringify(sidebarItems),
+			onerror: response => console.log('failed to save sidebar items online', response.statusText)
+		});
+		localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 		renderSidebarItems();
 		localStorage.setItem('sjoSidebarPageID', '');
 		setStatus('sjo-sidebar-status-read');
@@ -271,14 +284,42 @@ $(function() {
 	
 	
 	
+	
+	// Blank the sidebar
 	function resetSidebar() {
 		$('.sjo-sidebar ul').empty();
 	}
 	
 	// Load sidebar items from storage
 	function loadSidebarItems() {
-		console.log('load sidebar items from storage');
-		sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
+		console.log('load sidebar items');
+		var lastUpdate = localStorage.getItem('sjoSidebarUpdated');
+		console.log('last update', lastUpdate);
+		if (!lastUpdate || moment(lastUpdate, 'YYYY-MM-DD HH:mm:ss').isBefore(moment().subtract(1, 'minutes'))) {
+			console.log('updating from online storage', lastUpdate);
+			GM_xmlhttpRequest({
+				method: 'GET',
+				url: 'https://api.jsonbin.io/b/' + binID,
+				onload: response => {
+					var data = JSON.parse(response.responseText);
+					if (data.success === false) {
+						console.log('online storage not found', data.message);
+					} else {
+						console.log('online storage found');
+						sidebarItems = data;
+						localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
+						renderSidebarItems();
+						setStatus('sjo-sidebar-status-read');
+					}
+				},
+				onerror: response => console.log(response.statusText)
+			});
+		} else {
+			sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
+			console.log(JSON.stringify(sidebarItems));
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
+		}
 	}
 	
 	// Render all sidebar items
