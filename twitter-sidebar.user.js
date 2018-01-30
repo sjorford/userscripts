@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.30
+// @version        2018.01.30a
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -23,6 +23,9 @@ $(`<style>
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
 	
+	.sjo-sidebar-input-key {display: block;}
+	.sjo-sidebar-button-delete {display: none; float: right;}
+	
 	.sjo-sidebar-button-editkey    {display: none;}
 	.sjo-sidebar-functions-editkey {display: none;}
 	.sjo-sidebar-functions-read    {display: none;}
@@ -34,10 +37,8 @@ $(`<style>
 	.sjo-sidebar-status-read    .sjo-sidebar-button-editkey    {display: inline-block;}
 	.sjo-sidebar-status-read    .sjo-sidebar-functions-read    {display: inline-block;}
 	.sjo-sidebar-status-edit    .sjo-sidebar-functions-edit    {display: inline-block;}
+	.sjo-sidebar-status-edit    .sjo-sidebar-button-delete     {display: inline-block;}
 	.sjo-sidebar-status-locked  .sjo-sidebar-functions-locked  {display: inline-block;}
-	
-	.sjo-sidebar-input-key {display: block;}
-	.sjo-sidebar-item-delete {display: none; float: right;}
 	
 </style>`).appendTo('head');
 
@@ -340,7 +341,7 @@ $(function() {
 			li.addClass('sjo-sidebar-separator');
 			
 		} else {
-			li.addClass('sjo-sidebar-item').append('<a href="" class="sjo-sidebar-item-delete">X</a>');
+			li.addClass('sjo-sidebar-item').append('<a href="" class="sjo-sidebar-button-delete">X</a>');
 			var a = $('<a class="sjo-sidebar-link"></a>').appendTo(li).text(item.display);
 			
 			if (item.type == 'url') {
