@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.30a
+// @version        2018.01.30b
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -13,7 +13,6 @@
 
 // TODO:
 // buttons to add separators
-// synchronise between devices ¯\_(ツ)_/¯
 // rename items
 
 $(`<style>
@@ -72,6 +71,7 @@ $(function() {
 			console.log(editingPageID, pageID, 'resetting sidebar');
 			sidebarItemsTemp = null;
 			renderSidebarItems();
+			$('.sjo-sidebar ul').sortable('option', 'disabled', false);
 			setStatus('sjo-sidebar-status-read');
 		}
 		
@@ -85,8 +85,6 @@ $(function() {
 		if (!editingPageID && myModule.hasClass('sjo-sidebar-status-locked')) {
 			console.log(editingPageID, pageID, 'unlocking sidebar');
 			loadSidebarItems();
-			renderSidebarItems();
-			setStatus('sjo-sidebar-status-read');
 		}
 		
 	}
@@ -108,10 +106,10 @@ $(function() {
 		console.debug('addSidebar');
 		
 		// Add sidebar
-		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(twitterModules.first());
+		var module = $('<div class="module sjo-sidebar-module"></div>').insertAfter(twitterModules.first()).addClass('sjo-sidebar-status-read');
 		var flexModule = $('<div class="flex-module"></div>').appendTo(module);
 		var flexModuleHeader = $('<div class="flex-module-header"><h3>More</h3></div>').appendTo(flexModule);
-		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule).addClass('sjo-sidebar-status-read');
+		var flexModuleInner = $('<div class="flex-module-inner sjo-sidebar"></div>').appendTo(flexModule);
 		
 		// Add jQueryUI Sortable if missing
 		// Loading it with @require fails because of conflict with in-page scripts
@@ -153,8 +151,6 @@ $(function() {
 		if (binID) {
 			$('.sjo-sidebar-input-key').val(binID);
 			loadSidebarItems();
-			renderSidebarItems();
-			setStatus('sjo-sidebar-status-read');
 		} else {
 			setStatus('sjo-sidebar-status-nokey');
 		}
@@ -188,8 +184,6 @@ $(function() {
 			localStorage.setItem('sjoSidebarBinID', binID);
 			resetSidebar();
 			loadSidebarItems();
-			renderSidebarItems();
-			setStatus('sjo-sidebar-status-read');
 		} else {
 			localStorage.setItem('sjoSidebarBinID', '');
 			resetSidebar();
@@ -269,6 +263,7 @@ $(function() {
 		console.log('cancel editing');
 		sidebarItemsTemp = null;
 		renderSidebarItems();
+		$('.sjo-sidebar ul').sortable('option', 'disabled', false);
 		localStorage.setItem('sjoSidebarPageID', '');
 		setStatus('sjo-sidebar-status-read');
 		return false;
@@ -277,6 +272,7 @@ $(function() {
 	// Unlock sidebar
 	function unlockSidebar() {
 		console.log('unlock sidebar');
+		$('.sjo-sidebar ul').sortable('option', 'disabled', false);
 		localStorage.setItem('sjoSidebarPageID', '');
 		setStatus('sjo-sidebar-status-read');
 		return false;
@@ -368,7 +364,7 @@ $(function() {
 	// Utility function to set status of sidebar
 	var classList = ['nokey', 'editkey', 'read', 'edit', 'locked'].map(value => 'sjo-sidebar-status-' + value).join(' ');
 	function setStatus(newClass) {
-		$('.sjo-sidebar').removeClass(classList).addClass(newClass);
+		$('.sjo-sidebar-module').removeClass(classList).addClass(newClass);
 	}
 	
 });
