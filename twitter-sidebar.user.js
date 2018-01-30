@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.30b
+// @version        2018.01.30c
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -246,10 +246,11 @@ $(function() {
 		console.log(JSON.stringify(sidebarItems));
 		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
 		GM_xmlhttpRequest({
-			method: 'PUT',
+			method: 'POST',
 			url: 'https://api.jsonbin.io/b/' + binID,
 			data: JSON.stringify(sidebarItems),
-			onerror: response => console.log('failed to save sidebar items online', response.statusText)
+			onload: response => console.log('sidebar online save succeeded'), 
+			onerror: response => console.log('sidebar online save failed', response.statusText)
 		});
 		localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 		renderSidebarItems();
