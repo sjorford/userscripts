@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.31
+// @version        2018.01.31a
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -12,7 +12,6 @@
 // ==/UserScript==
 
 // TODO:
-// buttons to add separators
 // rename items
 
 $(`<style>
@@ -138,6 +137,7 @@ $(function() {
 				</span>
 				<span class="sjo-sidebar-functions-edit">
 					<a href="" class="sjo-sidebar-button-add">Add current page</a>
+				  • <a href="" class="sjo-sidebar-button-separator">Add separator</a>
 				  • <a href="" class="sjo-sidebar-button-done">Done</a>
 				  • <a href="" class="sjo-sidebar-button-cancel">Cancel</a>
 				</span>
@@ -167,6 +167,7 @@ $(function() {
 	$('body').on('click', '.sjo-sidebar-button-edit', editSidebar);
 	$('body').on('click', '.sjo-sidebar-button-add', addSidebarItem);
 	$('body').on('click', '.sjo-sidebar-button-delete', deleteSidebarItem);
+	$('body').on('click', '.sjo-sidebar-button-separator', addSeparator);
 	$('body').on('click', '.sjo-sidebar-button-done', saveSidebarChanges);
 	$('body').on('click', '.sjo-sidebar-button-cancel', cancelEditing);
 	$('body').on('click', '.sjo-sidebar-button-unlock', unlockSidebar);
@@ -235,6 +236,13 @@ $(function() {
 			li.remove();
 			sidebarItemsTemp.splice(index, 1);
 		}
+		return false;
+	}
+	
+	function addSeparator() {
+		var newItem = {type: 'separator'};
+		sidebarItemsTemp.push(newItem);
+		renderItem(newItem);
 		return false;
 	}
 	
