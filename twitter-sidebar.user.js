@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.30c
+// @version        2018.01.31
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -22,7 +22,7 @@ $(`<style>
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
 	
-	.sjo-sidebar-input-key {display: block;}
+	.sjo-sidebar-input-key, .sjo-sidebar-input-secret {display: block;}
 	.sjo-sidebar-button-delete {display: none; float: right;}
 	
 	.sjo-sidebar-button-editkey    {display: none;}
@@ -43,7 +43,7 @@ $(`<style>
 
 $(function() {
 	
-	var timer, sidebarItems, sidebarItemsTemp, binID;
+	var timer, sidebarItems = [], sidebarItemsTemp, binID, secret;
 	var pageID = Math.random();
 	
 	// Poll status once a second
@@ -71,7 +71,7 @@ $(function() {
 			console.log(editingPageID, pageID, 'resetting sidebar');
 			sidebarItemsTemp = null;
 			renderSidebarItems();
-			$('.sjo-sidebar ul').sortable('option', 'disabled', false);
+			$('.sjo-sidebar ul').sortable('option', 'disabled', true);
 			setStatus('sjo-sidebar-status-read');
 		}
 		
@@ -129,6 +129,7 @@ $(function() {
 				<a href="" class="sjo-sidebar-button-editkey">Key</a>
 				<span class="sjo-sidebar-functions-editkey">
 					<input type="text" class="sjo-sidebar-input-key">
+					<input type="text" class="sjo-sidebar-input-secret">
 					<a href="" class="sjo-sidebar-button-setkey">Set</a>
 				  • <a href="" class="sjo-sidebar-button-cancelkey">Cancel</a>
 				</span>
@@ -147,9 +148,11 @@ $(function() {
 		
 		// Get data URL
 		binID = localStorage.getItem('sjoSidebarBinID');
-		console.log('storage key', binID);
+		secret = localStorage.getItem('sjoSidebarSecret');
+		//console.log('storage keys', binID, secret);
 		if (binID) {
 			$('.sjo-sidebar-input-key').val(binID);
+			$('.sjo-sidebar-input-secret').val(secret);
 			loadSidebarItems();
 		} else {
 			setStatus('sjo-sidebar-status-nokey');
@@ -178,22 +181,23 @@ $(function() {
 	
 	// Save storage key
 	function setStorageKey() {
+		console.log('set storage keys');
 		binID = $('.sjo-sidebar-input-key').val();
-		console.log('set storage key', binID);
+		secret = $('.sjo-sidebar-input-secret').val();
+		//console.log(binID, secret);
+		localStorage.setItem('sjoSidebarBinID', binID);
+		localStorage.setItem('sjoSidebarSecret', secret);
+		resetSidebar();
 		if (binID) {
-			localStorage.setItem('sjoSidebarBinID', binID);
-			resetSidebar();
 			loadSidebarItems();
 		} else {
-			localStorage.setItem('sjoSidebarBinID', '');
-			resetSidebar();
 			setStatus('sjo-sidebar-status-nokey');
 		}
 		return false;
 	}
 	
 	function cancelStorageKey() {
-		console.log('cancel storage key');
+		console.log('cancel storage key editing');
 		if (binID) {
 			setStatus('sjo-sidebar-status-read');
 		} else {
@@ -243,15 +247,21 @@ $(function() {
 		console.log('save sidebar');
 		sidebarItems = sidebarItemsTemp;
 		sidebarItemsTemp = null;
-		console.log(JSON.stringify(sidebarItems));
+		//console.log(JSON.stringify(sidebarItems));
 		localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
-		GM_xmlhttpRequest({
-			method: 'POST',
+		var options = {
+			method: 'PUT',
 			url: 'https://api.jsonbin.io/b/' + binID,
+			headers: {
+				'content-type': 'application/json',
+				'secret-key': secret
+			},
 			data: JSON.stringify(sidebarItems),
-			onload: response => console.log('sidebar online save succeeded'), 
-			onerror: response => console.log('sidebar online save failed', response.statusText)
-		});
+			onload: response => console.log('sidebar online save succeeded', response), 
+			onerror: response => console.log('sidebar online save failed', response.statusText, response)
+		};
+		//console.log('GM_xmlhttpRequest', options);
+		GM_xmlhttpRequest(options);
 		localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 		renderSidebarItems();
 		localStorage.setItem('sjoSidebarPageID', '');
@@ -292,31 +302,41 @@ $(function() {
 	function loadSidebarItems() {
 		console.log('load sidebar items');
 		var lastUpdate = localStorage.getItem('sjoSidebarUpdated');
-		console.log('last update', lastUpdate);
+		//console.log('last update', lastUpdate);
 		if (!lastUpdate || moment(lastUpdate, 'YYYY-MM-DD HH:mm:ss').isBefore(moment().subtract(1, 'minutes'))) {
 			console.log('updating from online storage', lastUpdate);
-			GM_xmlhttpRequest({
+			var options = {
 				method: 'GET',
-				url: 'https://api.jsonbin.io/b/' + binID,
-				onload: response => {
-					var data = JSON.parse(response.responseText);
-					if (data.success === false) {
-						console.log('online storage not found', data.message);
-					} else {
-						console.log('online storage found');
-						sidebarItems = data;
-						localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
-						renderSidebarItems();
-						setStatus('sjo-sidebar-status-read');
-					}
+				url: 'https://api.jsonbin.io/b/' + binID + '/latest',
+				headers: {
+					'secret-key': secret
 				},
+				onload: loadSidebarItemsCallback,
 				onerror: response => console.log(response.statusText)
-			});
+			};
+			//console.log('GM_xmlhttpRequest', options);
+			GM_xmlhttpRequest(options);
 		} else {
 			sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
-			console.log(JSON.stringify(sidebarItems));
+			//console.log(JSON.stringify(sidebarItems));
 			renderSidebarItems();
 			setStatus('sjo-sidebar-status-read');
+		}
+	}
+	
+	function loadSidebarItemsCallback(response) {
+		console.log('online storage response', response);
+		if (response.status == 200) {
+			console.log('online storage found');
+			if (response.responseText) {
+				var data = response.responseText ? JSON.parse(response.responseText) : {};
+				sidebarItems = data;
+				localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
+				renderSidebarItems();
+			}
+			setStatus('sjo-sidebar-status-read');
+		} else {
+			console.log('online storage not found', response.status, response.statusText, response.responseText);
 		}
 	}
 	
