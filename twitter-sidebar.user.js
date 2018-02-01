@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.01.31a
+// @version        2018.02.01
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
