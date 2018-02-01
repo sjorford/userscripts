@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.01a
+// @version        2018.02.01b
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -13,11 +13,20 @@
 // ==/UserScript==
 
 // TODO:
-// rename items
+// icons for different types
+// allow different types of searches
+// hashtags?
+// something else I can't remember now
 
 $(`<style>
 	
-	.sjo-sidebar-item {display: block; margin-bottom: 0.25em;}
+	.sjo-sidebar-item {margin-bottom: 0.25em; padding-left: 0.5em;}
+	.sjo-sidebar-item-url     {list-style: "?";}
+	.sjo-sidebar-item-user    {list-style: "U";}
+	.sjo-sidebar-item-list    {list-style: "L";}
+	.sjo-sidebar-item-search  {list-style: "S";}
+	.sjo-sidebar-item-hashtag {list-image: "#";}
+	
 	.sjo-sidebar-link {color: #14171a; font-size: 14px; font-weight: bold; }
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
@@ -221,9 +230,32 @@ $(function() {
 	// TODO: add different types of items
 	function addSidebarItem(event) {
 		event.preventDefault();
-		var newItem = {type: 'url', href: window.location.href};
+		
+		var newItem = {};
+		
+		var urlMatch = window.location.href.match(/^https:\/\/twitter.com\/(([_A-Za-z0-9]+)$|search\?(.+&)?q=([^&]*)(&.*)?$|([_A-Za-z0-9]+)\/lists\/([-_A-Za-z0-9]+)$|.*$)/);
+		console.log(urlMatch);
+		
+		if (urlMatch[2]) {
+			newItem.type = 'user';
+			newItem.user = urlMatch[2];
+		} else if (urlMatch[4]) {
+			newItem.type = 'search';
+			newItem.query = urlMatch[4];
+		} else if (urlMatch[6]) {
+			newItem.type = 'list';
+			newItem.user = urlMatch[6];
+			newItem.list = urlMatch[7];
+		} else {
+			newItem.type = 'url';
+			newItem.href = window.location.href;
+		}
+		
 		newItem.display = $('.SearchNavigation-titleText, .js-list-name, .ProfileHeaderCard-nameLink').text().trim() || 'TBA';
+		console.log(newItem);
+		
 		renderItem(newItem);
+		
 	}
 	
 	// Delete a sidebar item
@@ -416,8 +448,8 @@ $(function() {
 				a.attr('href', `/${item.user}/lists/${item.list}`);
 				
 			} else if (item.type == 'search') {
-				li.addClass('sjo-sidebar-item-url');
-				a.attr('href', `/search?f=tweets&q=${encodeURIComponent(item.query)}`);
+				li.addClass('sjo-sidebar-item-search');
+				a.attr('href', `/search?f=tweets&q=${item.query}`);
 				
 			}
 		}
