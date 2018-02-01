@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.01b
+// @version        2018.02.01c
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -16,7 +16,7 @@
 // icons for different types
 // allow different types of searches
 // hashtags?
-// something else I can't remember now
+// press Enter to complete rename
 
 $(`<style>
 	
