@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.02
+// @version        2018.02.02a
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -15,7 +15,6 @@
 
 // TODO:
 // allow different types of searches
-// hashtags?
 // press Enter to complete rename
 // separate button for editing, so sortable can show hand cursor
 
@@ -23,10 +22,13 @@ $(`<style>
 	
 	.sjo-sidebar-link {color: #14171a; font-size: 14px; font-weight: bold; margin-left: 0.5em;}
 	.sjo-sidebar-link:hover {color: #0084B4;}
-	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
+	.sjo-sidebar-separator {text-align: center;}
+	
+	.sjo-sidebar-item {padding: 2px;}
+	.sjo-sidebar-status-edit .sjo-sidebar-item:hover {background-color: pink;}
 	
 	.sjo-sidebar-input-key, .sjo-sidebar-input-secret {display: block;}
-	.sjo-sidebar-button-delete {display: none; float: right;}
+	.sjo-sidebar-button-delete {display: none; position: absolute; right: 0; padding-right: 20px;}
 	
 	.sjo-sidebar-button-editkey    {display: none;}
 	.sjo-sidebar-functions-editkey {display: none;}
@@ -416,16 +418,16 @@ $(function() {
 	}
 	
 	// Render an item
-	// TODO: hashtags
 	// TODO: properly escape list names etc.
 	function renderItem(item) {
 		
-		var li = $('<li></li>')
+		var li = $('<li class="sjo-sidebar-item"></li>')
 			.data({sjoSidebarItem: item})
+			.append('<a href="" class="sjo-sidebar-button-delete"><span class="far fa-trash-alt"></span></a>')
 			.appendTo('.sjo-sidebar-list');
 		
 		if (item.type == 'separator') {
-			li.addClass('sjo-sidebar-separator');
+			li.addClass('sjo-sidebar-separator').append('\u2053');
 			
 		} else {
 			
@@ -453,10 +455,7 @@ $(function() {
 				.attr('href', href)
 				.text(item.display);
 			
-			li.addClass('sjo-sidebar-item')
-				.append(`<span class="${faClass}"></span>`)
-				.append(a)
-				.append('<a href="" class="sjo-sidebar-button-delete">X</a>');
+			li.append(`<span class="${faClass}"></span>`).append(a);
 			
 		}
 		
