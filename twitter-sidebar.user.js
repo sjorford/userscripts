@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.02a
+// @version        2018.02.02b
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -15,7 +15,6 @@
 
 // TODO:
 // allow different types of searches
-// press Enter to complete rename
 // separate button for editing, so sortable can show hand cursor
 
 $(`<style>
@@ -271,7 +270,7 @@ $(function() {
 	// Edit a sidebar item
 	function editSidebarItem(event) {
 		event.preventDefault();
-		console.log('editSidebarItem');
+		console.log('edit sidebar item');
 		
 		// Check if another item is being edited
 		// TODO: if another item is clicked, refocus on that item?
@@ -290,15 +289,34 @@ $(function() {
 			
 			// Create an input box
 			var wrapper = $('<span></span>').appendTo(li);
-			var input = $('<input type="text" class="sjo-sidebar-input-text">').appendTo(wrapper).val(data.display).focus();
-			$('<a href="" class="sjo-sidebar-button-tick"></span>').appendTo(wrapper).click(event => end(event, true));
-			$('<a href="" class="sjo-sidebar-button-cross"></span>').appendTo(wrapper).click(event => end(event, false));
+			var input = $('<input type="text" class="sjo-sidebar-input-text">').appendTo(wrapper).val(data.display).focus().on('keydown', keyPress);
+			$('<a href="" class="sjo-sidebar-button-tick"></span>').appendTo(wrapper).click(renameOK);
+			$('<a href="" class="sjo-sidebar-button-cross"></span>').appendTo(wrapper).click(renameCancel);
 			
 		}
 		
-		function end(event, update) {
+		function keyPress(event) {
+			if (event.originalEvent.key == 'Enter') {
+				event.preventDefault();
+				rename(true);
+			} else if (event.originalEvent.key == 'Escape') {
+				event.preventDefault();
+				rename(false)
+			}
+		}
+		
+		function renameOK(event) {
 			event.preventDefault();
-			console.log('editSidebarItem', 'end', update);
+			rename(true);
+		}
+		
+		function renameCancel(event) {
+			event.preventDefault();
+			rename(false);
+		}
+		
+		function rename(update) {
+			console.log('end rename', update);
 			if (update) {
 				newData.display = input.val();
 				link.text(input.val());
