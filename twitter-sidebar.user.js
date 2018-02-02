@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.01c
+// @version        2018.02.02
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -10,24 +10,18 @@
 // @run-at         document-idle
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/userscripts/master/lib/uiSortable.js
+// @require        https://use.fontawesome.com/releases/v5.0.6/js/all.js
 // ==/UserScript==
 
 // TODO:
-// icons for different types
 // allow different types of searches
 // hashtags?
 // press Enter to complete rename
+// separate button for editing, so sortable can show hand cursor
 
 $(`<style>
 	
-	.sjo-sidebar-item {margin-bottom: 0.25em; padding-left: 0.5em;}
-	.sjo-sidebar-item-url     {list-style: "?";}
-	.sjo-sidebar-item-user    {list-style: "U";}
-	.sjo-sidebar-item-list    {list-style: "L";}
-	.sjo-sidebar-item-search  {list-style: "S";}
-	.sjo-sidebar-item-hashtag {list-image: "#";}
-	
-	.sjo-sidebar-link {color: #14171a; font-size: 14px; font-weight: bold; }
+	.sjo-sidebar-link {color: #14171a; font-size: 14px; font-weight: bold; margin-left: 0.5em;}
 	.sjo-sidebar-link:hover {color: #0084B4;}
 	.sjo-sidebar-separator::before {content: "\u2053"; text-align: center; display: block; width: 100%;}
 	
@@ -426,32 +420,44 @@ $(function() {
 	// TODO: properly escape list names etc.
 	function renderItem(item) {
 		
-		var li = $('<li></li>').data({sjoSidebarItem: item}).appendTo('.sjo-sidebar-list');
+		var li = $('<li></li>')
+			.data({sjoSidebarItem: item})
+			.appendTo('.sjo-sidebar-list');
 		
 		if (item.type == 'separator') {
 			li.addClass('sjo-sidebar-separator');
 			
 		} else {
-			li.addClass('sjo-sidebar-item').append('<a href="" class="sjo-sidebar-button-delete">X</a>');
-			var a = $('<a class="sjo-sidebar-link"></a>').appendTo(li).text(item.display);
+			
+			var href, itemClass, faClass;
 			
 			if (item.type == 'url') {
-				li.addClass('sjo-sidebar-item-url');
-				a.attr('href', item.href);
-				
+				href = item.href;
+				itemClass = 'sjo-sidebar-item-url';
+				faClass = 'far';
 			} else if (item.type == 'user') {
-				li.addClass('sjo-sidebar-item-user');
-				a.attr('href', `/${item.user}`);
-				
+				href = `/${item.user}`;
+				itemClass = 'sjo-sidebar-item-user';
+				faClass = 'far fa-user';
 			} else if (item.type == 'list') {
-				li.addClass('sjo-sidebar-item-list');
-				a.attr('href', `/${item.user}/lists/${item.list}`);
-				
+				href = `/${item.user}/lists/${item.list}`;
+				itemClass = 'sjo-sidebar-item-list';
+				faClass = 'fas fa-list';
 			} else if (item.type == 'search') {
-				li.addClass('sjo-sidebar-item-search');
-				a.attr('href', `/search?f=tweets&q=${item.query}`);
-				
+				href = `/search?f=tweets&q=${item.query}`;
+				itemClass = 'sjo-sidebar-item-search';
+				faClass = 'fas fa-search';
 			}
+						
+			var a = $('<a class="sjo-sidebar-link"></a>')
+				.attr('href', href)
+				.text(item.display);
+			
+			li.addClass('sjo-sidebar-item')
+				.append(`<span class="${faClass}"></span>`)
+				.append(a)
+				.append('<a href="" class="sjo-sidebar-button-delete">X</a>');
+			
 		}
 		
 	}
