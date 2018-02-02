@@ -2,7 +2,7 @@
 // @name        Demo Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.02
+// @version     2018.02.02a
 // @grant       none
 // ==/UserScript==
 
@@ -38,6 +38,8 @@ function cleanInputValue(input) {
 function cleanInputName(value, reverse) {
 	if (debug) console.log('cleanInputName', value, reverse);
 	
+	value = value.replace(/\u200B/g, ' ').replace(/`/g, "'").trim();
+	
 	var match;
 	
 	// Check for Surname, Forenames
@@ -66,8 +68,6 @@ function cleanInputName(value, reverse) {
 
 function properCaseName(name) {
 	if (debug) console.log('properCaseName', name, name.codePointAt(0));
-	
-	name = name.replace(/\u200B/g, ' ').trim();
 	
 	if (name.indexOf(' ') >= 0) return name.split(' ').map(value => properCaseName(value)).join(' ');
 	if (name.indexOf('-') >= 0) return name.split('-').map(value => properCaseName(value)).join('-');
