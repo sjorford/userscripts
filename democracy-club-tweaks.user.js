@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-12-12
+// @version     2018.02.02
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -106,7 +106,11 @@ $(`<style>
 	
 </style>`).appendTo('head');
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	var url = location.href;
 	
@@ -156,7 +160,7 @@ $(function() {
 		}
 	});
 	
-});
+}
 
 // ================================================================
 // Add a candidate - list of elections

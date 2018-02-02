@@ -2,11 +2,15 @@
 // @name        Demo Club format post
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/election/*/post/*
-// @version     2017-11-20
+// @version     2018.02.02
 // @grant       none
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	polyfill();
 	
@@ -78,4 +82,4 @@ $(function() {
 		
 	}
 	
-});
+}

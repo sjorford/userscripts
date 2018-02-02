@@ -3,12 +3,16 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2017-10-09
+// @version     2018.02.02
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$(`<style>
 		
@@ -35,4 +39,4 @@ $(function() {
 	heading.next('ol').addClass('sjo-bulkadd-instructions').hide();
 	$('<a role="button" style="font-size: small;">Show</a>').click(event => $('.sjo-bulkadd-instructions').toggle()).appendTo(heading).before(' ');
 	
-});
+}

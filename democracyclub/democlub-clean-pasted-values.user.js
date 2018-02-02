@@ -2,18 +2,22 @@
 // @name        Demo Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2017-10-09
+// @version     2018.02.02
 // @grant       none
 // ==/UserScript==
 
 var debug = false;
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	// Clean pasted values
 	$('body').on('paste', 'input', event => setTimeout(() => event.target.value = cleanInputValue(event.target), 0));
 	
-});
+}
 
 function cleanInputValue(input) {
 	

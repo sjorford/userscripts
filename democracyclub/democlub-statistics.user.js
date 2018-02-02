@@ -2,14 +2,18 @@
 // @name        Demo Club format statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2017-11-27
+// @version     2018.02.02
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js?57348753478957
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$(`<style>
 		.sjo-stats {font-size: 9pt;}
@@ -116,4 +120,4 @@ $(function() {
 		}
 	});
 	
-});
+}

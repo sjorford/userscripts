@@ -2,7 +2,7 @@
 // @name        Demo Club format posts list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/posts
-// @version     2017-11-15
+// @version     2018.02.02
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -22,7 +22,11 @@ $(`<style>
 	.sjo-posts-may-button {font-size: 0.875rem; margin-left: 1rem;}
 </style>`).appendTo('head');
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$('.content h3').each((index, element) => {
 		
@@ -84,4 +88,4 @@ $(function() {
 		$('.sjo-posts-may, .sjo-posts-may-button').toggle();
 	}
 	
-});
+}

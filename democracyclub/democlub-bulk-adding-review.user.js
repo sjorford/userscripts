@@ -2,11 +2,15 @@
 // @name        Demo Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2017-10-09
+// @version     2018.02.02
 // @grant       none
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$(`<style>
 		.sjo-bulkadd-listitem {list-style-type: none; margin-top: 0.5rem;}
@@ -60,4 +64,4 @@ $(function() {
 			$(element).toggleClass('sjo-bulkadd-selected', $('input[type="radio"]', element).is(':checked')));
 	});
 	
-});
+}

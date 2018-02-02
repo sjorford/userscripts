@@ -2,11 +2,15 @@
 // @name        Demo Club version tree
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2017-12-12a
+// @version     2018.02.02
 // @grant       none
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$(`<style>
 		
@@ -148,4 +152,4 @@ $(function() {
 		button.addClass('sjo-tree-current');
 	});
 		
-});
+}

@@ -2,13 +2,17 @@
 // @name        Demo Club format candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018-01-12a
+// @version     2018.02.02
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
-$(function() {
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
+
+function onready() {
 	
 	$(`<style>
 		
@@ -264,4 +268,4 @@ $(function() {
 	];
 	$('.person__actions__action p').filter((i, e) => blah.indexOf(e.innerHTML) >= 0).hide();
 	
-});
+}
