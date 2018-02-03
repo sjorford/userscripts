@@ -139,4 +139,15 @@ function trimCouncilNames() {
 	var sortedElements = labels.toArray().sort((a, b) => a.innerText > b.innerText);
 	var wrapper = labels.first().parent().addClass('sjo-columns').append(sortedElements);
 	
+	// Add filter
+	wrapper.find('legend').append('<label for="sjo-filter">Filter: <input class="sjo-filter" id="sjo-filter"></label>');
+	var filter = $('.sjo-filter').on('change keyup', event => {
+		console.log(event.originalEvent, filter.val());
+		var filterText = filter.val().trim();
+		$('.block-label').each((index, element) => {
+			var label = $(element);
+			label.toggleClass('sjo-hidden', !label.text().trim().toLowerCase().match(filterText));
+		});
+	});
+	
 }
