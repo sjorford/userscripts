@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.02
+// @version     2018.02.02a
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -512,7 +512,7 @@ function formatRecentChanges() {
 		
 		// Add links
 		var sourceCell = cells.eq(headings['Information source']);
-		sourceCell.html(formatLinks(sourceCell.html(), maxUrlLength));
+		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
 		
 		// Highlight my changes
 		if (cells.eq(headings['User']).text() == username) {
