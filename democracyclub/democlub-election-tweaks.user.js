@@ -2,7 +2,7 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.01.18.a
+// @version     2018.02.03
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -11,16 +11,18 @@
 // ==/UserScript==
 
 $(`<style>
+	
 	.sjo-election-sublist {font-size: 10pt;}
 	.sjo-date-picker {clear: both; margin-bottom: 1em;}
 	.sjo-date-normal a {background-color: #7eeab5 !important;}
 	.sjo-date-normal a.ui-state-active {background-color: #007fff !important;}
-
+	
 	.block-label {background: inherit; border: none; margin: 0; padding: 0 0 0 30px; float: none;}
 	.block-label input {top: -2px; left: 0;}
 	.sjo-columns {column-width: 15em;}
-	.sjo-obsolete {color: #bbb; display: none;}
+	.sjo-hidden, .sjo-hidden-nir {color: #bbb; display: none;}
 	.sjo-election-sublist a {color: #333}
+	
 </style>`).appendTo('head');
 
 $(function() {
@@ -117,18 +119,24 @@ function displayDatePicker() {
 
 function trimCouncilNames() {
 	
+	// Hide Northern Ireland councils
 	// TODO: put these in a config file
 	var oldNICouncils = ['Antrim', 'Ards', 'Armagh', 'Ballymena', 'Ballymoney', 'Banbridge', 'Carrickfergus', 'Castlereagh', 'Coleraine', 'Cookstown', 'Craigavon', 'Derry', 'Down', 'Dungannon and South Tyrone', 'Fermanagh', 'Larne', 'Limavady', 'Lisburn', 'Magherafelt', 'Moyle', 'Newry and Mourne', 'Newtownabbey', 'North Down', 'Omagh', 'Strabane'];
+	var newNICouncils = ["Antrim and Newtownabbey", "Ards and North Down", "Armagh, Banbridge and Craigavon", "Belfast", "Causeway Coast and Glens", "Derry and Strabane", "Fermanagh and Omagh", "Lisburn and Castlereagh", "Mid and East Antrim", "Mid Ulster", "Newry, Mourne and Down"];
+	var allNICouncils = oldNICouncils.concat(newNICouncils);
 	
-	// Trim council names
+	// Trim council names and re-sort
 	var labels = $('.block-label');
-	labels.contents()
-		.filter((index, element) => element.nodeType == 3)
-		.each((index, element) => {
-			var council = Utils.shortOrgName(element.nodeValue);
-			if (oldNICouncils.indexOf(council) >= 0) $(element).closest('.block-label').addClass('sjo-obsolete');
-			element.nodeValue = council;
-		});
-	labels.first().parent().addClass('sjo-columns').append(labels.toArray().sort((a, b) => a.innerText > b.innerText));
-
+	labels.each((index, element) => {
+		var label = $(element);
+		var textElement = label.contents().filter((index, element) => element.nodeType == 3 && element.nodeValue.trim() != '')[0];
+		var council = Utils.shortOrgName(textElement.nodeValue);
+		textElement.nodeValue = council;
+		if (allNICouncils.indexOf(council) >= 0) {
+			label.addClass('sjo-hidden-nir');
+		}
+	});
+	var sortedElements = labels.toArray().sort((a, b) => a.innerText > b.innerText);
+	var wrapper = labels.first().parent().addClass('sjo-columns').append(sortedElements);
+	
 }
