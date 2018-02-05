@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.02b
+// @version        2018.02.02c
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -27,7 +27,8 @@ $(`<style>
 	.sjo-sidebar-status-edit .sjo-sidebar-item:hover {background-color: pink;}
 	
 	.sjo-sidebar-input-key, .sjo-sidebar-input-secret {display: block;}
-	.sjo-sidebar-button-delete {display: none; position: absolute; right: 0; padding-right: 20px;}
+	.sjo-sidebar-item-buttons {display: none; position: absolute; right: 0; margin-right: 20px;}
+	.sjo-sidebar-item-button {margin-left: 10px;}
 	
 	.sjo-sidebar-button-editkey    {display: none;}
 	.sjo-sidebar-functions-editkey {display: none;}
@@ -40,7 +41,7 @@ $(`<style>
 	.sjo-sidebar-status-read    .sjo-sidebar-button-editkey    {display: inline-block;}
 	.sjo-sidebar-status-read    .sjo-sidebar-functions-read    {display: inline-block;}
 	.sjo-sidebar-status-edit    .sjo-sidebar-functions-edit    {display: inline-block;}
-	.sjo-sidebar-status-edit    .sjo-sidebar-button-delete     {display: inline-block;}
+	.sjo-sidebar-status-edit    .sjo-sidebar-item-buttons      {display: inline-block;}
 	.sjo-sidebar-status-locked  .sjo-sidebar-functions-locked  {display: inline-block;}
 	
 	.sjo-sidebar-status-edit .sjo-sidebar-link {cursor: text;}
@@ -170,12 +171,12 @@ $(function() {
 		.on('click', '.sjo-sidebar-button-cancelkey', cancelStorageKey)
 		.on('click', '.sjo-sidebar-button-edit', editSidebar)
 		.on('click', '.sjo-sidebar-button-add', addSidebarItem)
-		.on('click', '.sjo-sidebar-button-delete', deleteSidebarItem)
 		.on('click', '.sjo-sidebar-button-separator', addSeparator)
 		.on('click', '.sjo-sidebar-button-done', saveSidebarChanges)
 		.on('click', '.sjo-sidebar-button-cancel', cancelEditing)
 		.on('click', '.sjo-sidebar-button-unlock', unlockSidebar)
-		.on('click', '.sjo-sidebar-status-edit .sjo-sidebar-link', editSidebarItem);
+		.on('click', '.sjo-sidebar-item-button-edit', editSidebarItem)
+		.on('click', '.sjo-sidebar-item-button-delete', deleteSidebarItem);
 	
 	// Edit storage key
 	function enterStorageKey(event) {
@@ -278,11 +279,11 @@ $(function() {
 			
 			// Disable other actions
 			$('.sjo-sidebar-list').sortable('option', 'disabled', true);
-			$('.sjo-sidebar-button-delete').hide();
+			$('.sjo-sidebar-item-buttons').hide();
 			
 			// Get the item to be edited
-			var link = $(event.target).hide();
-			var li = link.closest('li');
+			var li = $(event.target).closest('.sjo-sidebar-item');
+			var link = li.find('.sjo-sidebar-link').hide();
 			var data = li.data('sjoSidebarItem');
 			var newData = JSON.parse(JSON.stringify(data));
 			li.data('sjoSidebarItem', newData);
@@ -324,7 +325,7 @@ $(function() {
 			wrapper.remove();
 			link.show();
 			$('.sjo-sidebar-list').sortable('option', 'disabled', false);
-			$('.sjo-sidebar-button-delete').show();
+			$('.sjo-sidebar-item-buttons').show();
 		}
 		
 	}
@@ -441,8 +442,12 @@ $(function() {
 		
 		var li = $('<li class="sjo-sidebar-item"></li>')
 			.data({sjoSidebarItem: item})
-			.append('<a href="" class="sjo-sidebar-button-delete"><span class="far fa-trash-alt"></span></a>')
 			.appendTo('.sjo-sidebar-list');
+		
+		$('<span class="sjo-sidebar-item-buttons"></span>')
+			.append(item.type == 'separator' ? '' : '<a href="" class="sjo-sidebar-item-button sjo-sidebar-item-button-edit"><span class="far fa-edit"></span></a>')
+			.append('<a href="" class="sjo-sidebar-item-button sjo-sidebar-item-button-delete"><span class="far fa-trash-alt"></span></a>')
+			.appendTo(li);
 		
 		if (item.type == 'separator') {
 			li.addClass('sjo-sidebar-separator').append('\u2053');
