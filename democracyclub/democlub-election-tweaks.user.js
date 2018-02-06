@@ -2,7 +2,7 @@
 // @name        Demo Club elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.02.03
+// @version     2018.02.06
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -141,7 +141,7 @@ function trimCouncilNames() {
 	
 	// Add filter
 	wrapper.find('legend').append('<label for="sjo-filter">Filter: <input class="sjo-filter" id="sjo-filter"></label>');
-	var filter = $('.sjo-filter').on('change keyup', event => {
+	var filter = $('.sjo-filter').focus().on('change keyup', event => {
 		console.log(event.originalEvent, filter.val());
 		var filterText = filter.val().trim();
 		$('.block-label').each((index, element) => {
