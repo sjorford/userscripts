@@ -2,12 +2,13 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.05
+// @version        2018.02.07
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
 // @connect        api.jsonbin.io
 // @run-at         document-idle
+// @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/userscripts/master/lib/uiSortable.js
 // @require        https://use.fontawesome.com/releases/v5.0.6/js/all.js
