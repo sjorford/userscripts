@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.02a
+// @version     2018.02.12
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -29,7 +29,6 @@ $(`<style>
 	.sjo-mychanges, .sjo-mysuggestion {background-color: #ffeb99 !important;}
 	.sjo-changes-candidacy-delete {background-color: pink !important;}
 	.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject * {color: #ccc !important;}
-	.sjo-baduser {background-color: pink !important;}
 	
 	.sjo-nowrap {white-space: nowrap;}
 	.sjo-number {text-align: right;}
@@ -517,12 +516,6 @@ function formatRecentChanges() {
 		// Highlight my changes
 		if (cells.eq(headings['User']).text() == username) {
 			row.addClass('sjo-mychanges');
-		}
-		
-		// Highlight potentially bad users
-		var badusers = ['rml', 'stella the staffy', 'Eddgas'];
-		if (badusers.indexOf(cells.eq(headings['User']).text()) >= 0) {
-			row.addClass('sjo-baduser');
 		}
 		
 		// Flag all rows by action
