@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.12
+// @version     2018.02.12a
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -98,7 +98,6 @@ $(`<style>
 	.person__actions__action.sjo-post-candidates {background-color: #ff9;}
 	.sjo-post-candidates p {margin-bottom: 0.25em !important;}
 	.sjo-is-current {font-weight: bold;}
-	.sjo-search-exact {border: 2px solid gold; padding: 5px; margin-left: -7px; border-radius: 4px; background-color: #fff3b1;}
 	xxx.sjo-search-link {font-weight: bold; font-size: 0.75rem; margin-bottom: 0.5em; display: inline-block;}
 	
 	.document_viewer {min-height: 600px;}
@@ -134,8 +133,6 @@ function onready() {
 		formatResultsPage();
 	} else if (url.indexOf(rootUrl + 'uk_results/') === 0) {
 		formatResultsPostList();
-	} else if (url.indexOf(rootUrl + 'search?') === 0) {
-		formatSearchResults();
 	}
 	
 	// TODO: hide long list of parties with no candidates
@@ -542,26 +539,6 @@ function formatLockSuggestions() {
 		var newHeading = $('<h2></h2>').text(electionId).appendTo('.content .container');
 		var headingsGroup = headings.filter(':has(a[href*="/' + electionId + '."])').toArray().sort((a, b) => a.innerText < b.innerText);
 		$.each(headingsGroup, (index, element) => $(element).next('ul').addBack().insertAfter(newHeading));
-	});
-	
-}
-
-// ================================================================
-// Format name search results
-// ================================================================
-
-function formatSearchResults() {
-	
-	var searchName = $('form.search input[name="q"]').val().trim();
-	var regexString = '(^|\\s)' + searchName.replace(/[\.\*\?\[\]\(\)\|\^\$\\\/]/g, '\\$&').replace(/\s+/, '(\\s+|\\s+.*\\s+)') + '$';
-	console.log('formatSearchResults', regexString);
-	var regex = new RegExp(regexString, 'i');
-	
-	$('.candidates-list__person').each((index, element) => {
-		var item = $(element);
-		if (item.find('.candidate-name').text().match(regex)) {
-			item.addClass('sjo-search-exact');
-		}
 	});
 	
 }
