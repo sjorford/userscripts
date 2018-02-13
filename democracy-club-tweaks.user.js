@@ -2,12 +2,8 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.12b
+// @version     2018.02.13
 // @grant       none
-// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js
-// @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
-// @require     https://raw.githubusercontent.com/sjorford/fun-with-elections/master/dc-lib.js
-// @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
@@ -16,7 +12,6 @@
 
 // Parameters
 var rootUrl = 'https://candidates.democracyclub.org.uk/';
-var maxUrlLength = 40;
 
 // Styles
 $(`<style>
@@ -29,9 +24,6 @@ $(`<style>
 	.sjo-mychanges, .sjo-mysuggestion {background-color: #ffeb99 !important;}
 	.sjo-changes-candidacy-delete {background-color: pink !important;}
 	.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject * {color: #ccc !important;}
-	
-	.sjo-nowrap {white-space: nowrap;}
-	.sjo-number {text-align: right;}
 	
 	.counts_table td, .counts_table th {padding: 4px !important;}
 	.select2-results {max-height: 500px !important;}
@@ -51,7 +43,6 @@ $(`<style>
 	.sjo-formitem label {font-weight: bold;}
 	.sjo-formitem .standing-select {width: 390px !important; display: inline-block; height: 1.75rem; padding: 0px 8px; margin-bottom: 0;}
 	.sjo-formitem .select2-container {width: 390px !important; display: inline-block;}
-	xxx.sjo-formitem hr {display: none;}
 	input.sjo-input-empty {background-color: #ffc;}
 	.sjo-input#id_twitter_username {width: 360px; margin-left: -4px; display: inline-block;}
 	.sjo-prefix {display: inline-block; width: 30px; position: relative; top: 1px; height: 2rem; line-height: 2rem;}
@@ -68,7 +59,6 @@ $(`<style>
 	.sjo-results-num {width: 100px !important; margin-bottom: 5px !important; text-align: right; -moz-appearance: textfield !important;}
 	.sjo-total-error {background-color: #fbb !important;}
 	#id_source {max-height: 80px;}
-	xxx.sjo-recent-unknown, xxx.sjo-recent-unknown.sjo-mychanges {background-color: #daa !important;}
 	.header__nav .large-4 {width: 33.33333% !important;}
 	.header__nav .large-6 {width: 50% !important;}
 	.header__nav .large-8 {width: 66.66667%; !important;}
@@ -83,15 +73,12 @@ $(`<style>
 	.header__nav {padding: 1em 0 0 0;}
 	h2 {font-size: 1.5rem;}
 	
-	xxx.show-new-candidate-form {display: none;}
-	
 	.select2-result-label {font-size: 0.8rem;}
 	.person__actions__action {padding: 1em; margin-bottom: 1em;}
 	.person__actions__action h2 {margin-top: 0 !important;}
 	.person__actions__action.sjo-post-candidates {background-color: #ff9;}
 	.sjo-post-candidates p {margin-bottom: 0.25em !important;}
 	.sjo-is-current {font-weight: bold;}
-	xxx.sjo-search-link {font-weight: bold; font-size: 0.75rem; margin-bottom: 0.5em; display: inline-block;}
 	
 	.document_viewer {min-height: 600px;}
 	
@@ -105,21 +92,11 @@ function onready() {
 	
 	var url = location.href;
 	
-	// Fix broken EC links
-	$('.party__primary a[href^="http://search.electoralcommission.org.uk/"]').each(function(index, element) {
-		element.href = element.href.replace(/electoral-commission:%20/, '');
-	});
-	
 	// Reformat various pages
 	if ((url.indexOf(rootUrl + 'person/') === 0 && url.indexOf('/update') > 0) || (url.indexOf(rootUrl + 'election/') === 0 && url.indexOf('/person/create/') > 0)) {
 		formatEditForm();
-	} else if (url.indexOf(rootUrl + 'recent-changes') === 0) {
-		formatRecentChanges();
 	} else if (url.indexOf(rootUrl + 'moderation/suggest-lock') === 0) {
 		formatLockSuggestions();
-	} else if (url.indexOf(rootUrl + 'upload_document/') === 0) {
-		$('.header__hero').hide();
-	//} else if ($('h1:contains("Results")').length > 0) {
 	} else if (url.indexOf(rootUrl + 'uk_results/posts/') === 0) {
 		formatResultsPage();
 	} else if (url.indexOf(rootUrl + 'uk_results/') === 0) {
@@ -134,9 +111,6 @@ function onready() {
 	var container = hero.find('.container');
 	if (container.html().trim() === '') container.remove();
 	if (hero.html().trim() === '') hero.remove();
-	
-	// Hide banners
-	//$('div[style="background-color:#FFFF8E;padding:0.5em;margin-bottom:1em;clear:both"]').filter((index, element) => element.innerText.fullTrim() == '#GE2017 update There’s going to be a general election on 8 June. Read about how you can help, or donate now to support our work.').hide();
 	
 	// Shortcuts
 	$('body').on('keydown', event => {
@@ -408,49 +382,6 @@ function formatResultsPage() {
 }
 
 // ================================================================
-// Compact recent changes pages
-// ================================================================
-
-function formatRecentChanges() {
-	
-	var username = 'sjorford'; // TODO: get this from top of page?
-	var now = moment();
-	
-	// Get table and headings
-	var table = $('.container table').addClass('sjo-lesspadding');
-	table.find('th').addClass('sjo-nowrap');
-	var headings = getTableHeadings(table);
-	
-	table.find('tr').each(function(index, element) {
-		var row = $(element);
-		var cells = row.find('td');
-		if (cells.length === 0) return;
-		
-		// Reformat dates
-		var dateCell = cells.eq(headings['Date and time']);
-		var time = moment(dateCell.html().replace(/\./g, ''), 'MMMM D, YYYY, h:mm a');
-		dateCell.html(time.format('D MMM' + (time.year() == now.year() ? '' : ' YYYY') + ' HH:mm'));
-			
-		// Stop columns wrapping
-		dateCell.add(cells.eq(headings['Action'])).addClass('sjo-nowrap');
-		
-		// Add links
-		var sourceCell = cells.eq(headings['Information source']);
-		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
-		
-		// Highlight my changes
-		if (cells.eq(headings['User']).text() == username) {
-			row.addClass('sjo-mychanges');
-		}
-		
-		// Flag all rows by action
-		row.addClass('sjo-changes-' + cells.eq(headings['Action']).text());
-		
-	});
-	
-}
-
-// ================================================================
 // Reformat lock suggestions page
 // ================================================================
 
@@ -474,16 +405,6 @@ function formatLockSuggestions() {
 // ================================================================
 // General functions
 // ================================================================
-
-function getTableHeadings(element) {
-	var headings = {};
-	$(element).filter('table').eq(0).find('th').first().closest('tr').find('th').each(function(index, element) {
-		var text = $(element).text();
-		headings[text] = index;
-		headings[index] = text;
-	});
-	return headings;
-}
 
 if (!String.prototype.fullTrim) {
 	String.prototype.fullTrim = function() {
