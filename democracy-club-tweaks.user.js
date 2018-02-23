@@ -33,7 +33,6 @@ $(`<style>
 	h3 {font-size: 1.2rem;}
 	h4 {font-size: 1.1rem;}
 	#add_election_button {margin-bottom: 0;}
-	.person__versions {padding-top: 0;}
 	
 	.sjo-results-label {float: left; width: 50%; height: 1.5rem; padding-top: 7px;}
 	.sjo-results-num {width: 100px !important; margin-bottom: 5px !important; text-align: right; -moz-appearance: textfield !important;}
@@ -55,7 +54,7 @@ $(`<style>
 	
 	.select2-result-label {font-size: 0.8rem;}
 	
-	.person__actions__action h2 {margin-top: 0 !important;}
+	xxx.person__actions__action h2 {margin-top: 0 !important;}
 	
 	.document_viewer {min-height: 600px;}
 	
@@ -99,14 +98,6 @@ function onready() {
 		}
 	});
 	
-}
-
-// ================================================================
-// Edit a candidate
-// ================================================================
-
-function formatEditForm() {
-		
 }
 
 // ================================================================
