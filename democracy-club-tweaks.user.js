@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.13
+// @version     2018.02.25
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
@@ -69,10 +69,7 @@ function onready() {
 	var url = location.href;
 	
 	// Reformat various pages
-	if ((url.indexOf(rootUrl + 'person/') === 0 && url.indexOf('/update') > 0) 
-		|| (url.indexOf(rootUrl + 'election/') === 0 && url.indexOf('/person/create/') > 0)) {
-		formatEditForm();
-	} else if (url.indexOf(rootUrl + 'moderation/suggest-lock') === 0) {
+	if (url.indexOf(rootUrl + 'moderation/suggest-lock') === 0) {
 		formatLockSuggestions();
 	} else if (url.indexOf(rootUrl + 'uk_results/posts/') === 0) {
 		formatResultsPage();
