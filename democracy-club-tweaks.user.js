@@ -2,7 +2,7 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.26
+// @version     2018.02.26.1
 // @grant       none
 // ==/UserScript==
 
@@ -51,7 +51,7 @@ $(`<style>
 	.header__nav {padding: 1em 0 0 0;}
 	h2 {font-size: 1.5rem;}
 	
-	.select2-result-label {font-size: 0.8rem;}
+	.select2-result-label {font-size: 0.8rem; padding: 2px;}
 	
 	xxx.person__actions__action h2 {margin-top: 0 !important;}
 	
