@@ -2,9 +2,8 @@
 // @name        Democracy Club tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.25
+// @version     2018.02.26
 // @grant       none
-// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
 // ==/UserScript==
 
 // Restore correct line numbers in console log
