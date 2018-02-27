@@ -2,11 +2,12 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.02.27
+// @version     2018.02.27.1
 // @grant       unsafeWindow
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 $(function() {
@@ -65,7 +66,6 @@ $(function() {
 	var table;
 	
 	// Add all downloads to dropdown
-	// TODO: show whether these are local/mayor etc.
 	var dropdown = $('<select id="sjo-api-select"></select>').appendTo(wrapper);
 	var container = dropdown;
 	$('h2#csv').nextUntil('h2').find('h3, h4, a[href$=".csv"]').each((index, element) => {
@@ -75,7 +75,8 @@ $(function() {
 		} else {
 			var itemText = item.html().trim();
 			var match = itemText.match(/^Download the (The )?(.*?)( local election)? candidates$/);
-			$('<option></option>').attr('value', item.attr('href')).text(match ? match[2] : itemText).appendTo(container);
+			var optionText = match ? (item.attr('href').match(/candidates-mayor/) ? 'Mayor of ' : '') + Utils.shortOrgName(match[2]) : itemText;
+			$('<option></option>').attr('value', item.attr('href')).text(optionText).appendTo(container);
 		}
 	})
 	
