@@ -66,16 +66,18 @@ $(function() {
 	
 	// Add all downloads to dropdown
 	// TODO: show whether these are local/mayor etc.
-	var downloads = $('a[href$=".csv"]');
-	var dropdown = $('<select id="sjo-api-select">' 
-		+ downloads.toArray().map(element => {
-			var link = $(element);
-			var linkText = link.html().trim();
-			var match = linkText.match(/^Download the (The )?(.*?)( local election)? candidates$/);
-			return '<option value="' + link.attr('href') + '">' +
-				(match ? match[2] : linkText) + '</option>';
-		}).join('') 
-		+ '</select>').appendTo(wrapper);
+	var dropdown = $('<select id="sjo-api-select"></select>').appendTo(wrapper);
+	var container = dropdown;
+	$('h2#csv').nextUntil('h2').find('h3, h4, a[href$=".csv"]').each((index, element) => {
+		var item = $(element);
+		if (item.is('h3, h4')) {
+			container = $('<optgroup></optgroup>').attr('label', item.text()).appendTo(dropdown);
+		} else {
+			var itemText = item.html().trim();
+			var match = itemText.match(/^Download the (The )?(.*?)( local election)? candidates$/);
+			$('<option></option>').attr('value', item.attr('href')).text(match ? match[2] : itemText).appendTo(container);
+		}
+	})
 	
 	// Add button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">')
