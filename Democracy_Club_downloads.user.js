@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2017.02.14
+// @version     2018.02.27
 // @grant       unsafeWindow
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -65,12 +65,17 @@ $(function() {
 	var table;
 	
 	// Add all downloads to dropdown
+	// TODO: show whether these are local/mayor etc.
 	var downloads = $('a[href$=".csv"]');
-	var dropdown = $('<select id="sjo-api-select">' + downloads.toArray().map(element =>
-		'<option value="' + element.href + '">' +
-			element.innerHTML.trim().match(/^Download of the (The )?(.*?)( local election)? candidates$/)[2] +
-			'</option>'
-	).join('') + '</select>').appendTo(wrapper);
+	var dropdown = $('<select id="sjo-api-select">' 
+		+ downloads.toArray().map(element => {
+			var link = $(element);
+			var linkText = link.html().trim();
+			var match = linkText.match(/^Download the (The )?(.*?)( local election)? candidates$/);
+			return '<option value="' + link.attr('href') + '">' +
+				(match ? match[2] : linkText) + '</option>';
+		}).join('') 
+		+ '</select>').appendTo(wrapper);
 	
 	// Add button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">')
