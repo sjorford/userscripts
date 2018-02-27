@@ -87,7 +87,7 @@ $(function() {
 	$('<div id="sjo-api-table-wrapper"></div>').appendTo(wrapper);
 	
 	// TESTING
-	dropdown.find('option:contains("2017 Northern Ireland")').prop({selected: true});
+	//dropdown.find('option:contains("2017 Northern Ireland")').prop({selected: true});
 	
 	// Format dropdown
 	dropdown.chosen();
