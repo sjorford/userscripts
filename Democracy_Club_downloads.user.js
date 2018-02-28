@@ -12,20 +12,20 @@
 
 $(function() {
 	
-	$('<style>\
-		#sjo-api-wrapper {margin: 1rem;}\
-		#sjo-api-select {width: auto;}\
-		#sjo_api_select_chosen {margin-right: 1rem;}\
-		#sjo-api-status {font-style: italic; margin-top: 0.5rem;}\
-		#sjo-api-table-wrapper {margin: 0.5rem 0;}\
-		#sjo-api-table {margin-bottom: 0;}\
-		#sjo-api-table th {user-select: none; -moz-user-select: none; text-align: center;}\
-		#sjo-api-table th, #sjo-api-table td {padding: 0.25rem; font-size: 0.75rem !important;}\
-		#sjo-api-table td.sjo-cell-icon {font-size: 1rem !important; text-align: center;}\
-		#sjo-api-row-filter td {font-weight: normal;}\
-		#sjo-api-row-filter ul {font-size: 0.75rem !important;}\
-		#sjo-api-row-filter .chosen-container {xxxwidth: auto !important; min-width: 5rem; max-width: 20rem;}\
-	</style>').appendTo('head');
+	$(`<style>
+		#sjo-api-wrapper {margin: 1rem;}
+		#sjo-api-select {width: auto;}
+		#sjo_api_select_chosen {margin-right: 1rem;}
+		#sjo-api-status {font-style: italic; margin-top: 0.5rem;}
+		#sjo-api-table-wrapper {margin: 0.5rem 0;}
+		#sjo-api-table {margin-bottom: 0;}
+		#sjo-api-table th {user-select: none; -moz-user-select: none; text-align: center;}
+		#sjo-api-table th, #sjo-api-table td {padding: 0.25rem; font-size: 0.75rem !important;}
+		#sjo-api-table td.sjo-cell-icon {font-size: 1rem !important; text-align: center;}
+		#sjo-api-row-filter td {font-weight: normal;}
+		#sjo-api-row-filter ul {font-size: 0.75rem !important;}
+		#sjo-api-row-filter .chosen-container {xxxwidth: auto !important; min-width: 5rem; max-width: 20rem;}
+	</style>`).appendTo('head');
 	
 	// Import stylesheet for dropdowns
 	$('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css"></style>').appendTo('head');
