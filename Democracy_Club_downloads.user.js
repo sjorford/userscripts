@@ -79,7 +79,7 @@ $(function() {
 			var optionText = match ? (item.attr('href').match(/candidates-mayor/) ? 'Mayor of ' : '') + Utils.shortOrgName(match[2]) : itemText;
 			$('<option></option>').attr('value', item.attr('href')).text(optionText).appendTo(container);
 		}
-	})
+	});
 	
 	// Add button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">')
