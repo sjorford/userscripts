@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.02.27.1
+// @version     2018.02.28.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -35,11 +35,11 @@ $(function() {
 		{'name': '_row',				'display': '#',			'filter': false, 	'sort': 'number',	},
 		{'name': 'id',					'display': 'ID',		'filter': false, 	'sort': 'number',	},
 		{'name': 'name',				'display': 'Name',		'filter': false, 	'sort': 'text',		'link': '/person/@@id@@'},
-		{'name': '_extract',			'display': 'Election',	'filter': false,	'sort': 'text',		},
+//		{'name': '_extract',			'display': 'Election',	'filter': false,	'sort': 'text',		},
 //		{'name': 'election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
-//		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		}, //'defaults': ['2017-03-02', '2017-03-23', '2017-05-04']},
+		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': ['2018-05-03']},
 //		{'name': '_year',				'display': 'Year',		'filter': true, 	'sort': 'text',		}, //'defaults': ['2017']},
-//		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
+		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
 //		{'name': 'post_id',				'display': 'ID',		'filter': false, 	'sort': 'text',		},
 		{'name': 'post_label',			'display': 'Post',		'filter': true, 	'sort': 'text',		},
 //		{'name': 'party_list_position',	'display': 'Pos',		'filter': false, 	'sort': 'number',	},
