@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.07
+// @version        2018.03.01
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -411,6 +411,7 @@ $(function() {
 			//console.log(JSON.stringify(sidebarItems));
 			renderSidebarItems();
 			setStatus('sjo-sidebar-status-read');
+			localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 		}
 	}
 	
@@ -422,6 +423,7 @@ $(function() {
 				var data = response.responseText ? JSON.parse(response.responseText) : {};
 				sidebarItems = data;
 				localStorage.setItem('sjoSidebarItems', JSON.stringify(sidebarItems));
+				localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 				renderSidebarItems();
 			}
 			setStatus('sjo-sidebar-status-read');
