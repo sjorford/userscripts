@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.02.28.0
+// @version     2018.03.02.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -13,6 +13,7 @@
 $(function() {
 	
 	$(`<style>
+		
 		#sjo-api-wrapper {margin: 1rem;}
 		#sjo-api-select {width: auto;}
 		#sjo_api_select_chosen {margin-right: 1rem;}
@@ -24,7 +25,10 @@ $(function() {
 		#sjo-api-table td.sjo-cell-icon {font-size: 1rem !important; text-align: center;}
 		#sjo-api-row-filter td {font-weight: normal;}
 		#sjo-api-row-filter ul {font-size: 0.75rem !important;}
-		#sjo-api-row-filter .chosen-container {xxxwidth: auto !important; min-width: 5rem; max-width: 20rem;}
+		#sjo-api-row-filter .chosen-container {xxxwidth: auto !important; min-width: 5rem; max-width: 12rem;}
+		
+		.sjo-hidden {display: none;}
+		
 	</style>`).appendTo('head');
 	
 	// Import stylesheet for dropdowns
@@ -37,18 +41,19 @@ $(function() {
 		{'name': 'name',				'display': 'Name',		'filter': false, 	'sort': 'text',		'link': '/person/@@id@@'},
 //		{'name': '_extract',			'display': 'Election',	'filter': false,	'sort': 'text',		},
 //		{'name': 'election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
-		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': ['2018-05-03']},
+		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': ['2018-05-03'],		hidden: true},
 //		{'name': '_year',				'display': 'Year',		'filter': true, 	'sort': 'text',		}, //'defaults': ['2017']},
-		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
+//		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
+		{'name': '_election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
 //		{'name': 'post_id',				'display': 'ID',		'filter': false, 	'sort': 'text',		},
 		{'name': 'post_label',			'display': 'Post',		'filter': true, 	'sort': 'text',		},
 //		{'name': 'party_list_position',	'display': 'Pos',		'filter': false, 	'sort': 'number',	},
 //		{'name': 'party_id',			'display': 'ID',		'filter': false, 	'sort': 'party_id',	},
 		{'name': 'party_name',			'display': 'Party',		'filter': true, 	'sort': 'text',		},
-		//{'name': '_link_cells',			'display': 'Links',		'filter': false, 	'sort': 'text',		'format': 'html',	'colspan': 8},
-		//{'name': 'birth_date',			'display': 'DOB',		'filter': false, 	'sort': 'text',		},
-		//{'name': '_gender',				'display': 'Sex',		'filter': false, 	'sort': 'text',		'icon': true},
-		//{'name': '_image',				'display': 'Img',		'filter': false, 	'sort': 'text',		'icon': true},
+//		{'name': '_link_cells',			'display': 'Links',		'filter': false, 	'sort': 'text',		'format': 'html',	'colspan': 8},
+//		{'name': 'birth_date',			'display': 'DOB',		'filter': false, 	'sort': 'text',		},
+//		{'name': '_gender',				'display': 'Sex',		'filter': false, 	'sort': 'text',		'icon': true},
+//		{'name': '_image',				'display': 'Img',		'filter': false, 	'sort': 'text',		'icon': true},
 	];
 	
 	var linkTypes = [
@@ -69,14 +74,17 @@ $(function() {
 	// Add all downloads to dropdown
 	var dropdown = $('<select id="sjo-api-select"></select>').appendTo(wrapper);
 	var container = dropdown;
+	var slugMap = {};
 	$('h2#csv').nextUntil('h2').find('h3, h4, a[href$=".csv"]').each((index, element) => {
 		var item = $(element);
 		if (item.is('h3, h4')) {
 			container = $('<optgroup></optgroup>').attr('label', item.text()).appendTo(dropdown);
 		} else {
 			var itemText = item.html().trim();
-			var match = itemText.match(/^Download the (The )?(.*?)( local election)? candidates$/);
-			var optionText = match ? (item.attr('href').match(/candidates-mayor/) ? 'Mayor of ' : '') + Utils.shortOrgName(match[2]) : itemText;
+			var textMatch = itemText.match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/i);
+			var optionText = textMatch ? (item.attr('href').match(/\/candidates-mayor\./) ? 'Mayor of ' : '') + Utils.shortOrgName(textMatch[3]) : itemText;
+			var urlMatch = item.attr('href').match(/\/candidates-(.*?)\.\d{4}-\d{2}-\d{2}\.csv$/);
+			if (urlMatch) slugMap[urlMatch[1]] = optionText.replace(/^Mayor of /, '');
 			$('<option></option>').attr('value', item.attr('href')).text(optionText).appendTo(container);
 		}
 	});
@@ -128,10 +136,15 @@ $(function() {
 			$('#sjo-api-table-wrapper').empty();
 			table = $('<table id="sjo-api-table"><thead>' +
 				'<tr id="sjo-api-row-header">' + fields.map(field => 
-					'<th' + (field.colspan ? ' colspan="' + field.colspan + '"' : '') + '>' + escapeHtml(field.display) + '</th>').join('') + '</tr>' +
+					`<th${attr(field)}>${escapeHtml(field.display)}</th>`).join('') + '</tr>' +
 				'<tr id="sjo-api-row-filter">' + fields.map(field => 
-					'<td' + (field.colspan ? ' colspan="' + field.colspan + '"' : '') + '></td>').join('') + '</tr>' +
+					`<td${attr(field)}></td>`).join('') + '</tr>' +
 				'</thead><tbody></tbody></table>').appendTo('#sjo-api-table-wrapper');
+			
+			function attr(field) {
+				return (field.colspan ? ' colspan="' + field.colspan + '"' : '') +
+					   (field.hidden ? ' class="sjo-hidden"' : '');
+			}
 			
 			// Render table
 			table.data('data', results.data);
@@ -159,10 +172,12 @@ $(function() {
 			candidate.election;
 			
 		// Split election ID into components
-		var match = candidate.election.match(/^(local\.[^\.]+|[^\.]+)\.(.*\.)?((\d\d\d\d)-\d\d-\d\d)$/);
+		var match = candidate.election.match(/^((local|mayor)\.[^\.]+|[^\.]+)\.(.*\.)?((\d\d\d\d)-\d\d-\d\d)$/);
 		candidate._type = match[1];
-		candidate._date = match[3];
-		candidate._year = match[4];
+		candidate._date = match[4];
+		candidate._year = match[5];
+		candidate._election = slugMap[candidate._type] ? slugMap[candidate._type] : candidate._type;
+		if (candidate._type.match(/mayor\./)) candidate.post_label = 'Mayor of ' + Utils.shortOrgName(candidate.post_label);
 		
 		// Add link summary field and individual linked cells
 		candidate._links = '';
@@ -334,14 +349,21 @@ $(function() {
 						while (match = href.match(/^(.*?)@@(.*?)@@(.*)$/)) {
 							href = match[1] + candidate[match[2]] + match[3];
 						}
-						cellHtml = '<a href="' + href + '">' + cellHtml + '</a>';
+						cellHtml = `<a href=${href}>${cellHtml}</a>`;
 					}
-					return '<td' + (field.icon ? ' class="sjo-cell-icon"' : '') + '>' + cellHtml + '</td>';
+					return `<td${attr(field)}>${cellHtml}</td>`;
 				}).join('') + '</tr>\r\n';
 				numRows++;
 			}
 		});
 		table.find('tbody').html(bodyHtml);
+		
+		function attr(field) {
+			var classes = [];
+			if (field.icon) classes.push('sjo-cell-icon');
+			if (field.hidden) classes.push('sjo-hidden');
+			return classes.length == 0 ? '' : ' class="' + classes.join(' ') + '"';
+		}
 		
 		// Display total of rows
 		$('#sjo-api-status').text('Displaying ' + (numRows == table.data('data').length ? '' : numRows + ' of ') + table.data('data').length + ' rows');
