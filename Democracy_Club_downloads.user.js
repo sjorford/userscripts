@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.03.02.0
+// @version     2018.03.05.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -11,6 +11,8 @@
 // ==/UserScript==
 
 $(function() {
+	
+	var defaultDate = '2018-05-03';
 	
 	$(`<style>
 		
@@ -41,7 +43,7 @@ $(function() {
 		{'name': 'name',				'display': 'Name',		'filter': false, 	'sort': 'text',		'link': '/person/@@id@@'},
 //		{'name': '_extract',			'display': 'Election',	'filter': false,	'sort': 'text',		},
 //		{'name': 'election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
-		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': ['2018-05-03'],		hidden: true},
+		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': [defaultDate],		hidden: true},
 //		{'name': '_year',				'display': 'Year',		'filter': true, 	'sort': 'text',		}, //'defaults': ['2017']},
 //		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
 		{'name': '_election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
@@ -80,12 +82,17 @@ $(function() {
 		if (item.is('h3, h4')) {
 			container = $('<optgroup></optgroup>').attr('label', item.text()).appendTo(dropdown);
 		} else {
-			var itemText = item.html().trim();
-			var textMatch = itemText.match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/i);
-			var optionText = textMatch ? (item.attr('href').match(/\/candidates-mayor\./) ? 'Mayor of ' : '') + Utils.shortOrgName(textMatch[3]) : itemText;
-			var urlMatch = item.attr('href').match(/\/candidates-(.*?)\.\d{4}-\d{2}-\d{2}\.csv$/);
-			if (urlMatch) slugMap[urlMatch[1]] = optionText.replace(/^Mayor of /, '');
-			$('<option></option>').attr('value', item.attr('href')).text(optionText).appendTo(container);
+			var itemText = item.text().trim();
+			if (item.attr('href').match(/\/candidates-all\.csv$/)) {
+				$('<option></option>').attr('value', item.attr('href')).text(itemText + ' (' + defaultDate + ')').data('sjo-api-filters', {'_date': defaultDate}).appendTo(container);
+				$('<option></option>').attr('value', item.attr('href')).text(itemText).appendTo(container);
+			} else {
+				var textMatch = itemText.match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/i);
+				var optionText = textMatch ? (item.attr('href').match(/\/candidates-mayor\./) ? 'Mayor of ' : '') + Utils.shortOrgName(textMatch[3]) : itemText;
+				var urlMatch = item.attr('href').match(/\/candidates-(.*?)\.\d{4}-\d{2}-\d{2}\.csv$/);
+				if (urlMatch) slugMap[urlMatch[1]] = optionText.replace(/^Mayor of /, '');
+				$('<option></option>').attr('value', item.attr('href')).text(optionText).appendTo(container);
+			}
 		}
 	});
 	
@@ -129,8 +136,24 @@ $(function() {
 			// TODO: do something with errors
 			
 			// Clean data
-			$.each(results.data, (index, candidate) => cleanData(index, candidate));
+			var data = results.data;
+			$.each(data, (index, candidate) => cleanData(index, candidate));
 
+			// Filter data
+			var filters = $('#sjo-api-select option:selected').data('sjo-api-filters');
+			if (filters) {
+				data = $.grep(data, candidate => {
+					var success = true;
+					$.each(filters, (key, values) => {
+						if (values.indexOf(candidate[key]) < 0) {
+							success = false;
+							return false;
+						}
+					});
+					return success;
+				});
+			}
+			
 			// Create table
 			// TODO: format table
 			$('#sjo-api-table-wrapper').empty();
@@ -147,7 +170,7 @@ $(function() {
 			}
 			
 			// Render table
-			table.data('data', results.data);
+			table.data('data', data);
 			buildFilters();
 			renderTable();
 			
