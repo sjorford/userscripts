@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.03.05.0
+// @version     2018.03.05.1
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -38,7 +38,7 @@ $(function() {
 	
 	// TODO: split this into a field definition array, and a table definition array
 	var fields = [
-		{'name': '_row',				'display': '#',			'filter': false, 	'sort': 'number',	},
+//		{'name': '_row',				'display': '#',			'filter': false, 	'sort': 'number',	},
 		{'name': 'id',					'display': 'ID',		'filter': false, 	'sort': 'number',	},
 		{'name': 'name',				'display': 'Name',		'filter': false, 	'sort': 'text',		'link': '/person/@@id@@'},
 //		{'name': '_extract',			'display': 'Election',	'filter': false,	'sort': 'text',		},
