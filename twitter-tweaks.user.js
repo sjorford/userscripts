@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.03.06.0
+// @version     2018.03.06.1
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -39,7 +39,7 @@ $(function() {
 	var lists;
 	
 	// TODO: keep this running so that it reloads when internal links rewrite the page?
-	checkForDashboard();
+	//checkForDashboard();
 	
 	function checkForDashboard() {
 		
