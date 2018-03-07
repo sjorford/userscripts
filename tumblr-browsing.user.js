@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.03.07.0
+// @version        2018.03.07.1
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -20,10 +20,10 @@ $(function() {
 			xxx#posts > li:nth-of-type(3n) {clear: both;}
 			.post_avatar.post-avatar--sticky {visibility: hidden;}
 			#right_column {display: none;}
-			.l-container.l-container--two-column, 
-			.l-container.l-container--two-column-dashboard {width: auto;}
-			.l-container.l-container--two-column-dashboard .left_column, 
-			.l-container.l-container--two-column .left_column {width: auto;}
+			xxx.l-container.l-container--two-column, 
+			xxx.l-container.l-container--two-column-dashboard {width: auto;}
+			xxx.l-container.l-container--two-column-dashboard .left_column, 
+			xxx.l-container.l-container--two-column .left_column {width: auto;}
 			div[data-is_recommended="1"] {display: none;}
 		</style>`).appendTo('head');
 	}
