@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.03.06.1
+// @version     2018.03.09.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -13,12 +13,14 @@ $(`<style>
 	[data-trend-name="Ann Coulter"],
 	[data-trend-name="Brendan O'Neill"],
 	[data-trend-name="Giles Coren"],
+	[data-trend-name="Jeremy Clarkson"],
 	[data-trend-name="John Humphrys"],
 	[data-trend-name="Katie Hopkins"],
 	[data-trend-name="Michael Howard"],
 	[data-trend-name="Nadine Dorries"],
 	[data-trend-name="Peter Hitchens"],
 	[data-trend-name="Piers Morgan"],
+	[data-trend-name="Priti Patel"],
 	[data-trend-name="Toby Young"],
 	[data-trend-name="Tommy Robinson"] {display: none !important;}
 	
