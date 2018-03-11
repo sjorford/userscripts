@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.03.09.0
+// @version        2018.03.11.0
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -56,30 +56,52 @@ $(function() {
 	}
 	
 	var offset = 60;
-	var body = $('body');
-	body.on('keypress', event => {
-		
-		// TODO: need to use window.top but not allowed by CORS?
-		var line = $(window).scrollTop() + offset;
-		var posts = $('li.post_container, li.post, article, div[id="entry"], div[id="content"]');
-		//console.log(event, posts);
+	var timer = null;
+	
+	$('body').on('keypress', event => {
+		console.log(event.originalEvent.key);
 		
 		if (event.originalEvent.key === 'ArrowDown') {
-			
-			var nextPost = posts.filter((index, element) => $(element).offset().top > line + 1).first();
-			//console.log(nextPost);
-			body.scrollTo(nextPost, 0, {offset: -offset});
+			stopTimer();
+			scroll(false);
 			return false;
-			
 		} else if (event.originalEvent.key === 'ArrowUp') {
-			
-			var prevPost = posts.filter((index, element) => $(element).offset().top < line - 1).last();
-			//console.log(prevPost);
-			body.scrollTo(prevPost, 0, {offset: -offset});
+			stopTimer();
+			scroll(true);
 			return false;
-			
+		} else if (event.originalEvent.key === 'a') {
+			if (timer) {
+				stopTimer();
+			} else {
+				timer = window.setInterval(scroll, 2000)
+			}
+			return false;
 		}
 		
 	});
+	
+	function stopTimer() {
+		if (timer) {
+			window.clearTimeout(timer);
+			timer = null;
+		}
+	}
+	
+	function scroll(up) {
+		
+		var line = $(window).scrollTop() + offset;
+		var posts = $('li.post_container, li.post, article, div[id="entry"], div[id="content"]');
+		var nextPost;
+		
+		if (up) {
+			nextPost = posts.filter((index, element) => $(element).offset().top < line - 1).last();
+		} else {
+			nextPost = posts.filter((index, element) => $(element).offset().top > line + 1).first();
+		}
+		
+		console.log(nextPost);
+		$('html, body').animate({scrollTop: nextPost.offset().top - offset}, 200);
+		
+	}
 	
 });
