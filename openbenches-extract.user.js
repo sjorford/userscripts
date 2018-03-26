@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.26.0
+// @version        2018.03.26.1
 // @match          https://openbenches.org/
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -10,7 +10,7 @@
 
 $(function() {
 	
-	var threshold = 1.1; // km
+	var threshold = 1.2; // km
 	
 	window.sjo = window.sjo || {};
 	
