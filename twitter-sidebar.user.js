@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.01
+// @version        2018.03.27.0
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -393,7 +393,7 @@ $(function() {
 		console.log('load sidebar items');
 		var lastUpdate = localStorage.getItem('sjoSidebarUpdated');
 		//console.log('last update', lastUpdate);
-		if (!lastUpdate || moment(lastUpdate, 'YYYY-MM-DD HH:mm:ss').isBefore(moment().subtract(10, 'minutes'))) {
+		if (!lastUpdate || moment(lastUpdate, 'YYYY-MM-DD HH:mm:ss').isBefore(moment().subtract(1, 'hours'))) {
 			console.log('updating from online storage', lastUpdate);
 			var options = {
 				method: 'GET',
@@ -429,6 +429,11 @@ $(function() {
 			setStatus('sjo-sidebar-status-read');
 		} else {
 			console.log('online storage not found', response.status, response.statusText, response.responseText);
+			console.log('loading from local storage');
+			sidebarItems = JSON.parse(localStorage.getItem('sjoSidebarItems'));
+			renderSidebarItems();
+			setStatus('sjo-sidebar-status-read');
+			localStorage.setItem('sjoSidebarUpdated', moment().format('YYYY-MM-DD HH:mm:ss'));
 		}
 	}
 	
