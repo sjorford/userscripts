@@ -56,6 +56,7 @@ $(function() {
 //		{'name': 'birth_date',			'display': 'DOB',		'filter': false, 	'sort': 'text',		},
 //		{'name': '_gender',				'display': 'Sex',		'filter': false, 	'sort': 'text',		'icon': true},
 //		{'name': '_image',				'display': 'Img',		'filter': false, 	'sort': 'text',		'icon': true},
+		{'name': 'favourite_biscuits',	'display': 'Biscuits',	'filter': false, 	'sort': 'text',		},
 	];
 	
 	var linkTypes = [
