@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.26.1
+// @version        2018.03.31.0
 // @match          https://openbenches.org/
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -10,18 +10,20 @@
 
 $(function() {
 	
-	var threshold = 1.2; // km
+	var threshold = 1.5; // km
 	
-	window.sjo = window.sjo || {};
+	window.sjoExtractBenches = extractBenches;
+	console.log("registered sjoExtractBenches()");
+
+	window.sjoDistanceLatLon = getDistanceFromLatLonInKm;
+	console.log("registered sjoDistanceLatLon(lat1,lon1,lat2,lon2)");
+
+	window.sjoDrawCircles = drawCircles;
+	console.log("registered sjoDrawCircles()");
 	
-	window.sjo.extractBenches = extractBenches;
-	console.log("registered sjo.extractBenches()");
-
-	window.sjo.distanceLatLon = getDistanceFromLatLonInKm;
-	console.log("registered sjo.distanceLatLon(lat1,lon1,lat2,lon2)");
-
-	window.sjo.drawCircles = drawCircles;
-	console.log("registered sjo.drawCircles()");
+	// Fix number of benches in description
+	var header = $('h2[itemprop="description"]');
+	header.text(header.text().replace(/\d+,\d+/, benches.features.length.toString().replace(/(\d{3})$/, ',$1')));
 
 	function extractBenches() {
 
@@ -38,19 +40,25 @@ $(function() {
 			};
 		});
 		
+		var maxLatDifference = 1;
+		var maxLonDifference = 3;
+		var maxDistance = 100;
+		
 		// Calculate the distance between all benches
 		for (var i = 0; i < allBenches.length; i++) {
 			for (var j = i + 1; j < allBenches.length; j++) {
 				
+				// Limit distance to 100km (just under 1 degree of latitude)
 				var distance;
-				if (Math.abs(allBenches[i].lat - allBenches[j].lat) > 1 
-					|| Math.abs(allBenches[i].lon - allBenches[j].lon) > 1) {
+				if (Math.abs(allBenches[i].lat - allBenches[j].lat) > maxLatDifference
+					|| Math.abs(allBenches[i].lon - allBenches[j].lon) > maxLonDifference) {
 					distance = Infinity;
 				} else {
 					distance = getDistanceFromLatLonInKm(
 						allBenches[i].lat, allBenches[i].lon,
 						allBenches[j].lat, allBenches[j].lon);
 				}
+				if (distance > maxDistance) distance = Infinity;
 				
 				allBenches[i].distArray[allBenches[j].id] = distance;
 				allBenches[j].distArray[allBenches[i].id] = distance;
@@ -112,7 +120,7 @@ $(function() {
 				$('<td></td>').text(bench.lat.toFixed(6)).appendTo(row);
 				$('<td></td>').text(bench.lon.toFixed(6)).appendTo(row);
 				$('<td></td>').append(textLink).appendTo(row);
-				$('<td></td>').text(nextClosest.toFixed(3)).appendTo(row);
+				$('<td></td>').text(nextClosest == Infinity ? '-' : nextClosest.toFixed(3)).appendTo(row);
 				
 			});
 
