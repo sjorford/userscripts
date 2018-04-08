@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.03.05.1
+// @version     2018.04.08.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -46,7 +46,7 @@ $(function() {
 		{'name': '_date',				'display': 'Date',		'filter': true, 	'sort': 'text',		'defaults': [defaultDate],		hidden: true},
 //		{'name': '_year',				'display': 'Year',		'filter': true, 	'sort': 'text',		}, //'defaults': ['2017']},
 //		{'name': '_type',				'display': 'Type',		'filter': true, 	'sort': 'text',		},
-		{'name': '_election',			'display': 'Election',	'filter': true, 	'sort': 'text',		},
+		{'name': '_area',				'display': 'Election',	'filter': true, 	'sort': 'text',		},
 //		{'name': 'post_id',				'display': 'ID',		'filter': false, 	'sort': 'text',		},
 		{'name': 'post_label',			'display': 'Post',		'filter': true, 	'sort': 'text',		},
 //		{'name': 'party_list_position',	'display': 'Pos',		'filter': false, 	'sort': 'number',	},
@@ -56,7 +56,7 @@ $(function() {
 //		{'name': 'birth_date',			'display': 'DOB',		'filter': false, 	'sort': 'text',		},
 //		{'name': '_gender',				'display': 'Sex',		'filter': false, 	'sort': 'text',		'icon': true},
 //		{'name': '_image',				'display': 'Img',		'filter': false, 	'sort': 'text',		'icon': true},
-		{'name': 'favourite_biscuits',	'display': 'Biscuits',	'filter': false, 	'sort': 'text',		},
+//		{'name': 'favourite_biscuits',	'display': 'Biscuits',	'filter': false, 	'sort': 'text',		},
 	];
 	
 	var linkTypes = [
@@ -85,7 +85,7 @@ $(function() {
 		} else {
 			var itemText = item.text().trim();
 			if (item.attr('href').match(/\/candidates-all\.csv$/)) {
-				$('<option></option>').attr('value', item.attr('href')).text(itemText + ' (' + defaultDate + ')').data('sjo-api-filters', {'_date': defaultDate}).appendTo(container);
+				$('<option></option>').attr('value', item.attr('href')).text(itemText + ' (' + defaultDate + ')').data('sjo-api-filters', {'_date': [defaultDate], '_type': ['local', 'mayor']}).appendTo(container);
 				$('<option></option>').attr('value', item.attr('href')).text(itemText).appendTo(container);
 			} else {
 				var textMatch = itemText.match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/i);
@@ -196,12 +196,13 @@ $(function() {
 			candidate.election;
 			
 		// Split election ID into components
-		var match = candidate.election.match(/^((local|mayor)\.[^\.]+|[^\.]+)\.(.*\.)?((\d\d\d\d)-\d\d-\d\d)$/);
-		candidate._type = match[1];
-		candidate._date = match[4];
-		candidate._year = match[5];
-		candidate._election = slugMap[candidate._type] ? slugMap[candidate._type] : candidate._type;
-		if (candidate._type.match(/mayor\./)) candidate.post_label = 'Mayor of ' + Utils.shortOrgName(candidate.post_label);
+		var match = candidate.election.match(/^(([^\.]+)(\.[^\.]+)?)(\..*)?\.((\d\d\d\d)-\d\d-\d\d)$/);
+		candidate._election = match[1];
+		candidate._type = match[2];
+		candidate._date = match[5];
+		candidate._year = match[6];
+		candidate._area = slugMap[candidate._election] ? slugMap[candidate._election] : candidate._election;
+		if (candidate._type == 'mayor') candidate.post_label = 'Mayor of ' + Utils.shortOrgName(candidate.post_label);
 		
 		// Add link summary field and individual linked cells
 		candidate._links = '';
