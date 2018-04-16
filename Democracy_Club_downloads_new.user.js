@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.04.16.0
+// @version     2018.04.16.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -610,7 +610,8 @@ function buildDownloadList(dropdown) {
 			// Add option to group
 			var downloadName = element.innerHTML.trim().match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/)[3];
 			downloadName = downloadName.replace(/^(City|City and County|Council|Mayor) of (the )?|Comhairle nan /, '').trim();
-			downloadName = downloadName.replace(/((City|County|County Borough) )?Council|Combined Authority|Mayoral Election/, '').trim();
+			downloadName = downloadName.replace(/((City|County|County Borough|Borough) )?Council|Combined Authority|Mayoral Election/, '').trim();
+			downloadName = downloadName.replace(/\./, '').trim();
 			downloadName = downloadName.replace(/London Corporation/, 'City of London').trim();
 			groupHtml += `<option value="${element.href}">${downloadName}</option>`;
 			
