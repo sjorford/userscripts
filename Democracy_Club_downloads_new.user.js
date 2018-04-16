@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.04.15.0
+// @version     2018.04.16.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -184,8 +184,8 @@ var dataFields = {
 // Download buttons
 var allCandidatesUrl = '/media/candidates-all.csv';
 var buttonSpecs = {
-	'all':			{text: 'All', 		template: 'standard', 		urls: [allCandidatesUrl]},
-	'local18':		{text: 'LE 18', 	template: 'standard',	urls: [allCandidatesUrl],	limits: {election_date: ['2017-05-04']}},
+	'all':			{text: 'All', 		template: 'standard', 	urls: [allCandidatesUrl]},
+	'local18':		{text: 'LE 18', 	template: 'superbrief',	urls: [allCandidatesUrl],	limits: {election_date: ['2018-05-03'], _election_type: ['local', 'mayor']}},
 	'local17':		{text: 'LE 17', 	template: 'standard',	urls: [allCandidatesUrl],	limits: {election_date: ['2017-05-04']}},
 	'ge15':			{text: 'GE 15', 	template: 'ge', 		urls: ['/media/candidates-2015.csv']},
 	'ge17':			{text: 'GE 17', 	template: 'ge', 		urls: ['/media/candidates-parl.2017-06-08.csv']},
@@ -197,7 +197,7 @@ var buttonSpecs = {
 	//'test':  		{text: 'Test', 		template: 'ge2bio', 	urls: ['/media/candidates-local.huntingdonshire.2017-05-04.csv', '/media/candidates-local.huntingdonshire.2016-05-05.csv']},
 	'other':		{text: 'Other',   	template: 'standard',	urls: null},
 };
-var defaultButton = buttonSpecs.test ? 'test' : 'all';
+var defaultButton = buttonSpecs.test ? 'test' : 'local18';
 
 // Fields to be displayed
 var templates = {
@@ -247,6 +247,16 @@ var templates = {
 			'party_id',
 			'party_name',
 			'has:elected',
+	]},
+	
+	superbrief: {
+		display: 'Superbrief', 
+		columns: [
+			'id',
+			'name',
+			'_election_name',
+			'_post_label',
+			'party_name',
 	]},
 	
 	ge: {
