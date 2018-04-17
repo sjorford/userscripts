@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.04.17.0
+// @version     2018.04.17.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -184,7 +184,7 @@ var dataFields = {
 // Download buttons
 var allCandidatesUrl = '/media/candidates-all.csv';
 var buttonSpecs = {
-	'all':			{text: 'All', 		template: 'standard', 	urls: [allCandidatesUrl]},
+	'all':			{text: 'All', 		template: 'brief',  	urls: [allCandidatesUrl]},
 	'local18':		{text: 'LE 18', 	template: 'superbrief',	urls: [allCandidatesUrl],	limits: {election_date: ['2018-05-03'], _election_type: ['local', 'mayor']}},
 	'local17':		{text: 'LE 17', 	template: 'standard',	urls: [allCandidatesUrl],	limits: {election_date: ['2017-05-04']}},
 	'ge15':			{text: 'GE 15', 	template: 'ge', 		urls: ['/media/candidates-2015.csv']},
@@ -1772,10 +1772,10 @@ function findDuplicates() {
 		var candidate = unmatched[index];
 		$('#sjo-api-status-dupes').text(`Checking ${index + 1} of ${tableData.length}; ${groups.length} groups found`);
 		
-		// Start with an unmatched 2017 candidate
-		//if (!candidate.__matched && candidate._election_year === 2017) {
+		// Start with an unmatched 2018 candidate
+		if (!candidate.__matched && candidate._election_year === 2018) {
 		//if (!candidate.__matched && candidate.election_date === '2017-06-08') {
-		if (true) {
+		//if (true) {
 			
 			// Add this candidate to the pending list
 			candidate.__matched = true;
@@ -1791,7 +1791,8 @@ function findDuplicates() {
 				// Loop through all other unmatched rows
 				$.each(unmatched, (index2, c2) => {
 					if (c2.__matched) return;
-					if (c2._election_type != 'parl') return; // *******************
+					//if (c2._election_type != 'parl') return; // *******************
+					if (c2._election_year == 2010) return;
 					
 					//if ((c1.id == 5812 && c2.id == 10249) || (c2.id == 5812 && c1.id == 10249)) console.log(c1, c2);
 					
