@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.04.16.3
+// @version     2018.04.17.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -1029,7 +1029,7 @@ function cleanData(index, candidate) {
 		candidate.election;
 	
 	// Tweak ward names
-	candidate._post_label = candidate.post_label.replace(/^(Police and Crime Commissioner for|London Borough of) | (ward|Police|Constabulary|Combined Authority)$/g, '').trim();
+	candidate._post_label = candidate.post_label.replace(/^(Police and Crime Commissioner for|London Borough of) | (ward|Police|Constabulary|Combined Authority|Borough Council)$/g, '').trim();
 	if (candidate._post_label == 'Sheffield Brightside and Hillsborough') candidate._post_label = 'Sheffield, Brightside and Hillsborough';
 	
 	// Election
