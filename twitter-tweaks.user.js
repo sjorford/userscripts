@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.03.31.0
+// @version     2018.04.17.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -31,8 +31,10 @@ $(`<style>
 	.component[data-component-context="more_lists"] {display: none;}
 	
 	.StickersMediaImage-stickerLink {display: none;}
-	
+
 	li[data-suggestion-json*="ActivityTweet"] {display: none;}
+
+	.tweet.muting {display: none;}
 	
 </style>`).appendTo('head');
 
