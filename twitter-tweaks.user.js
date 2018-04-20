@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.04.17.0
+// @version     2018.04.20.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -18,6 +18,7 @@ $(`<style>
 	[data-trend-name="Katie Hopkins"],
 	[data-trend-name="Michael Howard"],
 	[data-trend-name="Nadine Dorries"],
+	[data-trend-name="Owen Jones"],
 	[data-trend-name="Peter Hitchens"],
 	[data-trend-name="Piers Morgan"],
 	[data-trend-name="Priti Patel"],
