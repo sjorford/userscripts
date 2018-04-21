@@ -2,8 +2,8 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.04.05.0
-// @match          https://openbenches.org/
+// @version        2018.04.21.0
+// @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -15,6 +15,7 @@ $(function() {
 		.sjo-table td {border: 1px solid black; padding: 0.25em;}
 		.sjo-table a {text-decoration: none;}
 		.sjo-table a:hover {text-decoration: underline;}
+		a[href="/login/"] {background-color: yellow; padding: 0.5em; border: 2px solid black; border-radius: 0.25em;}
 	</style>`).appendTo('head');
 	
 	var threshold = 1.5; // km
