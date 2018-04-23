@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.04.23.2
+// @version        2018.04.23.3
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -20,7 +20,7 @@ jQuery(function() {
 		a[href="/login/"] {background-color: yellow; padding: 0.5em; border: 2px solid black; border-radius: 0.25em;}
 	</style>`).appendTo('head');
 	
-	if (window.location.href != 'https://openbenches.org/') return;
+	if (window.location.href.split('#')[0] != 'https://openbenches.org/') return;
 	
 	var threshold = 1.5; // km
 	
