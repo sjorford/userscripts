@@ -2,10 +2,9 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.04.21.1
+// @version        2018.04.23.0
 // @match          https://openbenches.org/*
 // @grant          none
-// @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
 
 $(function() {
@@ -19,17 +18,6 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	var threshold = 1.5; // km
-	
-	/*
-	window.sjoExtractBenches = extractBenches;
-	console.log("registered sjoExtractBenches()");
-
-	window.sjoDistanceLatLon = getDistanceFromLatLonInKm;
-	console.log("registered sjoDistanceLatLon(lat1,lon1,lat2,lon2)");
-
-	window.sjoDrawCircles = drawCircles;
-	console.log("registered sjoDrawCircles()");
-	*/
 	
 	var buttonBar = $('<div class="button-bar"></div>').insertBefore('footer');
 	$('<a href="#" class="hand-drawn">Draw circles</a>').click(drawCircles).appendTo(buttonBar);
