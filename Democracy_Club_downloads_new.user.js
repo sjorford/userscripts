@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.01.0
+// @version     2018.05.01.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -210,7 +210,6 @@ var templates = {
 			'_election_type',
 			'_election_name',
 			'_post_label',
-			'has:_byelection',
 			'party_name',
 			'has:email',
 			'has:twitter_username',
