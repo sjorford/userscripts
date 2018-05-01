@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.04.23.3
+// @version        2018.05.01.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -118,7 +118,8 @@ jQuery(function() {
 				
 				var row = $('<tr></tr>').appendTo('table');
 				
-				var text = bench.text.replace(/&amp;/g, '&').replace(/(<br \/>|\s)+/g, ' ').trim();
+				var text = bench.text.replace(/&amp;/g, '&').replace(/(<br \/>|\s)+/g, ' ').trim()
+					.replace(/&(a(m(p)?)?)?…$/, '&…');
 				if (text.charAt(0) == '"') {
 					text = '="' + text.replace(/"/g, '""') + '"';
 				}
