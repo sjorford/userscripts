@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.04.17.1
+// @version     2018.05.01.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -31,7 +31,7 @@ var maxTableRows = 100;
 var areasByKey;
 
 // Dupe checking parameters
-var minTotalScore = 0.90;
+var minTotalScore = 0.95;
 var minNameScore = 0.95;
 	
 // TODO: add London Assembly to this?
@@ -185,7 +185,7 @@ var dataFields = {
 var allCandidatesUrl = '/media/candidates-all.csv';
 var buttonSpecs = {
 	'all':			{text: 'All', 		template: 'brief',  	urls: [allCandidatesUrl]},
-	'local18':		{text: 'LE 18', 	template: 'superbrief',	urls: [allCandidatesUrl],	limits: {election_date: ['2018-05-03'], _election_type: ['local', 'mayor']}},
+	'local18':		{text: 'LE 18', 	template: 'le18',		urls: [allCandidatesUrl],	limits: {election_date: ['2018-05-03'], _election_type: ['local', 'mayor']}},
 	'local17':		{text: 'LE 17', 	template: 'standard',	urls: [allCandidatesUrl],	limits: {election_date: ['2017-05-04']}},
 	'ge15':			{text: 'GE 15', 	template: 'ge', 		urls: ['/media/candidates-2015.csv']},
 	'ge17':			{text: 'GE 17', 	template: 'ge', 		urls: ['/media/candidates-parl.2017-06-08.csv']},
@@ -201,6 +201,30 @@ var defaultButton = buttonSpecs.test ? 'test' : 'local18';
 
 // Fields to be displayed
 var templates = {
+	
+	le18: {
+		display: 'Local elections 2018', 
+		columns: [
+			'id',
+			'name',
+			'_election_type',
+			'_election_name',
+			'_post_label',
+			'has:_byelection',
+			'party_name',
+			'has:email',
+			'has:twitter_username',
+			'has:facebook_personal_url',
+			'has:facebook_page_url',
+			'has:homepage_url',
+			'has:wikipedia_url',
+			'has:linkedin_url',
+			'has:party_ppc_page_url',
+			'birth_date',
+			'_age_at_election',
+			'_gender_icon',
+			'has:image_url',
+	]},
 	
 	standard: {
 		display: 'Standard', 
@@ -443,6 +467,23 @@ var templates = {
 			'party_name',
 			'_wikipedia',
 			'has:elected',
+	]},
+	
+	twitter: {
+		display: 'Twitter', 
+		columns: [
+			'id',
+			'name',
+			'election_date',
+			'_election_year',
+			'_country',
+			'_election_type',
+			'_election_name',
+			'_post_label',
+			'party_id',
+			'party_name',
+			'has:twitter_username',
+			'twitter_username',
 	]},
 	
 	names: {display: 'Name split', 		columns: ['id', 'name', 'honorific_prefix', '_first_name', '_middle_names', '_last_name', 'honorific_suffix', '_short_name']},
