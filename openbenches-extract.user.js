@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.01.0
+// @version        2018.05.09.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -125,12 +125,12 @@ jQuery(function() {
 				}
 				var textLink = $('<a></a>').text(text).attr('href', `https://openbenches.org/bench/${bench.id}/`);
 				
-				$('<td></td>').text(groupBenches[0].id).appendTo(row);
 				$('<td></td>').text(bench.id).appendTo(row);
+				$('<td></td>').text(groupBenches[0].id).appendTo(row);
 				$('<td></td>').text(bench.lat.toFixed(6)).appendTo(row);
 				$('<td></td>').text(bench.lon.toFixed(6)).appendTo(row);
 				$('<td></td>').append(textLink).appendTo(row);
-				$('<td></td>').text(nextClosest == Infinity ? '-' : nextClosest.toFixed(3)).appendTo(row);
+				//$('<td></td>').text(nextClosest == Infinity ? '-' : nextClosest.toFixed(3)).appendTo(row);
 				
 			});
 
