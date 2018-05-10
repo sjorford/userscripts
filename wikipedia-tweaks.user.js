@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2017-12-07
+// @version        2018.05.10.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -11,6 +11,21 @@
 // ==/UserScript==
 
 $(function() {
+	
+	$(`<style>
+		.flagicon {position: relative;}
+		.flagicon.sjo-flagicon-ENG::before {
+			content: "ENG";
+			position: absolute;
+			top: -8px;
+			width: 23px;
+			text-align: center;
+			font-size: 5pt;
+			font-weight: bold;
+		}
+	</style>`).appendTo('head');
+	
+	$('.flagicon:has(img[alt="England"])').addClass('sjo-flagicon-ENG');
 	
 	// Hide long references lists
 	$('.reflist').each((index, reflist) => {
