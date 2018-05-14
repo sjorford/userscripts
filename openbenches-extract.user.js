@@ -2,10 +2,11 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.09.0
+// @version        2018.05.14.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
 jQuery.noConflict();
@@ -36,7 +37,9 @@ jQuery(function() {
 	function extractBenches(event) {
 		if (event) event.preventDefault();
 
-		var table = $('<table class="sjo-table"></table>').appendTo('body');
+		var table = $('<table class="sjo-table"></table>')
+			.click(event => event.target.tagName == 'A' ? true : table.selectRange())
+			.appendTo('body');
 		
 		// Parse list of benches
 		var allBenches = benches.features.map(function(bench) {
@@ -49,15 +52,16 @@ jQuery(function() {
 			};
 		});
 		
-		var maxLatDifference = 1;
-		var maxLonDifference = 3;
-		var maxDistance = 100;
+		var maxLatDifference = 0.1;
+		var maxLonDifference = 0.3;
+		//var maxDistance = 10;
+		// 1 degree of latitude ~ 111km
 		
 		// Calculate the distance between all benches
 		for (var i = 0; i < allBenches.length; i++) {
 			for (var j = i + 1; j < allBenches.length; j++) {
 				
-				// Limit distance to 100km (just under 1 degree of latitude)
+				// Limit distance
 				var distance;
 				if (Math.abs(allBenches[i].lat - allBenches[j].lat) > maxLatDifference
 					|| Math.abs(allBenches[i].lon - allBenches[j].lon) > maxLonDifference) {
@@ -67,7 +71,7 @@ jQuery(function() {
 						allBenches[i].lat, allBenches[i].lon,
 						allBenches[j].lat, allBenches[j].lon);
 				}
-				if (distance > maxDistance) distance = Infinity;
+				//if (distance > maxDistance) distance = Infinity;
 				
 				allBenches[i].distArray[allBenches[j].id] = distance;
 				allBenches[j].distArray[allBenches[i].id] = distance;
@@ -102,6 +106,7 @@ jQuery(function() {
 			}
 			
 			// Find the next closest bench
+			/*
 			var nextClosest = Infinity;
 			for (var i = 0; i < groupBenches.length; i++) {
 				for (var j = 0; j < allBenches.length; j++) {
@@ -112,15 +117,22 @@ jQuery(function() {
 					}
 				}
 			}
+			*/
 			
 			// Write the group to the table
 			$.each(groupBenches, (index, bench) => {
 				
 				var row = $('<tr></tr>').appendTo('table');
 				
-				var text = bench.text.replace(/&amp;/g, '&').replace(/(<br \/>|\s)+/g, ' ').trim()
-					.replace(/&(a(m(p)?)?)?…$/, '&…');
-				if (text.charAt(0) == '"') {
+				var text = bench.text.replace(/(<br \/>)/g, '\n');
+				if (text.length < 128) {
+					text = text.replace(/…$/, '');
+				}
+				text = text.replace(/\s+/g, ' ').trim()
+					.replace(/&amp;/g, '&')
+					.replace(/&(a(m(p)?)?)?…$/, '&…')
+					.replace(/\s+…$/, '…');
+				if (text.charAt(0) == '"' || text.charAt(0) == "'") {
 					text = '="' + text.replace(/"/g, '""') + '"';
 				}
 				var textLink = $('<a></a>').text(text).attr('href', `https://openbenches.org/bench/${bench.id}/`);
