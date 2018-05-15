@@ -2,7 +2,7 @@
 // @name        Proboards tweaks
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
-// @version     2018.05.07.0
+// @version     2018.05.15.0
 // @grant       none
 // ==/UserScript==
 
