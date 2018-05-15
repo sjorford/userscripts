@@ -13,6 +13,7 @@ $(function() {
 		div.ui-form-error     + img + style + div[id$="-banner"],
 		iframe#rufous-sandbox       + style + div[id$="-banner"],
 		iframe#rufous-sandbox + img + style + div[id$="-banner"],
+		iframe#rufous-sandbox + img + style + style + div[id$="-banner"],
 		div.ui-dialog.ui-widget.ui-widget-content + img + style + div[id$="-overlay"],
 		div.ui-dialog.ui-widget.ui-widget-content + img + style + div[id$="-banner"],
 		div#support-message,
