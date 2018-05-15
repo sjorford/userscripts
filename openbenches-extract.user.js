@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.15.0
+// @version        2018.05.15.1
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -29,6 +29,8 @@ jQuery(function() {
 	$('<a href="#" class="hand-drawn">Draw circles</a>').click(drawCircles).appendTo(buttonBar);
 	buttonBar.append(' ');
 	$('<a href="#" class="hand-drawn">Extract benches</a>').click(extractBenches).appendTo(buttonBar);
+	buttonBar.append(' ');
+	$('<a href="/leaderboard" class="hand-drawn">Leaderboard</a>').appendTo(buttonBar);
 	
 	// Fix number of benches in description
 	//var header = $('h2[itemprop="description"]');
