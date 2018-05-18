@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.18.0
+// @version     2018.05.18.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -186,6 +186,7 @@ var dataFields = {
 var allCandidatesUrl = '/media/candidates-all.csv';
 var buttonSpecs = {
 	'all':			{text: 'All', 		template: 'brief',  	urls: [allCandidatesUrl]},
+	'local1819':	{text: 'LE 18-19', 	template: 'le1819',		urls: [allCandidatesUrl],	limits: {election_date: {from: '2018-05-04', to: '2019-05-02'}, _election_type: ['local']}},
 	'local18':		{text: 'LE 18', 	template: 'le18',		urls: [allCandidatesUrl],	limits: {election_date: ['2018-05-03'], _election_type: ['local', 'mayor']}},
 	'local17':		{text: 'LE 17', 	template: 'standard',	urls: [allCandidatesUrl],	limits: {election_date: ['2017-05-04']}},
 	'ge15':			{text: 'GE 15', 	template: 'ge', 		urls: ['/media/candidates-2015.csv']},
@@ -202,6 +203,29 @@ var defaultButton = buttonSpecs.test ? 'test' : 'local18';
 
 // Fields to be displayed
 var templates = {
+	
+	le1819: {
+		display: 'Local elections 2018-19', 
+		columns: [
+			'id',
+			'name',
+			'election_date',
+			'_election_type',
+			'_election_name',
+			'_post_label',
+			'party_name',
+			'has:email',
+			'has:twitter_username',
+			'has:facebook_personal_url',
+			'has:facebook_page_url',
+			'has:homepage_url',
+			'has:wikipedia_url',
+			'has:linkedin_url',
+			'has:party_ppc_page_url',
+			'birth_date',
+			'_gender_icon',
+			'has:image_url',
+	]},
 	
 	le18: {
 		display: 'Local elections 2018', 
@@ -1006,7 +1030,16 @@ function prepareRender() {
 	if (currentExtract.limits) {
 		$.each(currentExtract.limits, (key, values) => {
 			console.log('prepareRender', 'limits', key, values);
-			tableData = $.grep(tableData, record => !record[0] || values.indexOf(record[0][key]) >= 0);
+			if (Array.isArray(values)) {
+				tableData = $.grep(tableData, record => !record[0] || values.indexOf(record[0][key]) >= 0);
+			} else {
+				if (values.from) {
+					tableData = $.grep(tableData, record => !record[0] || record[0][key] >= values.from);
+				}
+				if (values.to) {
+					tableData = $.grep(tableData, record => !record[0] || record[0][key] <= values.to);
+				}
+			}
 		});
 		console.log('prepareRender', tableData.length);
 	}
