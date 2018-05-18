@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.01.1
+// @version     2018.05.18.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -29,9 +29,10 @@ var dupesActive = true;
 var maxTableRows = 100;
 //var areas, areasByKey, parties, electionTypes;
 var areasByKey;
+var badAreaNames = [];
 
 // Dupe checking parameters
-var minTotalScore = 0.95;
+var minTotalScore = 1;
 var minNameScore = 0.95;
 	
 // TODO: add London Assembly to this?
@@ -1098,7 +1099,8 @@ function cleanData(index, candidate) {
 		candidate.__area = area;
 		candidate._county = area.county;
 		candidate._country = area.country;
-	} else {
+	} else if (badAreaNames.indexOf(areaName) < 0) {
+		badAreaNames.push(areaName);
 		console.warn('cleanData', 'area not found', candidate._election_type, areaName);
 	}
 	
@@ -1918,7 +1920,9 @@ function findDuplicates() {
 		
 			// Check for matching counties
 			var countyOverlap = false;
-			$.each(c1.__area.county, (index, county) => countyOverlap = countyOverlap || c2.__area.county.indexOf(county) >= 0);
+			if (c1.__area.county && c2.__area.county) {
+				$.each(c1.__area.county, (index, county) => countyOverlap = countyOverlap || c2.__area.county.indexOf(county) >= 0);
+			}
 			if (!countyOverlap) {
 				totalScore = totalScore * 0.99;
 				if (totalScore < minTotalScore) return zeroScore;
