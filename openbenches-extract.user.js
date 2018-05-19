@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.15.1
+// @version        2018.05.19.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -22,6 +22,10 @@ jQuery(function() {
 	</style>`).appendTo('head');
 	
 	if (window.location.href.split('#')[0] != 'https://openbenches.org/') return;
+	
+	// Resize map
+	$('#map').css({width: 'auto', height: '600px'});
+	map.invalidateSize();
 	
 	var threshold = 1.5; // km
 	
