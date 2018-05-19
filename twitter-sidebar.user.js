@@ -2,7 +2,7 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.02.0
+// @version        2018.05.19.0
 // @match          https://twitter.com
 // @match          https://twitter.com/*
 // @grant          GM_xmlhttpRequest
@@ -25,6 +25,7 @@ $(`<style>
 	.sjo-sidebar-separator {text-align: center;}
 	
 	.sjo-sidebar-item {padding: 2px;}
+	.sjo-current {background-color: lavender;}
 	.sjo-sidebar-status-edit .sjo-sidebar-item:hover {background-color: pink;}
 	
 	.sjo-sidebar-input-key, .sjo-sidebar-input-secret {display: block;}
@@ -492,6 +493,7 @@ $(function() {
 				a.html(a.html().replace(/\b(or)\b/gi, '<span class="sjo-sidebar-text-subtle">$1</span>'));
 			}
 			
+			if (window.location.href == 'https://twitter.com' + href) li.addClass('sjo-current');
 			li.append(`<span class="${faClass}"></span>`).append(a);
 			
 		}
