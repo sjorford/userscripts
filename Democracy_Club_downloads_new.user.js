@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.21.0
+// @version     2018.05.21.2
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -199,7 +199,7 @@ var buttonSpecs = {
 	//'test':  		{text: 'Test', 		template: 'ge2bio', 	urls: ['/media/candidates-local.huntingdonshire.2017-05-04.csv', '/media/candidates-local.huntingdonshire.2016-05-05.csv']},
 	'other':		{text: 'Other',   	template: 'standard',	urls: null},
 };
-var defaultButton = buttonSpecs.test ? 'test' : 'local18';
+var defaultButton = buttonSpecs.test ? 'test' : 'local1819';
 
 // Fields to be displayed
 var templates = {
@@ -224,6 +224,11 @@ var templates = {
 			'birth_date',
 			'_gender_icon',
 			'has:image_url',
+		],
+		sort: [
+			{column: 'election_date', 	order: 1},
+			{column: '_election_name', 	order: 1},
+			{column: '_post_label', 	order: 1},
 	]},
 	
 	le18: {
@@ -673,9 +678,10 @@ function buildDownloadList(dropdown) {
 		links.each((index, element) => {
 			
 			// Add option to group
+			// TODO: use standard Utils function here
 			var downloadName = element.innerHTML.trim().match(/^Download the (\d{4} )?(The )?(.*?)( (local|mayoral) election)? candidates$/)[3];
 			downloadName = downloadName.replace(/^(City|City and County|Council|Mayor|London Borough) of (the )?|Comhairle nan /, '').trim();
-			downloadName = downloadName.replace(/((City|County|County Borough|Borough) )?Council|Combined Authority|Mayoral Election/, '').trim();
+			downloadName = downloadName.replace(/((City|County|County Borough|Metropolitan Borough|Borough) )?Council|Combined Authority|Mayoral Election/, '').trim();
 			downloadName = downloadName.replace(/\./, '').trim();
 			downloadName = downloadName.replace(/London Corporation/, 'City of London').trim();
 			groupHtml += `<option value="${element.href}">${downloadName}</option>`;
@@ -1060,8 +1066,36 @@ function prepareRender() {
 	console.log('prepareRender', 'tableColumns', tableColumns);
 	
 	// Set initial sort
-	sortColumn = currentTemplate.columns.indexOf('_row');
-	sortOrder = 1;
+	if (currentTemplate.sort) {
+		
+		// Sort by template
+		sortColumn = currentTemplate.sort[0].column;
+		sortOrder = currentTemplate.sort[0].order;
+		
+		tableData = tableData.sort((a, b) => {
+			for (var i = 0; i < currentTemplate.sort.length; i++) {
+				
+				var aValue = a[0][currentTemplate.sort[i].column];
+				var bValue = b[0][currentTemplate.sort[i].column];
+				
+				if (aValue > bValue) {
+					return currentTemplate.sort[i].order;
+				} else if (aValue < bValue) {
+					return -currentTemplate.sort[i].order;
+				}
+				
+			}
+			return 0;
+		});
+		
+	} else {
+		
+		// Default sort
+		sortColumn = currentTemplate.columns.indexOf('_row');
+		sortOrder = 1;
+		
+	}
+	
 	console.log('prepareRender', 'sortColumn', sortColumn, sortOrder);
 	updateSortIcon();
 	
