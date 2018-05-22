@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.19.0
+// @version        2018.05.22.1
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -21,25 +21,43 @@ jQuery(function() {
 		a[href="/login/"] {background-color: yellow; padding: 0.5em; border: 2px solid black; border-radius: 0.25em;}
 	</style>`).appendTo('head');
 	
-	if (window.location.href.split('#')[0] != 'https://openbenches.org/') return;
-	
-	// Resize map
-	$('#map').css({width: 'auto', height: '600px'});
-	map.invalidateSize();
-	
 	var threshold = 1.5; // km
 	
-	var buttonBar = $('<div class="button-bar"></div>').insertBefore('footer');
-	$('<a href="#" class="hand-drawn">Draw circles</a>').click(drawCircles).appendTo(buttonBar);
-	buttonBar.append(' ');
-	$('<a href="#" class="hand-drawn">Extract benches</a>').click(extractBenches).appendTo(buttonBar);
-	buttonBar.append(' ');
-	$('<a href="/leaderboard" class="hand-drawn">Leaderboard</a>').appendTo(buttonBar);
+	if (window.location.href.split('#')[0] == 'https://openbenches.org/') {
+		formatMainPage();
+	} else if (window.location.href.indexOf('/openbenches.org/bench/') > 0) {
+		formatBenchPage();
+	}
 	
-	// Fix number of benches in description
-	//var header = $('h2[itemprop="description"]');
-	//header.text(header.text().replace(/\d+,\d+/, benches.features.length.toString().replace(/(\d{3})$/, ',$1')));
-
+	function formatMainPage() {
+		
+		// Resize map
+		$('#map').css({width: 'auto', height: '600px'});
+		map.invalidateSize();
+		
+		var buttonBar = $('<div class="button-bar"></div>').insertBefore('footer');
+		$('<a href="#" class="hand-drawn">Draw circles</a>').click(drawCircles).appendTo(buttonBar);
+		buttonBar.append(' ');
+		$('<a href="#" class="hand-drawn">Extract benches</a>').click(extractBenches).appendTo(buttonBar);
+		buttonBar.append(' ');
+		$('<a href="/leaderboard" class="hand-drawn">Leaderboard</a>').appendTo(buttonBar);
+		
+	}
+	
+	function formatBenchPage() {
+		
+		var id = window.location.href.match(/\/bench\/(\d+)/)[1] - 0;
+		
+		var buttonBar = $('<div class="button-bar"></div>')
+			.append(`<a href="/bench/${id-1}/" class="hand-drawn">Prev</a>`)
+			.append(' ')
+			.append('<form style="display: inline-block;" action="/bench/" method="post"><input id="random" name="random" value="random" type="hidden"><input class="hand-drawn" value="Random" type="submit"></form>')
+			.append(' ')
+			.append(`<a href="/bench/${id+1}/" class="hand-drawn">Next</a>`)
+			.insertBefore('#benchInscription');
+		
+	}
+	
 	function extractBenches(event) {
 		if (event) event.preventDefault();
 
