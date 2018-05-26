@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.23.1
+// @version     2018.05.26.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -32,8 +32,8 @@ var areasByKey;
 var badAreaNames = [];
 
 // Dupe checking parameters
-var minTotalScore = 1;
-var minNameScore = 0.95;
+var minTotalScore = 0.9;
+var minNameScore = 1;
 	
 // TODO: add London Assembly to this?
 var electionMappings = {}; //{'parl': 'Parliament'};
@@ -1863,6 +1863,8 @@ function buildRawOutputRow(dataRow) {
 function findDuplicates() {
 	console.log('findDuplicates');
 	
+	var debug = true;
+	
 	// Clear previous results
 	var table = $('#sjo-api-table-dupes').empty();
 	$('#sjo-api-button-dupes-pause').show();
@@ -1949,6 +1951,8 @@ function findDuplicates() {
 	
 	function calcScore(c1, c2) {
 		
+		var debugComments = [];
+		
 		if (c1.id == c2.id) return {'totalScore': 1, 'nameScore': 1};
 		
 		var zeroScore = {'totalScore': 0, 'nameScore': 0};
@@ -1969,12 +1973,14 @@ function findDuplicates() {
 		// Weight down conflicting elections
 		if (c1.election_date == c2.election_date && c1._election_type == c2._election_type) {
 			totalScore = totalScore * 0.95;
+			debugComments.push(`${totalScore.toFixed(2)} - ${c1.election_date}.${c1._election_type} == ${c2.election_date}.${c2._election_type}`);
 			if (totalScore < minTotalScore) return zeroScore;
 		}
 		
 		// Weight down 2010 (no SOPNs)
 		if (c1._election_year < 2015 || c2._election_year < 2015) {
 			totalScore = totalScore * 0.99;
+			debugComments.push(`${totalScore.toFixed(2)} - 2010 has no SOPNs`);
 			if (totalScore < minTotalScore) return zeroScore;
 		}
 		
@@ -1983,10 +1989,12 @@ function findDuplicates() {
 			// Find area overlap
 			if (c1.__area.overlaps.indexOf(c2.__area.id) < 0) {
 				totalScore = totalScore * 0.99;
+				debugComments.push(`${totalScore.toFixed(2)} - no overlap between ${c1.__area.id} ${c1.__area.area} and ${c2.__area.id} ${c2.__area.area}`);
 				if (totalScore < minTotalScore) return zeroScore;
 			}
 		
 			// Check for matching counties
+			/*
 			var countyOverlap = false;
 			if (c1.__area.county && c2.__area.county) {
 				$.each(c1.__area.county, (index, county) => countyOverlap = countyOverlap || c2.__area.county.indexOf(county) >= 0);
@@ -1995,6 +2003,7 @@ function findDuplicates() {
 				totalScore = totalScore * 0.99;
 				if (totalScore < minTotalScore) return zeroScore;
 			}
+			*/
 			
 		}
 		
@@ -2012,8 +2021,16 @@ function findDuplicates() {
 			(c1._normal_name === c1.name || c2._normal_name === c2._short_name ? 0 : jaroWinkler(c1._normal_name, c2._normal_name)));
 		
 		// Calculate overall score
-		totalScore = totalScore * nameScore;
-		if (totalScore < minTotalScore) return zeroScore;
+		if (nameScore != 1) {
+			totalScore = totalScore * nameScore;
+			debugComments.push(`${totalScore.toFixed(2)} - name score ${nameScore.toFixed(2)}`);
+			if (totalScore < minTotalScore) return zeroScore;
+		}
+		
+		if (debug) {
+			console.log(`calcScore - ${c1.id} ${c1.name} v ${c2.id} ${c2.name}`);
+			if (debugComments.length > 0) $.each(debugComments, (i, comment) => console.log(comment));
+		}
 		
 		return {'totalScore': totalScore, 'nameScore': nameScore};
 		
