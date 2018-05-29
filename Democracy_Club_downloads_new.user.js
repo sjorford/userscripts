@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.26.0
+// @version     2018.05.29.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -33,7 +33,7 @@ var areasByKey;
 var badAreaNames = [];
 
 // Dupe checking parameters
-var minTotalScore = 0.9;
+var minTotalScore = 0.98;
 var minNameScore = 1;
 	
 // TODO: add London Assembly to this?
@@ -1995,16 +1995,15 @@ function findDuplicates() {
 			}
 		
 			// Check for matching counties
-			/*
 			var countyOverlap = false;
 			if (c1.__area.county && c2.__area.county) {
 				$.each(c1.__area.county, (index, county) => countyOverlap = countyOverlap || c2.__area.county.indexOf(county) >= 0);
 			}
 			if (!countyOverlap) {
-				totalScore = totalScore * 0.99;
+				totalScore = totalScore * 0.98;
+				debugComments.push(`${totalScore.toFixed(2)} - no county overlap between ${c1.__area.id} ${c1.__area.area} and ${c2.__area.id} ${c2.__area.area}`);
 				if (totalScore < minTotalScore) return zeroScore;
 			}
-			*/
 			
 		}
 		
