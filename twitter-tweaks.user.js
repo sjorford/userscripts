@@ -40,8 +40,16 @@ $(`<style>
 	.wtf-module {display: none !important;}
 	.module.trends {display: none !important;}
 	
+	.sjo-botuser * {display: none !important;}
+	
 </style>`).appendTo('head');
 
 $(function() {
+	
+	function hide12345678() {
+		$('li').not('.sjo-botuser').find('a.account-group').filter((i,e) => e.href.match(/\d{8}$/)).closest('li').addClass('sjo-botuser');
+	}
+	
+	window.setInterval(hide12345678, 50);
 	
 });
