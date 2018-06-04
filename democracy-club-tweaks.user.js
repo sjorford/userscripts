@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2018.04.18.0
+// @version     2018.06.04.0
 // @grant       none
 // ==/UserScript==
 
@@ -59,6 +59,7 @@ $(`<style>
 	.document_viewer {min-height: 600px;}
 	
 	label {color: #222;}
+	.finder__forms__container {max-width: 1000px; width: auto !important;}
 	
 </style>`).appendTo('head');
 
