@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.05.29.0
+// @version     2018.06.05.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -582,6 +582,7 @@ $(function() {
 	// Add dupe finding buttons
 	var dupesWrapper = $('<div class="sjo-api-wrapper" id="sjo-api-dupes-wrapper"></div>').appendTo(wrapper).hide();
 	$('<input type="button" id="sjo-api-button-dupes" value="Find duplicates">').appendTo(dupesWrapper).click(findDuplicates);
+	$('<input type="button" id="sjo-api-button-splits" value="Find splits">').appendTo(dupesWrapper).click(findSplits);
 	$('<input type="button" id="sjo-api-button-dupes-pause" value="Pause">').appendTo(dupesWrapper).hide().click(pauseDuplicates);
 	$('<input type="button" id="sjo-api-button-dupes-resume" value="Resume">').appendTo(dupesWrapper).hide().click(resumeDuplicates);
 	$('<span id="sjo-api-status-dupes"></span>').appendTo(dupesWrapper);
@@ -1112,6 +1113,7 @@ function prepareRender() {
 	// Display buttons
 	$('#sjo-api-dupes-wrapper').show();
 	$('#sjo-api-button-dupes').show();
+	$('#sjo-api-button-splits').show();
 	$('#sjo-api-button-redo').show();
 
 }
@@ -1870,6 +1872,7 @@ function findDuplicates() {
 	var table = $('#sjo-api-table-dupes').empty();
 	$('#sjo-api-button-dupes-pause').show();
 	$('#sjo-api-button-dupes').hide();
+	$('#sjo-api-button-splits').hide();
 	
 	// Initialise data
 	var groups = [];
@@ -2168,4 +2171,123 @@ function jaroWinkler(s1, s2) {
 	}
 	*/
 	return weight;
+}
+
+// ================================================================
+// Find possible splits
+// ================================================================
+
+function findSplits() {
+	console.log('findSplits');
+	
+	var debug = true;
+	
+	// Clear previous results
+	var table = $('#sjo-api-table-dupes').empty();
+	$('#sjo-api-button-dupes-pause').show();
+	$('#sjo-api-button-dupes').hide();
+	$('#sjo-api-button-splits').hide();
+	
+	// Initialise data
+	var groups = [];
+	var index = 0;
+	var scores = [];
+	
+	checkData();
+	
+	// Check the next candidate in the data set
+	function checkData() {
+		
+		var i1 = index;
+		$('#sjo-api-status-dupes').text(`Checking ${index + 1} of ${tableData.length}; ${groups.length} groups found`);
+		
+		var found = false;
+		
+		while (i1 < tableData.length && tableData[i1][0].name == tableData[index][0].name) {
+			var c1 = tableData[i1][0];
+			scores[i1] = scores[i1] || 0;
+			
+			var i2 = i1 + 1;
+			while (i2 < tableData.length && tableData[i2][0].name == tableData[index][0].name) {
+				var c2 = tableData[i2][0];
+				scores[i2] = scores[i2] || 0;
+				
+				if (c1.id == c2.id) {
+					
+					if (c1._party_group != c2._party_group) {
+						if (c1.__area && c2.__area && c1.__area.id != c2.__area.id) {
+							if (c1.__area.overlaps.indexOf(c2.__area.id) < 0) {
+								var countyOverlap = false;
+								if (c1.__area.county && c2.__area.county) {
+									$.each(c1.__area.county, (index, county) => countyOverlap = countyOverlap || c2.__area.county.indexOf(county) >= 0);
+								}
+								if (!countyOverlap) found = true;
+								scores[i1] = scores[i2] = 1;
+							}
+						}
+					}
+					
+				}
+				i2++;
+			}
+			i1++;
+		}
+		
+		// Add to the table
+		if (found) {
+			var group = [];
+			for (var i = index; i < i1; i++) {
+				group.push(tableData[i][0]);
+			}
+			groups.push(group);
+			writeDupesTable(groups.length - 1, group);
+		}
+		
+		index = i1;
+		if (index < tableData.length) {
+			checkActiveFlag();
+		} else {
+			$('#sjo-api-button-dupes-pause, #sjo-api-button-dupes-resume, #sjo-api-button-dupes-more').hide();
+			$('#sjo-api-status-dupes').text(`Search complete; ${groups.length} groups found`);
+		}
+		
+	}
+	
+	function checkActiveFlag() {
+		if (dupesActive) {
+			setTimeout(checkData, 0);
+		} else {
+			setTimeout(checkActiveFlag, 1000);
+		}
+	}
+	
+	function writeDupesTable(groupIndex, matches) {
+		console.log('writeDupesTable', groupIndex, matches);
+		
+		// Show table if any matches found
+		table.show();
+		
+		var groupClass = `sjo-api-dupes-group-${groupIndex + 1}`;
+		
+		// Sort the group by ID and date
+		matches.sort((a, b) => a.id > b.id || (a.id == b.id && a.election_date > b.election_date));
+		$.each(matches, (matchIndex, match) => {
+			
+			// Write to the dupes table
+			var row = $(`<tr class="${groupClass}"></tr>`)
+				.addClass(matchIndex === 0 ? 'sjo-api-dupes-first' : '')
+				.addCell(groupIndex + 1)
+				.addCell(match.id)
+				.addCell('') // blank column for links
+				.addCellHTML('<a href="' + getLinkAddress(dataFields.name, match) + '">' + match.name + '</a>')
+				.addCell(match.election_date)
+				.addCell(match._election_area)
+				.addCell(match._post_label)
+				.addCell(match.party_name)
+				.appendTo(table);
+				
+		});
+		
+	}
+	
 }
