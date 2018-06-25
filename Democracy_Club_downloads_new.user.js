@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.06.20.0
+// @version     2018.06.25.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -673,10 +673,21 @@ function buildDownloadList(dropdown) {
 		var h3 = list.prevAll('h3').first();
 		var h4 = list.prevUntil(h3, 'h4').first();
 		var h5 = list.prevUntil(h4, 'h5').first();
-		var groupName = 
-			h5.length > 0 ? h5.text() + ' (' + h4.text().substr(-4) + ')' :
-			h4.length > 0 ? h4.text() :
-			h3.text();
+		
+		// Construct group name
+		var groupName = '';
+		if (h5.length > 0) {
+			var groupMoment = moment(h4.text(), 'Do MMMM YYYY');
+			if (groupMoment.month() == 4 && groupMoment.date() <= 7) {
+				groupName = `${h5.text()} (${groupMoment.year()})`;
+			} else {
+				groupName = `${h5.text()} (${groupMoment.format('D MMM YYYY')})`;
+			}
+		} else if (h4.length > 0) {
+			groupName = h4.text();
+		} else {
+			groupName = h3.text();
+		}
 		
 		// Process all links in this group
 		var groupHtml = '';
