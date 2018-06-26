@@ -1,10 +1,9 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2017-09-03
+// @version        2018.06.26.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @include        http://en.wikipedia.org/wiki/*
 // @include        https://en.wikipedia.org/wiki/*
 // @run-at         document-end
 // @grant          none
@@ -36,8 +35,9 @@ $(function() {
 		"Port Moresby": "Papua New Guinea",
 	};
 	
-	var events = $('.vevent')
+	var events = $('div[itemtype="http://schema.org/SportsEvent"]')
 	if (events.length > 0) {
+		console.log('events', events);
 
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').click(function() {selectRange('.sjotable');}).hide().appendTo('body');
 		var table = $('<table class="sjotable"></table>').appendTo(div);
@@ -55,29 +55,23 @@ $(function() {
 			if (this.tagName == 'H3') {
 				addBreak = true;
 			} else {
-
+				
 				var matchWrapper = $(this);
-
-				var dateWrapper = matchWrapper.children('table:first-of-type');
-				var date = dateWrapper.text().trim().replace(/\n/g, ' ').replace(/\[/g, ' ').split(/\s+/);
-				if (date.length >= 3) date = [date[0], date[1].substr(0, 3), date[2]];
-				date = date.join(' ');
-
-				var resultWrapper = matchWrapper.children('table:nth-of-type(2)');
-
+				
+				var date = matchWrapper.find('time span.dtstart').first().text().trim();
+				
 				var teams = [];
-				teams[0] = resultWrapper.find('.attendee:first-of-type, .vcard:first-of-type').text().trim();
-				teams[1] = resultWrapper.find('.attendee:last-of-type, .vcard:last-of-type').text().trim();
+				teams[0] = matchWrapper.find('[itemprop="homeTeam"]').text().trim();
+				teams[1] = matchWrapper.find('[itemprop="awayTeam"]').text().trim();
 				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
 				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
-
-				var scoreWrapper = resultWrapper.find('th:not(.attendee, .vcard)');
-				var scoreText = scoreWrapper.text().trim();
-				var scoreMatches = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
-				var score = (scoreMatches && scoreMatches.length >= 4) ? [scoreMatches[1], scoreMatches[3]] : ['', ''];
-
+				
+				var scoreText = matchWrapper.find('[itemprop="homeTeam"]').next().text().trim();
+				var scoreMatch = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)$/);
+				var score = scoreMatch ? [scoreMatch[1], scoreMatch[3]] : ['', ''];
+				
 				var stadium = '', city = '', country = '', neutral = '';
-				var miscWrapper = matchWrapper.children('table:last-of-type');
+				var miscWrapper = matchWrapper.find('[itemprop="location"]');
 				var misc = miscWrapper.text().trim().split('\n');
 				var venueParts = misc[0].match(/^([^,\[]*)(, (.*?)( \((.*)\))?(\[.*\])?)?$/);
 				if (venueParts) {
