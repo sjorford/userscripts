@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.06.26.0
+// @version        2018.06.26.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -11,6 +11,8 @@
 // ==/UserScript==
 
 $(function() {
+	
+	console.log('Wikipedia extract matches');
 	
 	var tweakCountry = {
 		'China PR': 'China',
@@ -71,9 +73,9 @@ $(function() {
 				var score = scoreMatch ? [scoreMatch[1], scoreMatch[3]] : ['', ''];
 				
 				var stadium = '', city = '', country = '', neutral = '';
-				var miscWrapper = matchWrapper.find('[itemprop="location"]');
-				var misc = miscWrapper.text().trim().split('\n');
-				var venueParts = misc[0].match(/^([^,\[]*)(, (.*?)( \((.*)\))?(\[.*\])?)?$/);
+				var locationWrapper = matchWrapper.find('[itemprop="location"]');
+				var location = locationWrapper.text().trim().split('\n');
+				var venueParts = location[0].match(/^([^,\[]*)(, (.*?)( \((.*)\))?(\[.*\])?)?$/);
 				if (venueParts) {
 
 					stadium = venueParts[1];
@@ -93,7 +95,9 @@ $(function() {
 					}
 
 				}
-				var att = (misc.length < 2) ? '' : ((misc[1].indexOf('Attendance: ') == 0) ? misc[1].replace('[', ' ').split(' ')[1] : '');
+				
+				var attendanceMatch = locationWrapper.next(':contains("Attendance")').text().trim().match(/Attendance:\s+([\d,]+)/);
+				var attendance = attendanceMatch ? attendanceMatch[1] : '';
 
 				if (addBreak) {
 					if (table.find('tr').length > 0) {
@@ -110,7 +114,7 @@ $(function() {
 					.append('<td>' + score[1] + '</td>')
 					.append('<td>' + teams[1] + '</td>')
 					.append('<td>' + stadium  + '</td>')
-					.append('<td>' + att      + '</td>')
+					.append('<td>' + attendance + '</td>')
 					.append('<td>' + neutral  + '</td>')
 					.appendTo(table);
 
