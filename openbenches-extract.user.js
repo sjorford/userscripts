@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.22.1
+// @version        2018.07.05.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -32,7 +32,7 @@ jQuery(function() {
 	function formatMainPage() {
 		
 		// Resize map
-		$('#map').css({width: 'auto', height: '600px'});
+		$('#map').css({width: 'calc(100% - 200px)', height: '600px'});
 		map.invalidateSize();
 		
 		var buttonBar = $('<div class="button-bar"></div>').insertBefore('footer');
