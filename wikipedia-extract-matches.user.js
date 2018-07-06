@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.06.26.1
+// @version        2018.07.06.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -69,7 +69,7 @@ $(function() {
 				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
 				
 				var scoreText = matchWrapper.find('[itemprop="homeTeam"]').next().text().trim();
-				var scoreMatch = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)$/);
+				var scoreMatch = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
 				var score = scoreMatch ? [scoreMatch[1], scoreMatch[3]] : ['', ''];
 				
 				var stadium = '', city = '', country = '', neutral = '';
