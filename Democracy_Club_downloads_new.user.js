@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.06.25.0
+// @version     2018.07.17.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -621,12 +621,14 @@ $(function() {
 		renderTable();
 	});
 	
+	/*
 	// Select table body on click
 	$('body').on('click', '#sjo-api-table tbody', function(event) {
 		if (event.ctrlKey || event.shiftKey || event.altKey || event.target.tagName == 'A') return;
 		$(this).selectRange();
 	});
-		
+	*/
+	
 	// Get lookup tables
 	//GM_xmlhttpRequest({url: 'https://raw.githubusercontent.com/sjorford/fun-with-elections/master/areas.json', onload: preloader});
 	//GM_xmlhttpRequest({url: 'https://raw.githubusercontent.com/sjorford/fun-with-elections/master/parties.json', onload: preloader});
