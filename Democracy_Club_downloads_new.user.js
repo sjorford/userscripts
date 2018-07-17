@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.07.17.0
+// @version     2018.07.17.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -1898,8 +1898,9 @@ function findDuplicates() {
 		var candidate = unmatched[index];
 		$('#sjo-api-status-dupes').text(`Checking ${index + 1} of ${tableData.length}; ${groups.length} groups found`);
 		
-		// Start with an unmatched 2018 candidate
-		if (!candidate.__matched && candidate._election_year === 2018) {
+		// Start with an unmatched candidate post-May 2018
+		if (!candidate.__matched && candidate.election_date > '2018-05-03') {
+		//if (!candidate.__matched && candidate._election_year === 2018) {
 		//if (!candidate.__matched && candidate.election_date === '2017-06-08') {
 		//if (true) {
 			
@@ -1984,12 +1985,14 @@ function findDuplicates() {
 		totalScore = totalScore * (c1._middle_names !== '' && c2._middle_names !== '' && c1._middle_names !== c2._middle_names ? 0.90 : 1);
 		if (totalScore < minTotalScore) return zeroScore;
 		
+		/*
 		// Weight down conflicting elections
 		if (c1.election_date == c2.election_date && c1._election_type == c2._election_type) {
 			totalScore = totalScore * 0.95;
 			debugComments.push(`${totalScore.toFixed(2)} - ${c1.election_date}.${c1._election_type} == ${c2.election_date}.${c2._election_type}`);
 			if (totalScore < minTotalScore) return zeroScore;
 		}
+		*/
 		
 		// Weight down 2010 (no SOPNs)
 		if (c1._election_year < 2015 || c2._election_year < 2015) {
