@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.06.0
+// @version        2018.07.18.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -61,6 +61,8 @@ $(function() {
 				var matchWrapper = $(this);
 				
 				var date = matchWrapper.find('time span.dtstart').first().text().trim();
+				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASON][a-z]+ \d{4})?/)[1];
+				if (!date) date = '';
 				
 				var teams = [];
 				teams[0] = matchWrapper.find('[itemprop="homeTeam"]').text().trim();
