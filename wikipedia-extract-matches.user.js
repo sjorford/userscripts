@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.19.0
+// @version        2018.07.19.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -15,16 +15,25 @@ $(function() {
 	console.log('Wikipedia extract matches');
 	
 	var tweakCountry = {
-		'China PR': 'China',
-		'Chinese Taipei': 'Taiwan',
-		'Congo': 'Congo Republic',
-		'DR Congo': 'Congo DR',
-		'Saint Kitts and Nevis': 'St Kitts and Nevis',
-		'Saint Lucia': 'St Lucia',
-		'Saint Vincent and the Grenadines': 'St Vincent and the Gren.',
+		'Upper Volta':           'Burkina Faso',
+		'China PR':              'China',
+		'Congo':                 'Congo Republic',
+		'Congo-Brazzaville':     'Congo Republic',
+		'Congo-Léopoldville':    'Congo DR',
+		'Congo-Kinshasa':        'Congo DR',
+		'Zaire':                 'Congo DR',
+		'DR Congo':              'Congo DR',
+		'Timor-Leste':           'East Timor',
+		'St Kitts and Nevis':    'Saint Kitts and Nevis',
+		'St Lucia':              'Saint Lucia',
+		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
+		'Saint Vincent':         'Saint Vincent and the Grenadines',
 		'São Tomé and Príncipe': 'Sao Tome and Principe',
-		'Timor-Leste': 'East Timor',
-		'U.S. Virgin Islands': 'US Virgin Islands',
+		'Chinese Taipei':        'Taiwan',
+		'Republic of China':     'Taiwan',
+		'United Arab Rep.':      'United Arab Republic',
+		'U.S. Virgin Islands':   'US Virgin Islands',
+		'New Hebrides':          'Vanuatu',
 	};
 	
 	var tweakCity = {
@@ -46,7 +55,7 @@ $(function() {
 	
 	if (eventsFull.length > 0 || eventsBrief.length > 0) {
 		
-		var headings = $('h3:not(:has([id^=Matchday_]))');
+		var headings = $('h3:not(:has([id^=Matchday_])):not(:has(span[id*="_vs_"]))');
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
 		var everything = eventsFull.add(eventsBrief).add(headings).add(dateRows);
 		console.log('everything', everything);
@@ -70,14 +79,20 @@ $(function() {
 
 				// Blank rows between groups/stages
 				addBreak = true;
+				console.log('break', this);
 				
 			} else if (eventsFull.is(this)) {
 				
 				// Standard match format
 				var matchWrapper = $(this);
+				console.log('standard row', this);
 				
 				var date = matchWrapper.find('time span.dtstart').first().text().trim();
-				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASON][a-z]+ \d{4})?/)[1];
+				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASOND][a-z]+ \d{4})?/)[1];
+				if (!date) {
+					var dateParts = matchWrapper.find('time').text().trim().match(/^(([JFMASOND][a-z]+) (\d{1,2}), (\d{4}))?/);
+					if (dateParts) date = dateParts[3] + ' ' + dateParts[2] + ' ' + dateParts[4];
+				}
 				if (!date) date = '';
 				
 				var teams = [];
@@ -118,6 +133,7 @@ $(function() {
 				var attendance = attendanceMatch ? attendanceMatch[1] : '';
 
 				if (addBreak) {
+					console.log('adding break');
 					if (table.find('tr').length > 0) {
 						table.append('<tr><td><br></td></tr>');
 					}
@@ -140,19 +156,20 @@ $(function() {
 				
 				// Store current date
 				currentDate = $(this).text().trim();
-				console.log(currentDate);
+				console.log('date row', this);
 				
 			} else if (eventsBrief.is(this)) {
-				
-				console.log(currentDate);
 				
 				// Brief match format
 				var matchWrapper = $(this);
 				var cells = matchWrapper.children('td');
+				console.log('brief row', this);
 				
 				var teams = [];
 				teams[0] = cells.eq(0).text().trim();
 				teams[1] = cells.eq(2).text().trim();
+				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
+				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
 				
 				var score = cells.eq(1).text().trim().replace(/\u2013|\u2212|-/, '-').split('-');
 				
@@ -162,6 +179,13 @@ $(function() {
 				
 				var attendance = '';
 				var neutral = '';
+				
+				if (addBreak) {
+					if (table.find('tr').length > 0) {
+						table.append('<tr><td><br></td></tr>');
+					}
+					addBreak = false;
+				}
 				
 				$('<tr></tr>')
 					.append('<td>' + currentDate + '</td>')
@@ -178,12 +202,15 @@ $(function() {
 			}
 			
 		});
-
+		
+		/*
 		if ($('th > abbr[title="Points"]').length == 0) {
+			console.log('whatever this is');
 			$('<tr></tr>').append('<td></td>'.repeat(9)).appendTo(table);
 			$('tr:nth-of-type(even)', table).appendTo(table);
 		}
-
+		*/
+		
 	}
 
 	function resizeExtract() {
