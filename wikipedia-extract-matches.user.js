@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.18.0
+// @version        2018.07.19.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -37,10 +37,20 @@ $(function() {
 		"Port Moresby": "Papua New Guinea",
 	};
 	
-	var events = $('div[itemtype="http://schema.org/SportsEvent"]')
-	if (events.length > 0) {
-		console.log('events', events);
-
+	var eventsFull = $('div[itemtype="http://schema.org/SportsEvent"]')
+	var eventsBrief = $('tr').filter(
+		(i, tr) => {
+			var x = $(tr).find('*').toArray().map(e => e.tagName.toLowerCase()).join(' ');
+			return x == 'td a span img td a td span span img a td a a';
+		});
+	
+	if (eventsFull.length > 0 || eventsBrief.length > 0) {
+		
+		var headings = $('h3:not(:has([id^=Matchday_]))');
+		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
+		var everything = eventsFull.add(eventsBrief).add(headings).add(dateRows);
+		console.log('everything', everything);
+		
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').click(function() {selectRange('.sjotable');}).hide().appendTo('body');
 		var table = $('<table class="sjotable"></table>').appendTo(div);
 		$('<a style="position: absolute; right: 0px; top: 0px; font-size: larger;" href="#">Close</a>').click(hideData).appendTo(div);
@@ -52,12 +62,18 @@ $(function() {
 		$('#p-cactions').removeClass('emptyPortlet');
 
 		var addBreak = false;
-		events.add('h3:not(:has([id^=Matchday_]))').each(function(){
+		var currentDate;
+		
+		everything.each(function(){
+			
+			if (headings.is(this)) {
 
-			if (this.tagName == 'H3') {
+				// Blank rows between groups/stages
 				addBreak = true;
-			} else {
 				
+			} else if (eventsFull.is(this)) {
+				
+				// Standard match format
 				var matchWrapper = $(this);
 				
 				var date = matchWrapper.find('time span.dtstart').first().text().trim();
@@ -107,7 +123,7 @@ $(function() {
 					}
 					addBreak = false;
 				}
-
+				
 				$('<tr></tr>')
 					.append('<td>' + date     + '</td>')
 					.append('<td>' + city     + '</td>')
@@ -119,9 +135,48 @@ $(function() {
 					.append('<td>' + attendance + '</td>')
 					.append('<td>' + neutral  + '</td>')
 					.appendTo(table);
-
+				
+			} else if (dateRows.is(this)) {
+				
+				// Store current date
+				currentDate = $(this).text().trim();
+				console.log(currentDate);
+				
+			} else if (eventsBrief.is(this)) {
+				
+				console.log(currentDate);
+				
+				// Brief match format
+				var matchWrapper = $(this);
+				var cells = matchWrapper.children('td');
+				
+				var teams = [];
+				teams[0] = cells.eq(0).text().trim();
+				teams[1] = cells.eq(2).text().trim();
+				
+				var score = cells.eq(1).text().trim().replace(/\u2013|\u2212|-/, '-').split('-');
+				
+				var venue = cells.eq(3).text().trim().split(', ');
+				var stadium = venue[0];
+				var city = venue[1];
+				
+				var attendance = '';
+				var neutral = '';
+				
+				$('<tr></tr>')
+					.append('<td>' + currentDate + '</td>')
+					.append('<td>' + city        + '</td>')
+					.append('<td>' + teams[0]    + '</td>')
+					.append('<td>' + score[0]    + '</td>')
+					.append('<td>' + score[1]    + '</td>')
+					.append('<td>' + teams[1]    + '</td>')
+					.append('<td>' + stadium     + '</td>')
+					.append('<td>' + attendance  + '</td>')
+					.append('<td>' + neutral     + '</td>')
+					.appendTo(table);
+				
 			}
-
+			
 		});
 
 		if ($('th > abbr[title="Points"]').length == 0) {
