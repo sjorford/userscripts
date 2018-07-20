@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.20.0
+// @version        2018.07.20.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -210,7 +210,7 @@ $(function() {
 				var matchWrapper = $(this);
 				var row1 = matchWrapper.find('tr').first();
 				var row2 = row1.next('tr');
-				var cells = row1.children('td');
+				var cells = row1.children('td, th');
 				console.log('vcard row', this);
 				
 				var date = cells.eq(0).text().trim();
@@ -223,7 +223,7 @@ $(function() {
 				
 				var score = parseScore(cells.eq(2).text());
 				
-				var city = cells.eq(5).text().trim();
+				var city = cells.eq(4).find('span:not([role="button"])').text().trim();
 				var stadium = row2.find('.location').text().trim();
 				var attParts = row2.find('.location').closest('td').text().match(/(Attendance:\s+([0-9,]+))/);
 				var attendance = attParts ? attParts[2] : '';
