@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.19.2
+// @version        2018.07.20.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -15,25 +15,30 @@ $(function() {
 	console.log('Wikipedia extract matches');
 	
 	var tweakCountry = {
-		'Upper Volta':           'Burkina Faso',
-		'China PR':              'China',
-		'Congo':                 'Congo Republic',
-		'Congo-Brazzaville':     'Congo Republic',
-		'Congo-Léopoldville':    'Congo DR',
-		'Congo-Kinshasa':        'Congo DR',
-		'Zaire':                 'Congo DR',
-		'DR Congo':              'Congo DR',
-		'Timor-Leste':           'East Timor',
-		'St Kitts and Nevis':    'Saint Kitts and Nevis',
-		'St Lucia':              'Saint Lucia',
+		'Dahomey':                       'Benin',
+		'Upper Volta':                   'Burkina Faso',
+		'China PR':                      'China',
+		'Congo':                         'Congo Republic',
+		'Congo-Brazzaville':             'Congo Republic',
+		'Congo-Léopoldville':            'Congo DR',
+		'Congo-Kinshasa':                'Congo DR',
+		'Zaire':                         'Congo DR',
+		'DR Congo':                      'Congo DR',
+		'Timor-Leste':                   'East Timor',
+		'Palestine, British Mandate':    'Israel',
+		'Ireland (IFA)':                 'Northern Ireland',
+		'Ireland (FAI)':                 'Republic of Ireland',
+		'Irish Free State':              'Republic of Ireland',
+		'St Kitts and Nevis':            'Saint Kitts and Nevis',
+		'St Lucia':                      'Saint Lucia',
 		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
-		'Saint Vincent':         'Saint Vincent and the Grenadines',
-		'São Tomé and Príncipe': 'Sao Tome and Principe',
-		'Chinese Taipei':        'Taiwan',
-		'Republic of China':     'Taiwan',
-		'United Arab Rep.':      'United Arab Republic',
-		'U.S. Virgin Islands':   'US Virgin Islands',
-		'New Hebrides':          'Vanuatu',
+		'Saint Vincent':                 'Saint Vincent and the Grenadines',
+		'São Tomé and Príncipe':         'Sao Tome and Principe',
+		'Chinese Taipei':                'Taiwan',
+		'Republic of China':             'Taiwan',
+		'United Arab Rep.':              'United Arab Republic',
+		'U.S. Virgin Islands':           'US Virgin Islands',
+		'New Hebrides':                  'Vanuatu',
 	};
 	
 	var tweakCity = {
@@ -52,12 +57,14 @@ $(function() {
 			var x = $(tr).find('*').toArray().map(e => e.tagName.toLowerCase()).join(' ');
 			return x == 'td a span img td a td span span img a td a a';
 		});
+	var eventsCards = $('.vevent');
+	var everything = eventsFull.add(eventsBrief).add(eventsCards);
 	
-	if (eventsFull.length > 0 || eventsBrief.length > 0) {
+	if (everything.length > 0) {
 		
-		var headings = $('h3:not(:has([id^=Matchday_])):not(:has(span[id*="_vs_"]))');
+		var headings = $('h2, h3').not(':has([id^=Matchday_])').not(':has(span[id*="_vs_"])');
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
-		var everything = eventsFull.add(eventsBrief).add(headings).add(dateRows);
+		everything = everything.add(headings).add(dateRows);
 		console.log('everything', everything);
 		
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').click(function() {selectRange('.sjotable');}).hide().appendTo('body');
@@ -101,9 +108,7 @@ $(function() {
 				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
 				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
 				
-				var scoreText = matchWrapper.find('[itemprop="homeTeam"]').next().text().trim();
-				var scoreMatch = scoreText.match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
-				var score = scoreMatch ? [scoreMatch[1], scoreMatch[3]] : ['', ''];
+				var score = parseScore(matchWrapper.find('[itemprop="homeTeam"]').next().text());
 				
 				var stadium = '', city = '', country = '', neutral = '';
 				var locationWrapper = matchWrapper.find('[itemprop="location"]');
@@ -171,7 +176,7 @@ $(function() {
 				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
 				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
 				
-				var score = cells.eq(1).text().trim().replace(/\u2013|\u2212|-/, '-').split('-');
+				var score = parseScore(cells.eq(1).text());
 				
 				var venue = cells.eq(3).text().trim().split(', ');
 				var stadium = venue[0];
@@ -198,6 +203,50 @@ $(function() {
 					.append('<td>' + attendance  + '</td>')
 					.append('<td>' + neutral     + '</td>')
 					.appendTo(table);
+			
+			} else if (eventsCards.is(this)) {
+				
+				// vcard match format
+				var matchWrapper = $(this);
+				var row1 = matchWrapper.find('tr').first();
+				var row2 = row1.next('tr');
+				var cells = row1.children('td');
+				console.log('vcard row', this);
+				
+				var date = cells.eq(0).text().trim();
+				
+				var teams = [];
+				teams[0] = cells.eq(1).text().trim();
+				teams[1] = cells.eq(3).text().trim();
+				if (tweakCountry[teams[0]]) teams[0] = tweakCountry[teams[0]];
+				if (tweakCountry[teams[1]]) teams[1] = tweakCountry[teams[1]];
+				
+				var score = parseScore(cells.eq(2).text());
+				
+				var city = cells.eq(5).text().trim();
+				var stadium = row2.find('.location').text().trim();
+				var attParts = row2.find('.location').closest('td').text().match(/(Attendance:\s+([0-9,]+))/);
+				var attendance = attParts ? attParts[2] : '';
+				var neutral = '';
+				
+				if (addBreak) {
+					if (table.find('tr').length > 0) {
+						table.append('<tr><td><br></td></tr>');
+					}
+					addBreak = false;
+				}
+				
+				$('<tr></tr>')
+					.append('<td>' + date        + '</td>')
+					.append('<td>' + city        + '</td>')
+					.append('<td>' + teams[0]    + '</td>')
+					.append('<td>' + score[0]    + '</td>')
+					.append('<td>' + score[1]    + '</td>')
+					.append('<td>' + teams[1]    + '</td>')
+					.append('<td>' + stadium     + '</td>')
+					.append('<td>' + attendance  + '</td>')
+					.append('<td>' + neutral     + '</td>')
+					.appendTo(table);
 				
 			}
 			
@@ -212,7 +261,13 @@ $(function() {
 		*/
 		
 	}
-
+	
+	function parseScore(scoreText) {
+		var scoreParts = scoreText.trim().match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
+		var score = scoreParts ? [scoreParts[1], scoreParts[3]] : ['', ''];
+		return score;
+	}
+	
 	function resizeExtract() {
 
 		var w = $(window).width();
