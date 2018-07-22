@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.22.3
+// @version        2018.07.22.4
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -27,6 +27,7 @@ $(function() {
 		'DR Congo':                      'Congo DR',
 		'Timor-Leste':                   'East Timor',
 		'Palestine, British Mandate':    'Israel',
+		'Burma':                         'Myanmar',
 		'Ireland (IFA)':                 'Northern Ireland',
 		'Ireland (FAI)':                 'Republic of Ireland',
 		'Irish Free State':              'Republic of Ireland',
