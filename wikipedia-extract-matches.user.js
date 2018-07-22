@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.22.2
+// @version        2018.07.22.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -36,6 +36,7 @@ $(function() {
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
 		'Western Samoa':                 'Samoa',
 		'São Tomé and Príncipe':         'Sao Tome and Principe',
+		'Ceylon':                        'Sri Lanka',
 		'Chinese Taipei':                'Taiwan',
 		'Republic of China':             'Taiwan',
 		'United Arab Rep.':              'United Arab Republic',
