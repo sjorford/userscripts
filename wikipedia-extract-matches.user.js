@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.20.1
+// @version        2018.07.21.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -33,6 +33,7 @@ $(function() {
 		'St Lucia':                      'Saint Lucia',
 		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
+		'Western Samoa':                 'Samoa',
 		'São Tomé and Príncipe':         'Sao Tome and Principe',
 		'Chinese Taipei':                'Taiwan',
 		'Republic of China':             'Taiwan',
@@ -112,7 +113,16 @@ $(function() {
 				
 				var stadium = '', city = '', country = '', neutral = '';
 				var locationWrapper = matchWrapper.find('[itemprop="location"]');
-				var location = locationWrapper.text().trim().split('\n');
+				var locationText = locationWrapper.text().trim();
+				var attendanceText;
+				if (locationText.match(/Attendance/)) {
+					console.log('here');
+					[, locationText, attendanceText] = locationText.match(/(.*)(Attendance.*)/);
+				} else {
+					attendanceText = locationWrapper.next(':contains("Attendance")').text().trim()
+				}
+				
+				var location = locationText.trim().split('\n');
 				var venueParts = location[0].match(/^([^,\[]*)(, (.*?)( \((.*)\))?(\[.*\])?)?$/);
 				if (venueParts) {
 
@@ -134,7 +144,7 @@ $(function() {
 
 				}
 				
-				var attendanceMatch = locationWrapper.next(':contains("Attendance")').text().trim().match(/Attendance:\s+([\d,]+)/);
+				var attendanceMatch = attendanceText.match(/Attendance:\s+([\d,]+)/);
 				var attendance = attendanceMatch ? attendanceMatch[1] : '';
 
 				if (addBreak) {
