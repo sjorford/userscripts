@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.22.1
+// @version        2018.07.22.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -17,6 +17,7 @@ $(function() {
 	var tweakCountry = {
 		'Dahomey':                       'Benin',
 		'Upper Volta':                   'Burkina Faso',
+		'Khmer Republic':                'Cambodia',
 		'China PR':                      'China',
 		'Congo':                         'Congo Republic',
 		'Congo-Brazzaville':             'Congo Republic',
