@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.07.23.0
+// @version     2018.07.23.1
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -657,6 +657,9 @@ $(function() {
 		
 	}
 	
+	// Trigger event for other scripts
+	$('body').trigger('sjo-api-loaded');
+	
 });
 
 // Build list of download options
@@ -1114,6 +1117,9 @@ function prepareRender() {
 	console.log('prepareRender', 'sortColumn', sortColumn, sortOrder);
 	updateSortIcon();
 	
+	// Store tableData on document
+	$('#sjo-api-table').data('tableData', tableData);
+	
 	// Render table
 	if ($('#sjo-api-option-raw').is(':checked')) {
 		outputRaw();
@@ -1229,6 +1235,7 @@ function cleanData(index, candidate) {
 	}
 	candidate._short_name = (candidate._first_name + ' ' + candidate._last_name).trim();
 	candidate._normal_name = (nameNorms[candidate._first_name] ? nameNorms[candidate._first_name] : candidate._first_name) + ' ' + candidate._last_name;
+	candidate._name_parts = [candidate._first_name].concat(candidate._middle_names.split(' '));
 	
 	// Gender
 	// TODO: clean up name-gender mapping file and put on Github
@@ -2096,6 +2103,8 @@ function findDuplicates() {
 // ================================================================
 // General functions
 // ================================================================
+
+// TODO: add these to Utils
 
 // Escape angle brackets in values
 function escapeHtml(string) {
