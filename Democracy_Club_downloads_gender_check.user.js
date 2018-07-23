@@ -2,7 +2,7 @@
 // @name           Democracy Club downloads - gender check
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.07.23.2
+// @version        2018.07.23.3
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          none
 // ==/UserScript==
@@ -21,14 +21,13 @@ $(function() {
 		
 	});
 	
-	
-	
 	function checkGender() {
 		
 		var tableData = $('#sjo-api-table').data('tableData');
 		console.log('checkGender', tableData);
 		
 		var nameData = {};
+		var hits = [];
 
 		// TODO: create a new table, or rename this one
 		var table = $('#sjo-api-table-dupes').empty().show();
@@ -71,24 +70,29 @@ $(function() {
 				
 				// If known gender does not match predicted gender, output to table
 				if (prediction < threshold) {
-					
-					// Write to table
 					console.log('HIT', index, candidacy[0].name, candidacy[0]._gender, prediction);
-
-					var row = $(`<tr></tr>`)
-						.addCellHTML('<a href="/person/' + candidacy[0].id + '">' + candidacy[0].name + '</a>')
-						.addCell(candidacy[0].gender)
-						.addCell((prediction * 100).toFixed(0) + '%')
-						.addCell(candidacy[0].election_date)
-						.addCell(candidacy[0]._election_area)
-						.addCell(candidacy[0]._post_label)
-						.addCell(candidacy[0].party_name)
-						.appendTo(table);
-
-					
+					hits.push({candidacy: candidacy[0], prediction: prediction});
 				}
 				
 			}
+		});
+		
+		// Sort
+		hits = hits.sort((a, b) => a.prediction - b.prediction);
+		
+		// Output to table
+		$.each(hits, (index, hit) => {
+
+			var row = $(`<tr></tr>`)
+			.addCellHTML('<a href="/person/' + hit.candidacy.id + '">' + hit.candidacy.name + '</a>')
+			.addCell(hit.candidacy.gender)
+			.addCell((hit.prediction * 100).toFixed(0) + '%')
+			.addCell(hit.candidacy.election_date)
+			.addCell(hit.candidacy._election_area)
+			.addCell(hit.candidacy._post_label)
+			.addCell(hit.candidacy.party_name)
+			.appendTo(table);
+
 		});
 		
 	}
