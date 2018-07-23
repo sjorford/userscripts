@@ -2,7 +2,7 @@
 // @name        Democracy Club downloads new
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/help/api
-// @version     2018.07.17.1
+// @version     2018.07.23.0
 // @grant       GM_xmlhttpRequest
 // @connect     raw.githubusercontent.com
 // @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
@@ -519,6 +519,7 @@ var templates = {
 	]},
 	
 	names: {display: 'Name split', 		columns: ['id', 'name', 'honorific_prefix', '_first_name', '_middle_names', '_last_name', 'honorific_suffix', '_short_name']},
+	gender: {display: 'Name split with gender', columns: ['id', 'name', 'honorific_prefix', '_first_name', '_middle_names', '_last_name', 'honorific_suffix', '_short_name', '_gender']},
 	type:  {display: 'Election type', 	columns: ['id', '_election_year', 'election_date', '_election_type', '_election', '_election_name', '_election_area', '_post_label']},
 	id:    {display: 'ID only', 		columns: ['id']},
 	idmap: {display: 'ID mappings', 	columns: ['id', 'old_person_ids']},
