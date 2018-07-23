@@ -2,7 +2,7 @@
 // @name           Democracy Club downloads - gender check
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.07.23.1
+// @version        2018.07.23.2
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          none
 // ==/UserScript==
@@ -77,12 +77,12 @@ $(function() {
 
 					var row = $(`<tr></tr>`)
 						.addCellHTML('<a href="/person/' + candidacy[0].id + '">' + candidacy[0].name + '</a>')
+						.addCell(candidacy[0].gender)
+						.addCell((prediction * 100).toFixed(0) + '%')
 						.addCell(candidacy[0].election_date)
 						.addCell(candidacy[0]._election_area)
 						.addCell(candidacy[0]._post_label)
 						.addCell(candidacy[0].party_name)
-						.addCell(candidacy[0].gender)
-						.addCell((prediction * 100).toFixed(0) + '%')
 						.appendTo(table);
 
 					
