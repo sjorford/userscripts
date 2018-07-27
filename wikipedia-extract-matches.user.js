@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.23.0
+// @version        2018.07.27.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -158,17 +158,7 @@ $(function() {
 					addBreak = false;
 				}
 				
-				$('<tr></tr>')
-					.append('<td>' + date     + '</td>')
-					.append('<td>' + city     + '</td>')
-					.append('<td>' + teams[0] + '</td>')
-					.append('<td>' + score[0] + '</td>')
-					.append('<td>' + score[1] + '</td>')
-					.append('<td>' + teams[1] + '</td>')
-					.append('<td>' + stadium  + '</td>')
-					.append('<td>' + attendance + '</td>')
-					.append('<td>' + neutral  + '</td>')
-					.appendTo(table);
+				writeRow(date, city, teams, score, stadium, attendance, neutral);
 				
 			} else if (dateRows.is(this)) {
 				
@@ -205,18 +195,8 @@ $(function() {
 					addBreak = false;
 				}
 				
-				$('<tr></tr>')
-					.append('<td>' + currentDate + '</td>')
-					.append('<td>' + city        + '</td>')
-					.append('<td>' + teams[0]    + '</td>')
-					.append('<td>' + score[0]    + '</td>')
-					.append('<td>' + score[1]    + '</td>')
-					.append('<td>' + teams[1]    + '</td>')
-					.append('<td>' + stadium     + '</td>')
-					.append('<td>' + attendance  + '</td>')
-					.append('<td>' + neutral     + '</td>')
-					.appendTo(table);
-			
+				writeRow(currentDate, city, teams, score, stadium, attendance, neutral);
+				
 			} else if (eventsCards.is(this)) {
 				
 				// vcard match format
@@ -249,17 +229,7 @@ $(function() {
 					addBreak = false;
 				}
 				
-				$('<tr></tr>')
-					.append('<td>' + date        + '</td>')
-					.append('<td>' + city        + '</td>')
-					.append('<td>' + teams[0]    + '</td>')
-					.append('<td>' + score[0]    + '</td>')
-					.append('<td>' + score[1]    + '</td>')
-					.append('<td>' + teams[1]    + '</td>')
-					.append('<td>' + stadium     + '</td>')
-					.append('<td>' + attendance  + '</td>')
-					.append('<td>' + neutral     + '</td>')
-					.appendTo(table);
+				writeRow(date, city, teams, score, stadium, attendance, neutral);
 				
 			}
 			
@@ -272,6 +242,29 @@ $(function() {
 			$('tr:nth-of-type(even)', table).appendTo(table);
 		}
 		*/
+		
+	}
+	
+	function writeRow(date, city, teams, score, stadium, attendance, neutral) {
+		
+		var cityParts = city.match(/^(.*?), (.*)$/);
+		if (!cityParts) cityParts = ['', city, ''];
+								   
+		$('<tr></tr>')
+			.append('<td>' + date        + '</td>')
+			.append('<td>' + teams[0]    + '</td>')
+			.append('<td>' + score[0]    + '</td>')
+			.append('<td>' + score[1]    + '</td>')
+			.append('<td>' + teams[1]    + '</td>')
+			.append('<td></td>')
+			.append('<td></td>')
+			.append('<td></td>')
+			.append('<td>' + stadium      + '</td>')
+			.append('<td>' + cityParts[1] + '</td>')
+			.append('<td>' + cityParts[2] + '</td>')
+			.append('<td>' + attendance   + '</td>')
+			.append('<td>' + neutral      + '</td>')
+			.appendTo(table);
 		
 	}
 	
