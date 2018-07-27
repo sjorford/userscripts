@@ -2,7 +2,7 @@
 // @name           Democracy Club downloads - gender check
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.07.23.3
+// @version        2018.07.27.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          none
 // ==/UserScript==
@@ -91,6 +91,7 @@ $(function() {
 			.addCell(hit.candidacy._election_area)
 			.addCell(hit.candidacy._post_label)
 			.addCell(hit.candidacy.party_name)
+			.addCell(hit.candidacy.image_url ? '\u263A' : '')
 			.appendTo(table);
 
 		});
