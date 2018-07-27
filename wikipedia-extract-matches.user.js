@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.27.2
+// @version        2018.07.27.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -249,6 +249,9 @@ $(function() {
 		
 		var cityParts = city.match(/^(.*?), (.*)$/);
 		if (!cityParts) cityParts = ['', city, ''];
+		
+		cityParts[1] = cityParts[1].replace(/\[[^\[\]]*\]/, '');
+		cityParts[2] = cityParts[2].replace(/\[[^\[\]]*\]/, '');
 								   
 		$('<tr></tr>')
 			.append('<td>' + date        + '</td>')
