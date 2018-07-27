@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.27.1
+// @version        2018.07.27.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -256,7 +256,7 @@ $(function() {
 			.append('<td>' + score[0]    + '</td>')
 			.append('<td>' + score[1]    + '</td>')
 			.append('<td>' + teams[1]    + '</td>')
-			.append('<td></td>')
+			.append('<td>' + score[2]    + '</td>')
 			.append('<td></td>')
 			.append('<td></td>')
 			.append('<td>' + stadium      + '</td>')
@@ -269,8 +269,13 @@ $(function() {
 	}
 	
 	function parseScore(scoreText) {
-		var scoreParts = scoreText.trim().match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)/);
-		var score = scoreParts ? [scoreParts[1], scoreParts[3]] : ['', ''];
+		var scoreParts = scoreText.trim().match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)(\s*\((a\.e\.t\.|aet|a\.s\.d\.e\.t\.|asdet)\))?/);
+		var score = ['', '', ''];
+		if (scoreParts) {
+			score[0] = scoreParts[1];
+			score[1] = scoreParts[3];
+			if (scoreParts[4]) score[2] = scoreParts[5].replace(/\./g, '');
+		}
 		return score;
 	}
 	
