@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.27.0
+// @version        2018.07.27.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -262,8 +262,8 @@ $(function() {
 			.append('<td>' + stadium      + '</td>')
 			.append('<td>' + cityParts[1] + '</td>')
 			.append('<td>' + cityParts[2] + '</td>')
-			.append('<td>' + attendance   + '</td>')
 			.append('<td>' + neutral      + '</td>')
+			.append('<td>' + attendance   + '</td>')
 			.appendTo(table);
 		
 	}
