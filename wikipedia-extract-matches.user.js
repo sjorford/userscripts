@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.28.2
+// @version        2018.07.28.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -260,12 +260,15 @@ $(function() {
 		$('<tr></tr>')
 			.append('<td>' + date        + '</td>')
 			.append('<td>' + teams[0]    + '</td>')
-			.append('<td>' + score[0]    + '</td>')
-			.append('<td>' + score[1]    + '</td>')
+			.append('<td>' + score.F     + '</td>')
+			.append('<td>' + score.A     + '</td>')
 			.append('<td>' + teams[1]    + '</td>')
-			.append('<td>' + score[2]    + '</td>')
+			.append('<td>' + score.aet   + '</td>')
 			.append('<td></td>')
 			.append('<td></td>')
+			.append('<td>' + (score.pens ? 'pens' : '') + '</td>')
+			.append('<td>' + score.pens.F + '</td>')
+			.append('<td>' + score.pens.A + '</td>')
 			.append('<td>' + stadium      + '</td>')
 			.append('<td>' + cityParts[1] + '</td>')
 			.append('<td>' + cityParts[2] + '</td>')
@@ -276,12 +279,13 @@ $(function() {
 	}
 	
 	function parseScore(scoreText) {
-		var scoreParts = scoreText.trim().match(/^(\d+)\s*(\u2013|\u2212|-)\s*(\d+)(\s*\((a\.e\.t\.|aet|a\.s\.d\.e\.t\.|asdet)\))?/);
-		var score = ['', '', ''];
+		var scoreParts = scoreText.trim().match(/^(\d+)\s*[-\u2013\u2212]\s*(\d+)(\s*\((a\.e\.t\.|aet|a\.s\.d\.e\.t\.|asdet)\))?(\s*\((\d+)\s*[-\u2013\u2212]\s*(\d+)\s*(p|pens?)\.?\))?/);
+		var score = {};
 		if (scoreParts) {
-			score[0] = scoreParts[1];
-			score[1] = scoreParts[3];
-			if (scoreParts[4]) score[2] = scoreParts[5].replace(/\./g, '');
+			score.F = scoreParts[1];
+			score.A = scoreParts[2];
+			if (scoreParts[3]) score.aet = scoreParts[4].replace(/\./g, '');
+			if (scoreParts[5]) score.pens = {F: scoreParts[6], F: scoreParts[7]};
 		}
 		return score;
 	}
