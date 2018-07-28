@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.28.0
+// @version        2018.07.28.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -37,6 +37,7 @@ $(function() {
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
 		//'Western Samoa':                 'Samoa',
 		'São Tomé and Príncipe':         'Sao Tome and Principe',
+		'Korea Republic':                'South Korea',
 		//'Ceylon':                        'Sri Lanka',
 		//'Chinese Taipei':                'Taiwan',
 		//'Republic of China':             'Taiwan',
@@ -252,7 +253,8 @@ $(function() {
 		
 		cityParts[1] = cityParts[1].replace(/\[[^\[\]]*\]/, '');
 		cityParts[2] = cityParts[2].replace(/\[[^\[\]]*\]/, '');
-								   
+		if (tweakCountry[cityParts[2]]) cityParts[2] = tweakCountry[cityParts[2]];
+		
 		$('<tr></tr>')
 			.append('<td>' + date        + '</td>')
 			.append('<td>' + teams[0]    + '</td>')
