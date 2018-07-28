@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.27.4
+// @version        2018.07.28.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -15,34 +15,34 @@ $(function() {
 	console.log('Wikipedia extract matches');
 	
 	var tweakCountry = {
-		'Dahomey':                       'Benin',
-		'Upper Volta':                   'Burkina Faso',
-		'Khmer Republic':                'Cambodia',
+		//'Dahomey':                       'Benin',
+		//'Upper Volta':                   'Burkina Faso',
+		//'Khmer Republic':                'Cambodia',
 		'China PR':                      'China',
-		'Congo':                         'Congo Republic',
-		'Congo-Brazzaville':             'Congo Republic',
-		'Congo-Léopoldville':            'Congo DR',
-		'Congo-Kinshasa':                'Congo DR',
-		'Zaire':                         'Congo DR',
+		//'Congo':                         'Congo Republic',
+		//'Congo-Brazzaville':             'Congo Republic',
+		//'Congo-Léopoldville':            'Congo DR',
+		//'Congo-Kinshasa':                'Congo DR',
+		//'Zaire':                         'Congo DR',
 		'DR Congo':                      'Congo DR',
-		'Timor-Leste':                   'East Timor',
-		'Palestine, British Mandate':    'Israel',
-		'Burma':                         'Myanmar',
+		//'Timor-Leste':                   'East Timor',
+		//'Palestine, British Mandate':    'Israel',
+		//'Burma':                         'Myanmar',
 		'Ireland (IFA)':                 'Northern Ireland',
 		'Ireland (FAI)':                 'Republic of Ireland',
-		'Irish Free State':              'Republic of Ireland',
+		//'Irish Free State':              'Republic of Ireland',
 		'St Kitts and Nevis':            'Saint Kitts and Nevis',
 		'St Lucia':                      'Saint Lucia',
 		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
-		'Western Samoa':                 'Samoa',
+		//'Western Samoa':                 'Samoa',
 		'São Tomé and Príncipe':         'Sao Tome and Principe',
-		'Ceylon':                        'Sri Lanka',
-		'Chinese Taipei':                'Taiwan',
-		'Republic of China':             'Taiwan',
+		//'Ceylon':                        'Sri Lanka',
+		//'Chinese Taipei':                'Taiwan',
+		//'Republic of China':             'Taiwan',
 		'United Arab Rep.':              'United Arab Republic',
 		'U.S. Virgin Islands':           'US Virgin Islands',
-		'New Hebrides':                  'Vanuatu',
+		//'New Hebrides':                  'Vanuatu',
 	};
 	
 	var tweakCity = {
