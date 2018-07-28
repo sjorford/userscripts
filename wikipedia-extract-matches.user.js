@@ -1,13 +1,14 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.28.3
+// @version        2018.07.28.4
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
 // @run-at         document-end
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
 $(function() {
@@ -257,7 +258,7 @@ $(function() {
 		cityParts[2] = cityParts[2].replace(/\[[^\[\]]*\]/, '');
 		if (tweakCountry[cityParts[2]]) cityParts[2] = tweakCountry[cityParts[2]];
 		
-		$('<tr></tr>')
+		var row = $('<tr></tr>')
 			.append('<td>' + date        + '</td>')
 			.append('<td>' + teams[0]    + '</td>')
 			.append('<td>' + score.F     + '</td>')
@@ -265,10 +266,21 @@ $(function() {
 			.append('<td>' + teams[1]    + '</td>')
 			.append('<td>' + score.aet   + '</td>')
 			.append('<td></td>')
-			.append('<td></td>')
-			.append('<td>' + (score.pens ? 'pens' : '') + '</td>')
+			.append('<td></td>');
+		
+		if (score.pens) {
+			row
+			.addCell('pens')
 			.append('<td>' + score.pens.F + '</td>')
-			.append('<td>' + score.pens.A + '</td>')
+			.append('<td>' + score.pens.A + '</td>');
+		} else {
+			row
+			.append('<td></td>')
+			.append('<td></td>')
+			.append('<td></td>');
+		}
+		
+		row
 			.append('<td>' + stadium      + '</td>')
 			.append('<td>' + cityParts[1] + '</td>')
 			.append('<td>' + cityParts[2] + '</td>')
@@ -285,7 +297,7 @@ $(function() {
 			score.F = scoreParts[1];
 			score.A = scoreParts[2];
 			if (scoreParts[3]) score.aet = scoreParts[4].replace(/\./g, '');
-			if (scoreParts[5]) score.pens = {F: scoreParts[6], F: scoreParts[7]};
+			if (scoreParts[5]) score.pens = {F: scoreParts[6], A: scoreParts[7]};
 		}
 		return score;
 	}
