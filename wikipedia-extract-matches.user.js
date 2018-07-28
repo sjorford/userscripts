@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.28.1
+// @version        2018.07.28.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -247,6 +247,8 @@ $(function() {
 	}
 	
 	function writeRow(date, city, teams, score, stadium, attendance, neutral) {
+		
+		if (!date && !score[0] && !score[1]) return;
 		
 		var cityParts = city.match(/^(.*?), (.*)$/);
 		if (!cityParts) cityParts = ['', city, ''];
