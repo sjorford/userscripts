@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.29.1
+// @version        2018.07.29.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -109,7 +109,7 @@ $(function() {
 				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASOND][a-z]+ \d{4})?/)[1];
 				if (!date) {
 					var dateParts = matchWrapper.find('time').text().trim().match(/^(([JFMASOND][a-z]+) (\d{1,2}), (\d{4}))?/);
-					if (dateParts) date = dateParts[3] + ' ' + dateParts[2] + ' ' + dateParts[4];
+					if (dateParts[1]) date = dateParts[3] + ' ' + dateParts[2] + ' ' + dateParts[4];
 				}
 				if (!date) date = '';
 				
@@ -126,7 +126,6 @@ $(function() {
 				var locationText = locationWrapper.text().trim();
 				var attendanceText;
 				if (locationText.match(/Attendance/)) {
-					console.log('here');
 					[, locationText, attendanceText] = locationText.match(/(.*)(Attendance.*)/);
 				} else {
 					attendanceText = locationWrapper.next(':contains("Attendance")').text().trim()
@@ -254,6 +253,7 @@ $(function() {
 	
 	function writeRow(date, city, teams, score, stadium, attendance, neutral) {
 		
+		console.log(date);
 		if (!date && !score[0] && !score[1]) return;
 		
 		var cityParts = city.match(/^(.*?), (.*)$/);
@@ -339,6 +339,8 @@ $(function() {
 	$('body').on('keydown', event => {
 		if (event.key == 'Escape') hideData();
 	});
+	
+	showData(); // ************************
 	
 });
 
