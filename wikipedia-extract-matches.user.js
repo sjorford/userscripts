@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.30.0
+// @version        2018.07.30.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -68,7 +68,7 @@ $(function() {
 	var eventsCards = $('.vevent');
 	var everything = eventsFull.add(eventsBrief).add(eventsCards);
 	
-	if (everything.length > 0) {
+	if (everything.length > 1) {
 		
 		var headings = $('h2, h3, h4')
 			.not(':has([id^=Matchday_])')
@@ -124,6 +124,7 @@ $(function() {
 				
 				var stadium = '', city = '', country = '', neutral = '';
 				var locationWrapper = matchWrapper.find('[itemprop="location"]');
+				locationWrapper.find('br').after(', ').remove();
 				var locationText = locationWrapper.text().trim();
 				var attendanceText;
 				if (locationText.match(/Attendance/)) {
