@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.29.2
+// @version        2018.07.30.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -26,6 +26,7 @@ $(function() {
 		//'Congo-Kinshasa':                'Congo DR',
 		//'Zaire':                         'Congo DR',
 		'DR Congo':                      'Congo DR',
+		'Territory of Curaçao':          'Curaçao',
 		//'Timor-Leste':                   'East Timor',
 		//'Palestine, British Mandate':    'Israel',
 		"Côte d'Ivoire":                 'Ivory Coast',
@@ -72,7 +73,7 @@ $(function() {
 		var headings = $('h2, h3, h4')
 			.not(':has([id^=Matchday_])')
 			.not(':has(span[id*="_vs_"])')
-			.not(':has(span[id^="First_Leg"], span[id^="Second_Leg"], span[id^="First_leg"], span[id^="Second_leg"])');
+			.not(':has(span[id^="First_Leg"], span[id^="Second_Leg"], span[id^="First_leg"], span[id^="Second_leg"], span[id^="Replay"])');
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
 		everything = everything.add(headings).add(dateRows);
 		console.log('everything', everything);
