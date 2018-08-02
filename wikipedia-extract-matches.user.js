@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.30.2
+// @version        2018.07.31.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -27,7 +27,7 @@ $(function() {
 		//'Zaire':                         'Congo DR',
 		'DR Congo':                      'Congo DR',
 		'Territory of Curaçao':          'Curaçao',
-		//'Timor-Leste':                   'East Timor',
+		'Timor-Leste':                   'East Timor',
 		//'Palestine, British Mandate':    'Israel',
 		"Côte d'Ivoire":                 'Ivory Coast',
 		//'Burma':                         'Myanmar',
@@ -145,8 +145,8 @@ $(function() {
 					if (tweakCountry[country]) country = tweakCountry[country];
 
 					if (country == teams[1]) {
-						teams = [teams[1], teams[0]];
-						score = [score[1], score[0]];
+						//teams = [teams[1], teams[0]];
+						//score = [score[1], score[0]];
 					} else if (country == teams[0]) {
 						country = '';
 					} else if (country != '') {
