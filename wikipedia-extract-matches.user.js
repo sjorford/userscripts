@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.07.31.0
+// @version        2018.08.02.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -72,7 +72,7 @@ $(function() {
 		
 		var headings = $('h2, h3, h4')
 			.not(':has([id^=Matchday_])')
-			.not(':has(span[id*="_vs_"])')
+			.not(':has(span[id*="_vs_"], span[id*="_v_"])')
 			.not(':has(span[id^="First_Leg"], span[id^="Second_Leg"], span[id^="First_leg"], span[id^="Second_leg"], span[id^="Replay"])');
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
 		everything = everything.add(headings).add(dateRows);
