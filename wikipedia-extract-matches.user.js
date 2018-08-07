@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.07.2
+// @version        2018.08.07.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -36,6 +36,7 @@ $(function() {
 		//'Irish Free State':              'Republic of Ireland',
 		'St Kitts and Nevis':            'Saint Kitts and Nevis',
 		'St Lucia':                      'Saint Lucia',
+		'Saint-Martin':                  'Saint Martin',
 		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
 		'St. Vincent & Grenadines':      'Saint Vincent and the Grenadines',
