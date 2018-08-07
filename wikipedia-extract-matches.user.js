@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.07.0
+// @version        2018.08.07.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -107,9 +107,9 @@ $(function() {
 				console.log('standard row', this);
 				
 				var date = matchWrapper.find('time span.dtstart').first().text().trim();
-				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASOND][a-z]+ \d{4})?/)[1];
+				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASOND][a-z]+\s+\d{4})?/)[1];
 				if (!date) {
-					var dateParts = matchWrapper.find('time').text().trim().match(/^(([JFMASOND][a-z]+) (\d{1,2}), (\d{4}))?/);
+					var dateParts = matchWrapper.find('time').text().trim().match(/^(([JFMASOND][a-z]+)\s+(\d{1,2}),\s+(\d{4}))?/);
 					if (dateParts[1]) date = dateParts[3] + ' ' + dateParts[2] + ' ' + dateParts[4];
 				}
 				if (!date) date = '';
