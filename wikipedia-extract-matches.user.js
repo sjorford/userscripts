@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.02.0
+// @version        2018.08.07.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -157,14 +157,6 @@ $(function() {
 				
 				var attendanceMatch = attendanceText.match(/Attendance:\s+([\d,]+)/);
 				var attendance = attendanceMatch ? attendanceMatch[1] : '';
-
-				if (addBreak) {
-					console.log('adding break');
-					if (table.find('tr').length > 0) {
-						table.append('<tr><td><br></td></tr>');
-					}
-					addBreak = false;
-				}
 				
 				writeRow(date, city, teams, score, stadium, attendance, neutral);
 				
@@ -196,13 +188,6 @@ $(function() {
 				var attendance = '';
 				var neutral = '';
 				
-				if (addBreak) {
-					if (table.find('tr').length > 0) {
-						table.append('<tr><td><br></td></tr>');
-					}
-					addBreak = false;
-				}
-				
 				writeRow(currentDate, city, teams, score, stadium, attendance, neutral);
 				
 			} else if (eventsCards.is(this)) {
@@ -230,13 +215,6 @@ $(function() {
 				var attendance = attParts ? attParts[2] : '';
 				var neutral = '';
 				
-				if (addBreak) {
-					if (table.find('tr').length > 0) {
-						table.append('<tr><td><br></td></tr>');
-					}
-					addBreak = false;
-				}
-				
 				writeRow(date, city, teams, score, stadium, attendance, neutral);
 				
 			}
@@ -257,6 +235,13 @@ $(function() {
 		
 		console.log(date);
 		if (!date && !score[0] && !score[1]) return;
+		
+		if (addBreak) {
+			if (table.find('tr').length > 0) {
+				table.append('<tr><td><br></td></tr>');
+			}
+			addBreak = false;
+		}
 		
 		var cityParts = city.match(/^(.*?), (.*)$/);
 		if (!cityParts) cityParts = ['', city, ''];
