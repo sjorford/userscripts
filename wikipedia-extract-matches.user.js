@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.07.1
+// @version        2018.08.07.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -38,6 +38,7 @@ $(function() {
 		'St Lucia':                      'Saint Lucia',
 		'St Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
 		'Saint Vincent':                 'Saint Vincent and the Grenadines',
+		'St. Vincent & Grenadines':      'Saint Vincent and the Grenadines',
 		//'Western Samoa':                 'Samoa',
 		//'São Tomé and Príncipe':         'Sao Tome and Principe',
 		'Korea Republic':                'South Korea',
