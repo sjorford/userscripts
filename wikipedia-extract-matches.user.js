@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.07.3
+// @version        2018.08.09.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -16,6 +16,7 @@ $(function() {
 	polyfill();
 	
 	var tweakCountry = {
+		'The Bahamas':                   'Bahamas',
 		//'Dahomey':                       'Benin',
 		//'Upper Volta':                   'Burkina Faso',
 		//'Khmer Republic':                'Cambodia',
@@ -46,7 +47,9 @@ $(function() {
 		//'Ceylon':                        'Sri Lanka',
 		//'Chinese Taipei':                'Taiwan',
 		//'Republic of China':             'Taiwan',
+		'Trinidad & Tobago':             'Trinidad and Tobago',
 		'United Arab Rep.':              'United Arab Republic',
+		'United States Virgin Islands':  'US Virgin Islands',
 		'U.S. Virgin Islands':           'US Virgin Islands',
 		//'New Hebrides':                  'Vanuatu',
 	};
