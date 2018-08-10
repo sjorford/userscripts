@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.09.3
+// @version        2018.08.10.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -58,6 +58,7 @@ $(function() {
 	var tweakCity = {
 		'Djibouti City': 'Djibouti',
 		'Luxembourg City': 'Luxembourg',
+		'Noumea': 'Nouméa',
 		//'São Tomé': 'Sao Tome',
 	};
 	
