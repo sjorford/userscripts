@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.09.2
+// @version        2018.08.09.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -48,6 +48,7 @@ $(function() {
 		//'Chinese Taipei':                'Taiwan',
 		//'Republic of China':             'Taiwan',
 		'Trinidad & Tobago':             'Trinidad and Tobago',
+		'UAE':                           'United Arab Emirates',
 		'United Arab Rep.':              'United Arab Republic',
 		'United States Virgin Islands':  'US Virgin Islands',
 		'U.S. Virgin Islands':           'US Virgin Islands',
