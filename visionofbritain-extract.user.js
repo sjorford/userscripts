@@ -2,7 +2,7 @@
 // @name           Vision of Britain extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.08.05.1
+// @version        2018.08.06.0
 // @match          http://www.visionofbritain.org.uk/unit/*
 // @match          http://www.visionofbritain.org.uk/unit/*#*
 // @grant          none
@@ -48,6 +48,8 @@ $(function() {
 					.addCellHTML(`<a href="${unitLink.attr('href').replace(/#.*/, '')}">${cleanPlacename(unit[1])}</a>`)
 					.addCell(unit[2])
 					.addCell(unitID)
+					.addCell(startYear)
+					.addCell(endYear)
 					.appendTo(table);
 
 			}
