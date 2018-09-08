@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.08.10.0
+// @version        2018.09.08.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -336,7 +336,7 @@ $(function() {
 		if (event.key == 'Escape') hideData();
 	});
 	
-	showData(); // ************************
+	//showData(); // ************************
 	
 });
 
