@@ -2,7 +2,7 @@
 // @name           Boxrec extract 2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.09.28.0
+// @version        2018.09.28.1
 // @match          http://boxrec.com/
 // @match          http://boxrec.com/en/
 // @grant          none
@@ -21,7 +21,8 @@ $(function() {
 	polyfill();
 	
 	$(`<style class="sjo-style">
-		.sjo-iframe {display: none; width: 80%;}
+		.sjo-wrapper {background-color: white;}
+		.sjo-iframe {display: none;}
 		.sjo-output {display: block; width: 80%; height: 10em;}
 	</style>`).appendTo('head');
 	
@@ -34,16 +35,36 @@ $(function() {
 		189: {text: 'International Boxing Organization World', abbr: 'IBO'},
 	};
 	
-	$('<input type="button" value="Start extract">').appendTo('body').click(start);
+	var wrapper = $('<div class="sjo-wrapper"></div>').appendTo('body');
+	
+	$('<input type="button" class="sjo-start" value="Start extract">').appendTo(wrapper).click(start);
 	
 	var iframe, outputBouts, outputBoxers;
 	
 	// Start with Anthony Joshua
 	var boxerIDs = ["659461"];
 	var boxerIndex = 0;
+	var numBouts = 0;
+	var paused = false;
 	
 	function start() {
-
+		
+		$('.sjo-start').hide();
+		
+		$('<label for="sjo-autopause">Autopause:</label> <input id="sjo-autopause" type="number" value="100">').appendTo(wrapper);
+		$('<span id="sjo-status">Bouts: <span id="sjo-status-bouts"></span> Boxers: <span id="sjo-status-boxers"></span> of <span id="sjo-status-queue"></span></span>').appendTo(wrapper);
+		
+		$('<input type="button" id="sjo-pause" value="Pause">').appendTo(wrapper).click(() => {
+			$('#sjo-pause, #sjo-resume').toggle();
+			paused = true;
+		});
+		
+		$('<input type="button" id="sjo-resume" value="Resume">').appendTo(wrapper).hide().click(() => {
+			$('#sjo-pause, #sjo-resume').toggle();
+			paused = false;
+			loadPage();
+		});
+		
 		// Create iframe
 		iframe = $('<iframe class="sjo-iframe" src="http://boxrec.com/en/contact_us"></iframe>').appendTo('body')
 				.on('load', parsePage);
@@ -58,8 +79,17 @@ $(function() {
 	}
 	
 	function loadPage() {
+		
+		if (paused) return;
+		
+		var autopause = $('#sjo-autopause').val();
+		if (boxerIndex >= ($.isNumeric(autopause) ? parseInt(autopause) : 0)) {
+			$('#sjo-pause').click();
+			$('#sjo-autopause').val(boxerIndex + 100);
+			return;
+		}
+		
 		var url = `http://boxrec.com/en/boxer/${boxerIDs[boxerIndex]}`;
-		console.log(url);
 		iframe.attr('src', url);
 	}
 
@@ -74,8 +104,7 @@ $(function() {
 
 		boxer.id = iframe[0].contentWindow.location.href.match(/\d+$/)[0];
 		boxer.name = $('.profileTable .defaultTitleAlign h1', doc).text();
-		console.log(boxer);
-
+		
 		var wrapperWLD = $('.profileWLD', doc);
 
 		boxer.WLD = {};
@@ -231,14 +260,17 @@ $(function() {
 				clean(bout.weightClasses.join('/'));
 
 			outputBouts.val(outputBouts.val() + outputString + "\n");
-
+			numBouts++;
+			
 		});
 
 		outputBouts.val(outputBouts.val() + "\n");
 
 		// Load next page
 		boxerIndex++;
-		console.log(boxerIndex, boxerIDs);
+		$('#sjo-status-bouts').text(numBouts);
+		$('#sjo-status-boxers').text(boxerIndex + 1);
+		$('#sjo-status-queue').text(boxerIDs.length);
 		if (boxerIndex < boxerIDs.length) {
 			loadPage();
 		}
