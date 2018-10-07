@@ -1,8 +1,8 @@
 ﻿// ==UserScript==
-// @name           Boxrec extract 2
+// @name           Boxrec extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.09.28.1
+// @version        2018.10.07.0
 // @match          http://boxrec.com/
 // @match          http://boxrec.com/en/
 // @grant          none
@@ -149,7 +149,9 @@ $(function() {
 
 			var bout = {};
 			bout.date = cells.eq(1).text().trim();
-
+			
+			[bout.event, bout.id] = row.find('.boutP').closest('a').attr('href').split('/').slice(-2);
+			
 			bout.boxers = [];
 			bout.boxers[0] = {};
 			bout.boxers[0].id = boxer.id;
@@ -237,6 +239,8 @@ $(function() {
 			// ================================================================
 
 			var outputString =
+				clean(bout.id) + '\t' +
+				clean(bout.event) + '\t' +
 				clean(bout.date) + '\t' +
 				clean(bout.boxers[0].id) + '\t' +
 				clean(bout.boxers[0].name) + '\t' +
