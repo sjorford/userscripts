@@ -12,6 +12,7 @@
 // TODO:
 // trim venue, see 578597 Antonio Tostado Garcia
 // trim opponent name, see 9011 Danny Lopez v 16300 Jose Luis Valdovinos
+// see http://boxrec.com/media/index.php?title=Fight:2229011
 
 $(function() {
 	
@@ -251,7 +252,7 @@ $(function() {
 			// Append to textarea
 			// ================================================================
 			
-			if (!(bout.result == 'L' && boutIDs.indexOf(bout.id) >= 0)) {
+			if (bout.result == 'L' || boutIDs.indexOf(bout.id) >= 0) {
 				
 				var outputString =
 					clean(bout.id) + '\t' +
