@@ -2,7 +2,7 @@
 // @name           Boxrec extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.10.07.0
+// @version        2018.10.10.0
 // @match          http://boxrec.com/
 // @match          http://boxrec.com/en/
 // @grant          none
@@ -10,13 +10,13 @@
 // ==/UserScript==
 
 // TODO:
-// pause button
-// auto pause
-// auto resume
-// countdown clock
-// stats (bouts output/boxers output/boxers in queue)
+// trim venue, see 578597 Antonio Tostado Garcia
+// trim opponent name, see 9011 Danny Lopez v 16300 Jose Luis Valdovinos
 
 $(function() {
+	
+	var startBoxerIDs = ["677961", "659461"];
+	var pauseAfter = 1000;
 	
 	polyfill();
 	
@@ -39,10 +39,11 @@ $(function() {
 	
 	$('<input type="button" class="sjo-start" value="Start extract">').appendTo(wrapper).click(start);
 	
-	var iframe, outputBouts, outputBoxers;
+	var iframe;
+	var outputBouts = [], outputBoxers = [];
+	var boutIDs = [];
 	
-	// Start with Anthony Joshua
-	var boxerIDs = ["659461"];
+	var boxerIDs = startBoxerIDs;
 	var boxerIndex = 0;
 	var numBouts = 0;
 	var paused = false;
@@ -51,7 +52,7 @@ $(function() {
 		
 		$('.sjo-start').hide();
 		
-		$('<label for="sjo-autopause">Autopause:</label> <input id="sjo-autopause" type="number" value="100">').appendTo(wrapper);
+		$('<label for="sjo-autopause">Autopause:</label> <input id="sjo-autopause" type="number">').attr('value', pauseAfter).appendTo(wrapper);
 		$('<span id="sjo-status">Bouts: <span id="sjo-status-bouts"></span> Boxers: <span id="sjo-status-boxers"></span> of <span id="sjo-status-queue"></span></span>').appendTo(wrapper);
 		
 		$('<input type="button" id="sjo-pause" value="Pause">').appendTo(wrapper).click(() => {
@@ -65,13 +66,25 @@ $(function() {
 			loadPage();
 		});
 		
+		$('<input type="button" id="sjo-show" value="Show">').appendTo(wrapper).click(() => {
+			$('#sjo-outputboxers').val(outputBoxers.join('\n'));
+			$('#sjo-outputbouts').val(outputBouts.join('\n'));
+			$('.sjo-output').toggle();
+			$('#sjo-show, #sjo-hide').toggle();
+		});
+		
+		$('<input type="button" id="sjo-hide" value="Hide">').appendTo(wrapper).hide().click(() => {
+			$('.sjo-output').toggle();
+			$('#sjo-show, #sjo-hide').toggle();
+		});
+		
 		// Create iframe
-		iframe = $('<iframe class="sjo-iframe" src="http://boxrec.com/en/contact_us"></iframe>').appendTo('body')
-				.on('load', parsePage);
+		iframe = $('<iframe class="sjo-iframe" src="http://boxrec.com/en/contact_us"></iframe>')
+					.appendTo('body').on('load', parsePage);
 
 		// Create output areas
-		outputBouts = $('<textarea class="sjo-output">').appendTo('body').click(e => e.target.select());
-		outputBoxers = $('<textarea class="sjo-output">').appendTo('body').click(e => e.target.select());
+		$('<textarea id="sjo-outputboxers" class="sjo-output">').appendTo('body').hide().click(e => e.target.select());
+		$('<textarea id="sjo-outputbouts" class="sjo-output">').appendTo('body').hide().click(e => e.target.select());
 		
 		// Load seed page into iframe
 		loadPage();
@@ -85,7 +98,7 @@ $(function() {
 		var autopause = $('#sjo-autopause').val();
 		if (boxerIndex >= ($.isNumeric(autopause) ? parseInt(autopause) : 0)) {
 			$('#sjo-pause').click();
-			$('#sjo-autopause').val(boxerIndex + 100);
+			$('#sjo-autopause').val(boxerIndex + pauseAfter);
 			return;
 		}
 		
@@ -94,19 +107,19 @@ $(function() {
 	}
 
 	function parsePage() {
-
+		
 		var doc = iframe[0].contentDocument;
-
+		
 		// Parse profile
 		// ================================================================
-
+		
 		var boxer = {};
-
+		
 		boxer.id = iframe[0].contentWindow.location.href.match(/\d+$/)[0];
 		boxer.name = $('.profileTable .defaultTitleAlign h1', doc).text();
 		
 		var wrapperWLD = $('.profileWLD', doc);
-
+		
 		boxer.WLD = {};
 		boxer.WLD.W = wrapperWLD.find('.bgW').text();
 		boxer.WLD.L = wrapperWLD.find('.bgL').text();
@@ -137,7 +150,7 @@ $(function() {
 			clean(boxer.KO.W) + '\t' +
 			clean(boxer.KO.L);
 
-		outputBoxers.val(outputBoxers.val() + outputString + "\n");
+		outputBoxers.push(outputString);
 
 		// Parse bouts
 		// ================================================================
@@ -146,7 +159,7 @@ $(function() {
 
 			var row = $(element);
 			var cells = row.find('td');
-
+			
 			var bout = {};
 			bout.date = cells.eq(1).text().trim();
 			
@@ -157,7 +170,7 @@ $(function() {
 			bout.boxers[0].id = boxer.id;
 			bout.boxers[0].name = boxer.name;
 			bout.boxers[0].weight = parseWeight(cells.eq(2).text());
-
+			
 			bout.boxers[1] = {};
 			var boxerLink = cells.eq(4).find('a');
 			if (boxerLink.length > 0) {
@@ -165,45 +178,45 @@ $(function() {
 				bout.boxers[1].name = boxerLink.text();
 				bout.boxers[1].weight = parseWeight(cells.eq(5).text());
 			}
-
+			
 			bout.venue = {};
 			bout.venue.country = cells.eq(8).find('.flag').attr('class').split(' ')[1].toUpperCase();
 			var venueMatch = cells.eq(8).text().trim().match(/(.*), (.*)/);
 			if (venueMatch) {
-				bout.venue.name = venueMatch[1];
-				bout.venue.city = venueMatch[2];
+				bout.venue.name = venueMatch[1].trim();
+				bout.venue.city = venueMatch[2].trim();
 			} else {
 				bout.venue.city = cells.eq(8).text().trim();
 			}
-
+			
 			bout.result = cells.eq(9).text().trim();
-
+			
 			decisionMatch = cells.eq(10).text().match(/(\w+)?\s*(([\d\?]+)\/)?([\d\?]+)/);
 			bout.decision = decisionMatch[1];
 			bout.lastRound = decisionMatch[3];
 			bout.totalRounds = decisionMatch[4];
-
+			
 			// Parse titles
 			// ================================================================
-
+			
 			var secondRow = row.next('.SR');
-
+			
 			bout.titles = {};
 			bout.weightClasses = [];
-
+			
 			secondRow.find('.titleLink').each((index, element) => {
-
+				
 				var titleLink = $(element);
 				var titleLinkMatch = titleLink.attr('href').match(/(\d+)\/(.+)$/);
 				var titleID = titleLinkMatch[1];
-
+				
 				if (titles[titleID]) {
-
+					
 					var titleRegex = new RegExp("^((.+) )?" + titles[titleID].text + " (.+) Title$");
 					var titleMatch = titleLink.text().fullTrim().match(titleRegex);
-
+					
 					if (titleMatch) {
-
+						
 						if (titleMatch[2] == 'vacant') {
 							bout.titles[titles[titleID].abbr] = 'vac';
 						} else if (titleMatch[2] == 'interim') {
@@ -213,20 +226,20 @@ $(function() {
 						} else {
 							bout.titles[titles[titleID].abbr] = 'def';
 						}
-
+						
 						var weightClass = titleMatch[3];
-
+						
 						if (bout.weightClasses.indexOf(weightClass) < 0 ) {
 							bout.weightClasses.push(weightClass);
 						}
-
+						
 					} else {
 						bout.titles[titles[titleID].abbr] = '?';
 						bout.weightClasses.push('?');
 					}
-
+					
 				}
-
+				
 			});
 			
 			// Add championship boxers to list
@@ -234,42 +247,44 @@ $(function() {
 				if (boxerIDs.indexOf(bout.boxers[1].id) < 0) 
 					boxerIDs.push(bout.boxers[1].id);
 			}
-
+			
 			// Append to textarea
 			// ================================================================
-
-			var outputString =
-				clean(bout.id) + '\t' +
-				clean(bout.event) + '\t' +
-				clean(bout.date) + '\t' +
-				clean(bout.boxers[0].id) + '\t' +
-				clean(bout.boxers[0].name) + '\t' +
-				clean(bout.boxers[0].weight) + '\t' +
-				clean(bout.boxers[1].id) + '\t' +
-				clean(bout.boxers[1].name) + '\t' +
-				clean(bout.boxers[1].weight) + '\t' +
-				clean(bout.venue.name) + '\t' +
-				clean(bout.venue.city) + '\t' +
-				clean(bout.venue.country) + '\t' +
-				clean(bout.result) + '\t' +
-				clean(bout.decision) + '\t' +
-				clean(bout.lastRound) + '\t' +
-				clean(bout.totalRounds) + '\t' +
-				clean(bout.titles['WBC']) + '\t' +
-				clean(bout.titles['WBA']) + '\t' +
-				clean(bout.titles['WBA+']) + '\t' +
-				clean(bout.titles['IBF']) + '\t' +
-				clean(bout.titles['WBO']) + '\t' +
-				clean(bout.titles['IBO']) + '\t' +
-				clean(bout.weightClasses.join('/'));
-
-			outputBouts.val(outputBouts.val() + outputString + "\n");
-			numBouts++;
+			
+			if (!(bout.result == 'L' && boutIDs.indexOf(bout.id) >= 0)) {
+				
+				var outputString =
+					clean(bout.id) + '\t' +
+					clean(bout.event) + '\t' +
+					clean(bout.date) + '\t' +
+					clean(bout.boxers[0].id) + '\t' +
+					clean(bout.boxers[0].name) + '\t' +
+					clean(bout.boxers[0].weight) + '\t' +
+					clean(bout.boxers[1].id) + '\t' +
+					clean(bout.boxers[1].name) + '\t' +
+					clean(bout.boxers[1].weight) + '\t' +
+					clean(bout.venue.name) + '\t' +
+					clean(bout.venue.city) + '\t' +
+					clean(bout.venue.country) + '\t' +
+					clean(bout.result) + '\t' +
+					clean(bout.decision) + '\t' +
+					clean(bout.lastRound) + '\t' +
+					clean(bout.totalRounds) + '\t' +
+					clean(bout.titles['WBC']) + '\t' +
+					clean(bout.titles['WBA']) + '\t' +
+					clean(bout.titles['WBA+']) + '\t' +
+					clean(bout.titles['IBF']) + '\t' +
+					clean(bout.titles['WBO']) + '\t' +
+					clean(bout.titles['IBO']) + '\t' +
+					clean(bout.weightClasses.join('/'));
+				
+				outputBouts.push(outputString);
+				numBouts++;
+				
+			}
 			
 		});
-
-		outputBouts.val(outputBouts.val() + "\n");
-
+		
 		// Load next page
 		boxerIndex++;
 		$('#sjo-status-bouts').text(numBouts);
