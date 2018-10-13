@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2018.06.26.0
+// @version        2018.10.13.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -13,6 +13,7 @@
 $(function() {
 	
 	$(`<style>
+		
 		.flagicon {position: relative;}
 		.flagicon.sjo-flagicon-ENG::before {
 			content: "ENG";
@@ -23,6 +24,11 @@ $(function() {
 			font-size: 5pt;
 			font-weight: bold;
 		}
+		
+		.sjo-titlelink {font-size: small;}
+		.sjo-titlelink::before {content: " •";}
+		.sjo-titlelink:first-of-type::before {content: ""; padding-left: 2rem;}
+
 	</style>`).appendTo('head');
 	
 	//$('.flagicon:has(img[alt="England"])').addClass('sjo-flagicon-ENG');
@@ -49,5 +55,22 @@ $(function() {
 		$('.sjo-reflist-button-expand').hide();
 		$('.sjo-reflist-button-collapse').show();
 	});
+	
+	var pageRegex = /\/wiki\/(.*_)([A-Z])$/;
+	var pages = [];
+	var titleMatch = window.location.pathname.match(pageRegex);
+	if (titleMatch) {
+		$('a').each((i,e) => {
+			var linkMatch = e.href.match(pageRegex);
+			if (linkMatch && linkMatch[1] == titleMatch[1] && pages.indexOf(e.href) < 0) {
+				pages.push(e.href);
+			}
+		});
+	}
+	if (pages.length > 0) {
+		$.each(pages.sort(), (i,e) => {
+			$(`<span class="sjo-titlelink"> <a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo('#firstHeading');
+		});
+	}
 	
 });
