@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.00.12.0
+// @version        2018.10.13.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -90,7 +90,10 @@ $(function() {
 		
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').hide().appendTo('body');
 		var table = $('<table class="sjotable"></table>').appendTo(div);
-		div.click(() => table.selectRange());
+		div.click(() => {
+			polyfill();
+			table.selectRange();
+		});
 		$('<a style="position: absolute; right: 0px; top: 0px; font-size: larger;" href="#">Close</a>').click(hideData).appendTo(div);
 
 		$(window).resize(resizeExtract);
