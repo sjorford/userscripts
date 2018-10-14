@@ -12,6 +12,8 @@
 
 $(function() {
 	
+	console.log('Wikipedia tweaks');
+		
 	$(`<style>
 		
 		.flagicon {position: relative;}
@@ -25,9 +27,9 @@ $(function() {
 			font-weight: bold;
 		}
 		
-		.sjo-titlelink {font-size: small;}
-		.sjo-titlelink::before {content: " •";}
-		.sjo-titlelink:first-of-type::before {content: ""; padding-left: 2rem;}
+		.sjo-titlelinks {font-size: small;}
+		.sjo-titlelinks a::before {content: " • ";}
+		.sjo-titlelinks a:first-of-type::before {content: ""; padding-left: 2rem;}
 
 	</style>`).appendTo('head');
 	
@@ -56,21 +58,53 @@ $(function() {
 		$('.sjo-reflist-button-collapse').show();
 	});
 	
+	// Header links
+	var thisURL = window.location.href.split('#')[0];
 	var pageRegex = /\/wiki\/(.*_)([A-Z])$/;
 	var pages = [];
-	var titleMatch = window.location.pathname.match(pageRegex);
+	var titleMatch = thisURL.match(pageRegex);
 	if (titleMatch) {
+		
 		$('a').each((i,e) => {
 			var linkMatch = e.href.match(pageRegex);
 			if (linkMatch && linkMatch[1] == titleMatch[1] && pages.indexOf(e.href) < 0) {
 				pages.push(e.href);
 			}
 		});
+		
+		console.log(pages);
+		if (pages.length > 0) {
+			var wrapper = $('<span class="sjo-titlelinks"></span>').appendTo('#firstHeading');
+			$.each(pages.sort(), (i,e) => {
+				$(`<a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo(wrapper);
+			});
+		}
+		
 	}
-	if (pages.length > 0) {
-		$.each(pages.sort(), (i,e) => {
-			$(`<span class="sjo-titlelink"> <a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo('#firstHeading');
+	
+	pageRegex = /\/en\.wikipedia\.org\/wiki\/(\d+%E2%80%93\d+)_(.*)$/;
+	pages = [thisURL];
+	titleMatch = thisURL.match(pageRegex);
+	if (titleMatch) {
+		
+		$('a').each((i,e) => {
+			var linkMatch = e.href.match(pageRegex);
+			if (linkMatch && linkMatch[2] == titleMatch[2] && pages.indexOf(e.href) < 0) {
+				pages.push(e.href);
+			}
 		});
+		
+		if (pages.length > 0) {
+			wrapper = $('<span class="sjo-titlelinks"></span>').appendTo('#firstHeading');
+			pages = pages.sort();
+			var pos = pages.indexOf(thisURL);
+			console.log(pages, pos);
+			pages = [pages[pos - 1], pages[pos + 1]];
+			$.each(pages, (i,e) => {
+				if (e) $(`<a href="${e}">${decodeURIComponent(e.match(pageRegex)[1])}</a>`).appendTo(wrapper);
+			});
+		}
+		
 	}
 	
 });
