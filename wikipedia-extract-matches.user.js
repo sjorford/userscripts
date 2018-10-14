@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.10.13.0
+// @version        2018.10.14.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -86,7 +86,7 @@ $(function() {
 			.not(':has(span[id^="First_Leg"], span[id^="Second_Leg"], span[id^="First_leg"], span[id^="Second_leg"], span[id^="Replay"])');
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
 		everything = everything.add(headings).add(dateRows);
-		console.log('everything', everything);
+		//console.log('everything', everything);
 		
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').hide().appendTo('body');
 		var table = $('<table class="sjotable"></table>').appendTo(div);
@@ -111,13 +111,13 @@ $(function() {
 
 				// Blank rows between groups/stages
 				addBreak = true;
-				console.log('break', this);
+				//console.log('break', this);
 				
 			} else if (eventsFull.is(this)) {
 				
 				// Standard match format
 				var matchWrapper = $(this);
-				console.log('standard row', this);
+				//console.log('standard row', this);
 				
 				var date = matchWrapper.find('time span.dtstart').first().text().trim();
 				if (!date) date = matchWrapper.find('time').text().trim().match(/^(\d{1,2} [JFMASOND][a-z]+\s+\d{4})?/)[1];
@@ -177,14 +177,14 @@ $(function() {
 				
 				// Store current date
 				currentDate = $(this).text().trim();
-				console.log('date row', this);
+				//console.log('date row', this);
 				
 			} else if (eventsBrief.is(this)) {
 				
 				// Brief match format
 				var matchWrapper = $(this);
 				var cells = matchWrapper.children('td');
-				console.log('brief row', this);
+				//console.log('brief row', this);
 				
 				var teams = [];
 				teams[0] = cells.eq(0).text().trim();
@@ -210,7 +210,7 @@ $(function() {
 				var row1 = matchWrapper.find('tr').first();
 				var row2 = row1.next('tr');
 				var cells = row1.children('td, th');
-				console.log('vcard row', this);
+				//console.log('vcard row', this);
 				
 				var date = cells.eq(0).text().trim();
 				
@@ -236,7 +236,7 @@ $(function() {
 		
 		/*
 		if ($('th > abbr[title="Points"]').length == 0) {
-			console.log('whatever this is');
+			//console.log('whatever this is');
 			$('<tr></tr>').append('<td></td>'.repeat(9)).appendTo(table);
 			$('tr:nth-of-type(even)', table).appendTo(table);
 		}
@@ -246,7 +246,7 @@ $(function() {
 	
 	function writeRow(date, city, teams, score, stadium, attendance, neutral) {
 		
-		console.log(date);
+		//console.log(date);
 		if (!date && !score[0] && !score[1]) return;
 		
 		if (addBreak) {
