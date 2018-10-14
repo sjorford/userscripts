@@ -2,7 +2,7 @@
 // @name           Boxrec extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.10.10.0
+// @version        2018.10.10.1
 // @match          http://boxrec.com/
 // @match          http://boxrec.com/en/
 // @grant          none
@@ -18,6 +18,10 @@ $(function() {
 	
 	var startBoxerIDs = ["677961", "659461"];
 	var pauseAfter = 1000;
+	
+	// testing
+	startBoxerIDs = ["31972"];
+	pauseAfter = 1;
 	
 	polyfill();
 	
@@ -176,7 +180,7 @@ $(function() {
 			var boxerLink = cells.eq(4).find('a');
 			if (boxerLink.length > 0) {
 				bout.boxers[1].id = boxerLink.attr('href').match(/\d+$/)[0];
-				bout.boxers[1].name = boxerLink.text();
+				bout.boxers[1].name = boxerLink.text().trim();
 				bout.boxers[1].weight = parseWeight(cells.eq(5).text());
 			}
 			
@@ -252,7 +256,7 @@ $(function() {
 			// Append to textarea
 			// ================================================================
 			
-			if (bout.result == 'L' || boutIDs.indexOf(bout.id) >= 0) {
+			if (bout.result != 'L' && boutIDs.indexOf(bout.id) < 0) {
 				
 				var outputString =
 					clean(bout.id) + '\t' +
@@ -281,6 +285,7 @@ $(function() {
 				
 				outputBouts.push(outputString);
 				numBouts++;
+				boutIDs.push(bout.id); // duh
 				
 			}
 			
