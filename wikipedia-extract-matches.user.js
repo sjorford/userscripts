@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.10.14.0
+// @version        2018.10.15.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -10,7 +10,11 @@
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
 
-$(function() {
+var jQ = $.noConflict();
+
+jQ(function() {
+	
+	var $ = jQ;
 	
 	console.log('Wikipedia extract matches');
 	
@@ -379,8 +383,8 @@ function polyfill() {
 			return obj;
 		}
 
-	})(jQuery);
-
+	})(jQ);
+	
 	// Select range
 	(function($) {
 		$.fn.selectRange = function() {
@@ -391,6 +395,6 @@ function polyfill() {
 			selection.addRange(range);
 			return this;
 		};
-	})(jQuery);
-
+	})(jQ);
+	
 }
