@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.10.14.0
+// @version     2018.10.17.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -27,12 +27,13 @@ $(`<style>
 
 $(function() {
 	
-	if (window.location.search.indexOf('lang=en') >= 0) window.location = window.location.href.split('?')[0];
+	// Strip search parameters
+	if (window.location.search.match(/^\?(lang=en$|ref_src=)/)) window.location = window.location.href.split('?')[0];
 	
+	// Hide bots
 	function hide12345678() {
 		$('li').not('.sjo-botuser').find('a.account-group').filter((i,e) => e.href.match(/\d{8}$/)).closest('li').addClass('sjo-botuser');
 	}
-	
 	window.setInterval(hide12345678, 50);
 	
 });
