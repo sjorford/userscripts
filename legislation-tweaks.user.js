@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018-01-03c
+// @version        2018.10.29.0
 // @match          http://www.legislation.gov.uk/all?*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
 // @match          file:///C:/Users/Stuart/Google%20Drive/Personal/Politics/ECOs/*
@@ -10,6 +10,12 @@
 // ==/UserScript==
 
 $(function() {
+	
+	// Repopulate search box
+	var locationMatch = window.location.href.match(/\/all\?title=([^&]+)/);
+	if (locationMatch) {
+		$('#title').val(decodeURIComponent(locationMatch[1]));
+	}
 	
 	// Highlight ECOs
 	$('<style>.sjo-electoral td {background-color: #ffc35bb3 !important;}</style>').appendTo('head');
