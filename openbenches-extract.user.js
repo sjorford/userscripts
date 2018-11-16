@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.10.05.0
+// @version        2018.11.16.0
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -19,6 +19,7 @@ jQuery(function() {
 		.sjo-table a {text-decoration: none;}
 		.sjo-table a:hover {text-decoration: underline;}
 		a[href="/login/"] {background-color: yellow; padding: 0.5em; border: 2px solid black; border-radius: 0.25em;}
+		form[action="/search/"] h2 {display: none;}
 	</style>`).appendTo('head');
 	
 	var threshold = 1.5; // km
@@ -32,7 +33,7 @@ jQuery(function() {
 	function formatMainPage() {
 		
 		// Resize map
-		$('#map').css({width: 'calc(100% - 200px)', height: '600px'});
+		$('#map').css({width: 'calc(100% - 100px)', height: '500px'});
 		map.invalidateSize();
 		
 		var buttonBar = $('<div class="button-bar"></div>').insertBefore('footer');
@@ -63,7 +64,7 @@ jQuery(function() {
 			.append('<form style="display: inline-block;" action="/bench/" method="post"><input id="random" name="random" value="random" type="hidden"><input class="hand-drawn" value="Random" type="submit"></form>')
 			.append(' ')
 			.append(`<a href="/bench/${id+1}/" class="hand-drawn">Next</a>`)
-			.insertBefore('#benchInscription');
+			.insertBefore('footer');
 		
 	}
 	
