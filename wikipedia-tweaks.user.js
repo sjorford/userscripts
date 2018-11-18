@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2018.10.13.0
+// @version        2018.11.18.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -28,8 +28,9 @@ $(function() {
 		}
 		
 		.sjo-titlelinks {font-size: small;}
-		.sjo-titlelinks a::before {content: " • ";}
-		.sjo-titlelinks a:first-of-type::before {content: ""; padding-left: 2rem;}
+		.sjo-titlelinks a {padding: 0 0.5em;}
+		.sjo-titlelinks span::before {content: "•";}
+		.sjo-titlelinks span:first-of-type::before {content: ""; padding-left: 2rem;}
 
 	</style>`).appendTo('head');
 	
@@ -76,7 +77,7 @@ $(function() {
 		if (pages.length > 0) {
 			var wrapper = $('<span class="sjo-titlelinks"></span>').appendTo('#firstHeading');
 			$.each(pages.sort(), (i,e) => {
-				$(`<a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo(wrapper);
+				$(`<span><a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo(wrapper);
 			});
 		}
 		
@@ -101,7 +102,7 @@ $(function() {
 			console.log(pages, pos);
 			pages = [pages[pos - 1], pages[pos + 1]];
 			$.each(pages, (i,e) => {
-				if (e) $(`<a href="${e}">${decodeURIComponent(e.match(pageRegex)[1])}</a>`).appendTo(wrapper);
+				if (e) $(`<span><a href="${e}">${decodeURIComponent(e.match(pageRegex)[1])}</a></span>`).appendTo(wrapper);
 			});
 		}
 		
