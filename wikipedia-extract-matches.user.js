@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.10.15.0
+// @version        2018.12.03.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -102,7 +102,7 @@ jQ(function() {
 		$(window).resize(resizeExtract);
 		resizeExtract();
 
-		var openButton = $('<a href="#">Extract matches</a>').appendTo('#p-cactions .menu ul').wrap('<li></li>').click(showData);
+		var openButton = $('<a href="#">Extract matches</a>').appendTo('#p-cactions ul.menu').wrap('<li></li>').click(showData);
 		$('#p-cactions').removeClass('emptyPortlet');
 
 		var addBreak = false;
@@ -336,8 +336,6 @@ jQ(function() {
 	$('body').on('keydown', event => {
 		if (event.key == 'Escape') hideData();
 	});
-	
-	//showData(); // ************************
 	
 });
 
