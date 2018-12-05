@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2018.11.18.0
+// @version        2018.12.05.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -75,7 +75,7 @@ $(function() {
 		
 		console.log(pages);
 		if (pages.length > 0) {
-			var wrapper = $('<span class="sjo-titlelinks"></span>').appendTo('#firstHeading');
+			var wrapper = $('<span class="sjo-titlelinks"> </span>').appendTo('#firstHeading');
 			$.each(pages.sort(), (i,e) => {
 				$(`<span><a href="${e}">${e.match(pageRegex)[2]}</a></span>`).appendTo(wrapper);
 			});
@@ -96,7 +96,7 @@ $(function() {
 		});
 		
 		if (pages.length > 0) {
-			wrapper = $('<span class="sjo-titlelinks"></span>').appendTo('#firstHeading');
+			wrapper = $('<span class="sjo-titlelinks"> </span>').appendTo('#firstHeading');
 			pages = pages.sort();
 			var pos = pages.indexOf(thisURL);
 			console.log(pages, pos);
