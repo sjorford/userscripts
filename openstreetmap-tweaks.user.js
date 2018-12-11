@@ -2,7 +2,7 @@
 // @name           OpenStreetMap tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.11.0
+// @version        2018.12.11.1
 // @match          https://www.openstreetmap.org/id
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
@@ -27,7 +27,7 @@ $(function() {
 		// Enter address, or change point type to Address (Ctrl-A)
 		if (oe.key == 'a' && oe.ctrlKey && !oe.shiftKey && !oe.altKey) {
 			event.preventDefault();
-			if ($('g.node.point.selected').length > 0) {
+			if ($('g.node.selected').length > 0) {
 				presetAddress();
 			} else {
 				enterAddress();
