@@ -2,7 +2,7 @@
 // @name           OpenStreetMap tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.15.0
+// @version        2018.12.15.1
 // @match          https://www.openstreetmap.org/id
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
@@ -26,8 +26,8 @@ $(function() {
 			console.log('changing type: address');
 			$('.preset-reset.preset-choose').first().click();
 			var button = $('.preset-icon-fill-vertex, .preset-icon-fill-point')
-					.filter((i, e) => e.className.split(' ').indexOf('tag-addr:*') >= 0)
-					.closest('.preset-list-button').not('.preset-reset').first();
+			.filter((i, e) => e.className.split(' ').indexOf('tag-addr:*') >= 0)
+			.closest('.preset-list-button').not('.preset-reset').first();
 			if (button.length == 0) return;
 			button.click();
 			enterAddress();
@@ -62,6 +62,7 @@ $(function() {
 	// Prevent iD actions on keydown
 	$('body').on('keydown', event => {
 		var oe = event.originalEvent;
+		if (!$('body').is(oe.originalTarget)) return;
 		console.log('keydown', oe.originalTarget);
 		$.each(hotkeys, (index, keydef) => {
 			if (keyPressed(event, keydef)) {
