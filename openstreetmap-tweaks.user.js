@@ -2,7 +2,7 @@
 // @name           OpenStreetMap tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.16.0
+// @version        2018.12.31.0
 // @match          https://www.openstreetmap.org/id
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
@@ -13,7 +13,11 @@ $(function() {
 	//var $ = $sjo;
 	
 	console.log('OpenStreetMap tweaks');
-
+	
+	$(`<style>
+		div.combobox {max-height:368px;}
+	</style>`).appendTo('head');
+	
 	function presetHouse() {
 		console.log('changing type: house');
 		$('.preset-reset.preset-choose').first().click();
@@ -93,11 +97,9 @@ $(function() {
 	$('body').on('keydown', event => {
 		var oe = event.originalEvent;
 		if (!$('body').is(oe.originalTarget)) return;
-		console.log('keydown', oe.originalTarget);
 		$.each(hotkeys, (index, keydef) => {
 			if (keyPressed(event, keydef)) {
 				event.preventDefault();
-				console.log('keydown', keydef, oe.originalTarget);
 				return false;
 			}
 		});
@@ -107,11 +109,9 @@ $(function() {
 	$('body').on('keyup', event => {
 		var oe = event.originalEvent;
 		if (!$('body').is(oe.originalTarget)) return;
-		console.log('keyup', oe.originalTarget);
 		$.each(hotkeys, (index, keydef) => {
 			if (keyPressed(event, keydef)) {
 				event.preventDefault();
-				console.log('keydown', keydef, oe.originalTarget);
 				keydef.fn.call();
 				return false;
 			}
