@@ -2,9 +2,9 @@
 // @name           Twitter sidebar
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.05.19.0
-// @match          https://twitter.com
+// @version        2018.12.31.0
 // @match          https://twitter.com/*
+// @exclude        https://twitter.com/settings/*
 // @grant          GM_xmlhttpRequest
 // @connect        api.jsonbin.io
 // @run-at         document-idle
