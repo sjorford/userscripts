@@ -1,7 +1,8 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2018.12.05.0
+// @version        2019.01.02.0
+// @salutation     Happy New Year!
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -31,7 +32,9 @@ $(function() {
 		.sjo-titlelinks a {padding: 0 0.5em;}
 		.sjo-titlelinks span::before {content: "•";}
 		.sjo-titlelinks span:first-of-type::before {content: ""; padding-left: 2rem;}
-
+		
+		th > div.plainlinks.hlist.navbar.mini {display: none;}
+		
 	</style>`).appendTo('head');
 	
 	//$('.flagicon:has(img[alt="England"])').addClass('sjo-flagicon-ENG');
@@ -58,6 +61,8 @@ $(function() {
 		$('.sjo-reflist-button-expand').hide();
 		$('.sjo-reflist-button-collapse').show();
 	});
+	
+	$('sup').filter((i,e) => !e.innerText.match(/\(|\[/)).html((i,html) => `[${html}]`);
 	
 	// Header links
 	var thisURL = window.location.href.split('#')[0];
