@@ -2,7 +2,7 @@
 // @name           OpenStreetMap tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2010.01.02.0
+// @version        2019.01.08.0
 // @match          https://www.openstreetmap.org/id
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
@@ -39,7 +39,7 @@ $(function() {
 
 	function enterAddress() {
 		console.log('moving focus to address fields');
-		$('.addr-housenumber').first().focus();
+		$('.addr-housenumber').first().focus().select();
 	}
 	
 	function presetGarage() {
