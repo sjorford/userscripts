@@ -2,7 +2,7 @@
 // @name        Proboards tweaks
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
-// @version     2018.05.15.1
+// @version     2019.02.11.0
 // @grant       none
 // ==/UserScript==
 
@@ -29,6 +29,24 @@ $(function() {
 		
 		.message br {margin-bottom: 0.5em;}
 		
+		.sjo-faves-wrapper {margin-bottom: 0.5em;}
+		.sjo-fave {display: inline-block; border: 1px solid black; border-radius: 5px; padding: 0 4px; margin: 0 0.25em 0.25em 0;}
+		.sjo-faves-wrapper label, .sjo-fave a {font: 0.8em Calibri;}
+		.sjo-fave a:hover {color: black; text-decoration: none;}
+		.sjo-fave.new_span {background-color: gold;}
+		
 	</style>`).appendTo('head');
+	
+	var favBoards = [108, 109, 110, 111, 112];
+	
+	var wrapper = $('<div class="sjo-faves-wrapper"><label>2019:</label> </div>').insertAfter('#navigation-tree');
+	
+	$.each(favBoards, (i, boardNumber) => {
+		var li = $('#nav-tree-menu-0 li').filter((i, e) => e.className.split(' ').indexOf('nav-tree-board-' + boardNumber) >= 0);
+		var anchor = li.find('a');
+		var href = anchor.attr('href');
+		var linkText = anchor.find('.item-text').text().replace(/ 2019$/, '');
+		$(`<span class="sjo-fave"><a href="${href}">${linkText}</a></span>`).addClass(li.hasClass('new_span') ? 'new_span' : '').appendTo(wrapper);
+	});
 	
 });
