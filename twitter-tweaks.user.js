@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2018.10.31.0
+// @version     2019.02.17.1
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -21,8 +21,6 @@ $(`<style>
 	.wtf-module {display: none !important;}
 	.module.trends {display: none !important;}
 	
-	.sjo-botuser * {display: none !important;}
-	
 </style>`).appendTo('head');
 
 $(function() {
@@ -30,10 +28,13 @@ $(function() {
 	// Strip search parameters
 	if (window.location.search.match(/^\?(lang=en(-gb)?$|ref_src=)/)) window.location = window.location.href.split('?')[0];
 	
-	// Hide bots
-	function hide12345678() {
-		$('li').not('.sjo-botuser').find('a.account-group').filter((i,e) => e.href.match(/\d{8}$/)).closest('li').addClass('sjo-botuser');
-	}
-	window.setInterval(hide12345678, 50);
+	// Hotkey for search box
+	$('body').on('keydown', event => {
+		var oe = event.originalEvent;
+		if (oe.shiftKey && oe.altKey && !oe.ctrlKey && oe.key == 'F') {
+			$('#search-query').focus().select();
+			event.preventDefault();
+		}
+	});
 	
 });
