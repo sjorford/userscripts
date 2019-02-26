@@ -2,7 +2,7 @@
 // @name        Twitter auto add to list
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2019.02.22.1
+// @version     2019.02.26.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -26,28 +26,29 @@ $(function() {
 	window.sjoExportListMembers = exportListMembers;
 
 	// Check "Local parties" list
+	var alreadyClicked = [];
 	window.setInterval(addToList, 200);
 	
 	function addToList() {
-		//console.log('anything to click?');
 
 		var menuItem = $('.list-text').not('.sjo-clicked').filter(':visible');
 		if (menuItem.length > 0) {
-			//console.log('clicking menu item!');
 			menuItem.addClass('sjo-clicked').click();
 			return;
 		}
 
 		var checkbox = $('#list_1090883244713742336').not('.sjo-clicked').filter(':visible');
 		if (checkbox.length > 0) {
-			if (checkbox.is(':checked')) {
-				//console.log('checkbox already checked');
-				checkbox.addClass('sjo-clicked');
-			} else {
-				//console.log('clicking checkbox!');
-				checkbox.addClass('sjo-clicked').click();
+			var userID = checkbox.closest('.list-membership-container').attr('data-user-id');
+			if (alreadyClicked.indexOf(userID) < 0) {
+				alreadyClicked.push(userID);
+				if (checkbox.is(':checked')) {
+					checkbox.addClass('sjo-clicked');
+				} else {
+					checkbox.addClass('sjo-clicked').click();
+				}
+				checkbox.closest('.modal-content').find('.modal-close').click();
 			}
-			checkbox.closest('.modal-content').find('.modal-close').click();
 			return;
 		}
 
