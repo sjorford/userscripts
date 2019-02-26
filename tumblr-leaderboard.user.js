@@ -2,7 +2,7 @@
 // @name           Tumblr leaderboard
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.07.09.0
+// @version        2019.02.24.0
 // @match          https://www.tumblr.com/likes
 // @match          https://www.tumblr.com/dashboard
 // @grant          none
@@ -12,16 +12,25 @@
 $(function() {
 	
 	$(`<style>
-		.sjo-leaders {position: fixed; background: white; z-index: 999; font-size: 8pt; top: 0; right: 0; padding: 1em 0 1em 1em;}
+		.sjo-leaders {position: fixed; background: white; z-index: 999; font-size: 8pt; top: 0; right: 0; padding: 1em 0 1em 1em; border: 1px solid black;}
 		.sjo-leaders td, .sjo-leaders th {padding-right: 1em; text-align: right;}
 		.sjo-leaders td:first-of-type, .sjo-leaders th:first-of-type {text-align: left;}
 		.sjo-leaders th {font-weight: bold;}
 		.tab-bar-container {right: 120px;}
+		.sjo-leaders a {color: darkblue;}
+.sjo-leaders table {margin-top: 1em;}
+.sjo-expand {display: none;}
+.sjo-collapse, .sjo-expand {text-align: right; margin-right: 1em;}
 	</style>`).appendTo('head');
 	
 	var postIds = [];
 	var bloggers = [];
-	$('<div class="sjo-leaders"><table><tbody></tbody></table></div>').appendTo('body');
+	var wrapper = $('<div class="sjo-leaders"></div>')
+		.append('<div class="sjo-collapse"><a href="">[Collapse]<a></div>')
+		.append('<div class="sjo-expand"><a href="">[Expand]<a></div>')
+		.append('<table><tbody></tbody></table>')
+		.appendTo('body');
+	$('a', '.sjo-collapse, .sjo-expand').click(event => wrapper.children().toggle() && false);
 	var leaderboard = $('.sjo-leaders tbody');
 	var totals = {total: 0, likes: 0, likes2: 0};
 	
@@ -29,7 +38,7 @@ $(function() {
 	
 	function update() {
 		
-		$('img.post_media_photo').each((index, element) => {
+		$('img.post_media_photo, figure.tmblr-full img').each((index, element) => {
 			var container = $(element).closest('li.post_container');
 			var postId = container.attr('data-pageable');
 			if (postIds.indexOf(postId) < 0) {
@@ -78,7 +87,7 @@ $(function() {
 					$.each(bloggers, (index, item) => 
 						   leaderboard.append(`
 								<tr>
-									<td>${item.name}</td>
+									<td><a href="http://${item.name}.tumblr.com/archive" target="_blank">${item.name}</a></td>
 									<td>${item.total}</td>
 									<td>${item.likes}</td>
 									<td>${item.likes2}</td>
