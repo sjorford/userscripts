@@ -2,7 +2,7 @@
 // @name        Twitter auto add to list
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2019.02.26.0
+// @version     2019.03.03.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -16,6 +16,7 @@ $(function() {
 		var users = $('.activity-user-profile-content').each((i, e) => {
 			var user = $(e);
 			var row = $('<tr></tr>').appendTo(table);
+			$('<td></td>').text('="' + user.closest('.account').attr('data-user-id') + '"').appendTo(row);
 			$('<td></td>').text(user.find('.username b').text()).appendTo(row);
 			$('<td></td>').text(user.find('.fullname').text()).appendTo(row);
 			$('<td></td>').text(user.find('.bio').text()).appendTo(row);
