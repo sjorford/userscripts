@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.03.13.1
+// @version        2018.06.02.0
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -60,7 +60,7 @@ $(function() {
 	var delay = 0; //200
 	var timer = null;
 	
-	$('body').on('keypress', event => {
+	$('body').on('keydown', event => {
 		
 		if (event.originalEvent.key === 'ArrowDown') {
 			stopTimer();
