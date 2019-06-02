@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.06.02.0
+// @version        2018.06.02.1
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -58,36 +58,21 @@ $(function() {
 	
 	var offset = 60;
 	var delay = 0; //200
-	var timer = null;
 	
 	$('body').on('keydown', event => {
 		
 		if (event.originalEvent.key === 'ArrowDown') {
-			stopTimer();
 			scroll(false);
 			return false;
 		} else if (event.originalEvent.key === 'ArrowUp') {
-			stopTimer();
 			scroll(true);
 			return false;
-		} else if (event.originalEvent.key === 'a') {
-			if (timer) {
-				stopTimer();
-			} else {
-				scroll();
-				timer = window.setInterval(scroll, 1200)
-			}
+		} else if (event.originalEvent.key === ' ') {
+			like();
 			return false;
 		}
 		
 	});
-	
-	function stopTimer() {
-		if (timer) {
-			window.clearTimeout(timer);
-			timer = null;
-		}
-	}
 	
 	function scroll(up) {
 		
@@ -112,5 +97,31 @@ $(function() {
 		}
 		
 	}
+	
+	function posts(current) {
+		
+		var line = $(window).scrollTop() + offset;
+		var posts = $('li.post_container, li.post, article, div[id="entry"], div[id="content"]');
+		
+		var currentPost = posts.filter((index, element) => $(element).offset().top >= line - 1).first();
+		var postsBelow = posts.filter((index, element) => $(element).offset().top > line + 1);
+		
+		if (current == -1) {
+			return posts.not(postsBelow).not(currentPost);
+		} else if (current == 1) {
+			return postsBelow;
+		} else if (current == 0) {
+			return currentPost;
+		}
+		
+	}
+	
+	function like() {
+		
+		var post = posts(0);
+		post.find('.post_control.like').first().click();
+		
+	}
+	
 	
 });
