@@ -1,22 +1,34 @@
 // ==UserScript==
-// @name        Sporcle tweaks
-// @namespace   sjorford@gmail.com
-// @include     http://www.sporcle.com/*
-// @include     https://www.sporcle.com/*
-// @version     2017-11-08
-// @grant       none
+// @name           Sporcle tweaks
+// @namespace      sjorford@gmail.com
+// @author         Stuart Orford
+// @version        2019.06.13.0
+// @match          https://www.sporcle.com/games/ateweston85/european-cup--champions-league-semi-finalists
+// @grant          none
 // ==/UserScript==
 
-var $ = jQuery;
-
-$(function() {
+jQuery(function() {
+	
+	var $ = jQuery;
+	
+	var functionMap = {
+		'/games/ateweston85/european-cup--champions-league-semi-finalists': [moreColumns, blackOnWhite],
+	};
+	
+	$.each(functionMap, (key, fn) => {if (window.location.href.indexOf(key)) {Array.isArray(fn) ? $.each(fn, (i, f) => f.call()) : fn.call()}});
+	
+	// Widen the play area and double the number of columns
+	function moreColumns() {
+		$(`<style>#page-wrapper {width: auto;}</style>`).appendTo('head');
+		$('#gameTable > tbody > tr:nth-of-type(2n)').each((index, element) => $(element).prev('tr').append(element.cells));
+	}
+	
+	// Default colours
+	function blackOnWhite() {
+		$(`<style>td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}</style>`).appendTo('head');
+	}
 	
 	/*
-		.remodal-overlay, .remodal-wrapper, .remodal {xxxdisplay: none !important;}
-		.remodal-overlay.pauseScreen {xxxdisplay: block !important;}
-		.remodal.pauseScreen {xxxdisplay: inline-block !important;}
-		html.remodal-is-locked {xxxoverflow: auto !important; touch-action: auto !important;}
-	*/
 	
 	$(`<style>
 		#bg-temp.shifted {margin-top: auto;}
@@ -40,5 +52,7 @@ $(function() {
 	$('body').on('keypress', '#gameinput', event => {
 		if (event.originalEvent.key === 'ArrowDown' ? $('#nextButton').click() : event.originalEvent.key === 'ArrowUp' ? $('#previousButton').click() : '');
 	});
+	
+	*/
 	
 });
