@@ -2,7 +2,7 @@
 // @name        Proboards tweaks
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
-// @version     2019.02.11.0
+// @version     2019.07.09.0
 // @grant       none
 // ==/UserScript==
 
@@ -34,6 +34,8 @@ $(function() {
 		.sjo-faves-wrapper label, .sjo-fave a {font: 0.8em Calibri;}
 		.sjo-fave a:hover {color: black; text-decoration: none;}
 		.sjo-fave.new_span {background-color: gold;}
+
+		.post .content article h3.title {display: none;}
 		
 	</style>`).appendTo('head');
 	
