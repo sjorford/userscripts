@@ -2,7 +2,7 @@
 // @name        Proboards tweaks
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
-// @version     2019.07.09.0
+// @version     2019.08.02.0
 // @grant       none
 // ==/UserScript==
 
@@ -39,6 +39,7 @@ $(function() {
 		
 	</style>`).appendTo('head');
 	
+	/*
 	var favBoards = [108, 109, 110, 111, 112];
 	
 	var wrapper = $('<div class="sjo-faves-wrapper"><label>2019:</label> </div>').insertAfter('#navigation-tree');
@@ -50,5 +51,6 @@ $(function() {
 		var linkText = anchor.find('.item-text').text().replace(/ 2019$/, '');
 		$(`<span class="sjo-fave"><a href="${href}">${linkText}</a></span>`).addClass(li.hasClass('new_span') ? 'new_span' : '').appendTo(wrapper);
 	});
+	*/
 	
 });
