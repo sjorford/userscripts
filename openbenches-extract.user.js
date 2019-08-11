@@ -2,7 +2,7 @@
 // @name           OpenBenches extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.08.11.0
+// @version        2019.08.11.1
 // @match          https://openbenches.org/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -167,7 +167,7 @@ jQuery(function() {
 					.replace(/&quot;/g, '"')
 					.replace(/&(a(m(p)?)?)?…$/, '&…')
 					.replace(/\s+…$/, '…');
-				if (text.charAt(0) == '"' || text.charAt(0) == "'") {
+				if ('=+\'"'.indexOf(text.charAt(0)) >= 0) {
 					text = '="' + text.replace(/"/g, '""') + '"';
 				}
 				var textLink = $('<a></a>').text(text).attr('href', `https://openbenches.org/bench/${bench.id}/`);
