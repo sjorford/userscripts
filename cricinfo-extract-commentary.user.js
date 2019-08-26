@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cricinfo extract commentary
 // @namespace    sjorford@gmail.com
-// @version      2019.08.26.0
+// @version      2019.08.26.1
 // @author       Stuart Orford
 // @match        https://www.espncricinfo.com/*
 // @grant        none
@@ -41,6 +41,7 @@ $(function() {
 			
 			data.push({
 				ball: item.find('.time-stamp').text() - 0,
+				runsAll: runsMatch[0],
 				runs: runsMatch[1],
 				extras: runsMatch[2],
 				wicket: runsMatch[3],
@@ -60,6 +61,7 @@ $(function() {
 			$('<td></td>').text(e.ball).appendTo(row);
 			$('<td></td>').text(e.bowler).appendTo(row);
 			$('<td></td>').text(e.batsman).appendTo(row);
+			$('<td></td>').text(e.runsAll).appendTo(row);
 			$('<td></td>').text(e.runs).appendTo(row);
 			$('<td></td>').text(e.extras).appendTo(row);
 			$('<td></td>').text(e.wicket).appendTo(row);
