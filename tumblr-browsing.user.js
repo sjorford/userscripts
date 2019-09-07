@@ -1,18 +1,21 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.06.02.1
+// @version        2018.09.07.0
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
 // @match          https://www.tumblr.com/*
 // @include        /^https?://[^.]+\.tumblr\.com//
-// @grant          none
+// @grant          GM_getValue
+// @grant          GM_setValue
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.js
 // ==/UserScript==
 
 $(function() {
+	
+	var readPostIDs = (GM_getValue('sjo_tumblr_readPostIDs') || '').split(',');
 	
 	if (location.href.split('#')[0] == 'https://www.tumblr.com/dashboard') {
 		
@@ -35,6 +38,7 @@ $(function() {
 				pointer-events: auto;
 			}
 			
+			.sjo-read  * {background-color: hsl(120, 45%, 60%) !important;}
 			.sjo-liked * {background-color: hsl(44, 100%, 50%) !important;}
 			.sjo-liked .post_header::before {
 				content: "\\EA4F";
@@ -53,7 +57,15 @@ $(function() {
 			$('.post_control.liked').closest('li.post_container').addClass('sjo-liked');
 			$('.post_control.like').not('.liked').closest('li.post_container').removeClass('sjo-liked');
 		}
-	
+		
+		setInterval(highlightReadPosts, 50);
+		
+		function highlightReadPosts() {
+			$.each(readPostIDs, (index, id) => {
+				$('#' + id).closest('li.post_container').addClass('sjo-read');
+			});
+		}
+		
 	}
 	
 	var offset = 60;
@@ -94,6 +106,12 @@ $(function() {
 			
 		if (nextPost && nextPost.length > 0) {
 			$('html, body').animate({scrollTop: nextPost.offset().top - offset}, delay);
+			var id = nextPost.find('.post').attr('id');
+			if (readPostIDs.indexOf(id) < 0) {
+				readPostIDs.push(id);
+				GM_setValue('sjo_tumblr_readPostIDs', readPostIDs.join(','));
+				nextPost.closest('.post-container').addClass('sjo-read');
+			}
 		}
 		
 	}
