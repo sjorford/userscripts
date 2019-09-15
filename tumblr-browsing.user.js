@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.09.07.0
+// @version        2018.09.15.0
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -38,8 +38,9 @@ $(function() {
 				pointer-events: auto;
 			}
 			
-			.sjo-read  * {background-color: hsl(120, 45%, 60%) !important;}
-			.sjo-liked * {background-color: hsl(44, 100%, 50%) !important;}
+			.sjo-read     * {background-color: hsl(120, 45%, 60%) !important;}
+			.sjo-read-new * {background-color: hsl(120, 45%, 60%) !important; transition: background-color ease-in 1s;}
+			.sjo-liked    * {background-color: hsl(44, 100%, 50%) !important;}
 			.sjo-liked .post_header::before {
 				content: "\\EA4F";
 				color: #d95e40;
@@ -110,7 +111,7 @@ $(function() {
 			if (readPostIDs.indexOf(id) < 0) {
 				readPostIDs.push(id);
 				GM_setValue('sjo_tumblr_readPostIDs', readPostIDs.join(','));
-				nextPost.closest('.post-container').addClass('sjo-read');
+				nextPost.addClass('sjo-read-new');
 			}
 		}
 		
