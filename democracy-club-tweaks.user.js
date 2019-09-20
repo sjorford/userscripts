@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2019.02.20.0
+// @version     2019.09.20.0
 // @grant       none
 // ==/UserScript==
 
@@ -41,20 +41,16 @@ $(`<style>
 	.header__nav .large-4 {width: 33.33333% !important;}
 	.header__nav .large-6 {width: 50% !important;}
 	.header__nav .large-8 {width: 66.66667%; !important;}
-	.candidates-list__person .button.secondary.small {margin-bottom: 0;}
 	.missing_field {display: none;}
 	.person__party_emblem img {max-height: 5em;}
 	.finder__forms__container {width: 60% !important;}
 	.header__hero {padding-top: 0 !important;}
 	.header__hero h1 {font-size: 2rem !important;}
-	.candidate-list {margin: 0.5em 0;}
 	p {margin-bottom: 0.5rem;}
 	.header__nav {padding: 1em 0 0 0;}
 	h2 {font-size: 1.5rem;}
 	
 	.select2-result-label {font-size: 0.8rem; padding: 2px !important;}
-	
-	xxx.person__actions__action h2 {margin-top: 0 !important;}
 	
 	.document_viewer {min-height: 600px;}
 	
