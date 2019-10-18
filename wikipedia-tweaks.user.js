@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2019.06.08.0
+// @version        2019.10.18.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -111,5 +111,8 @@ $(function() {
 		}
 		
 	}
+	
+	var wikidataLink = $('#t-wikibase a');
+	wikidataLink.text(wikidataLink.attr('href').match(/Q\d+/)[0]).css({backgroundColor: 'gold'});
 	
 });
