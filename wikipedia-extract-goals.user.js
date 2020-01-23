@@ -1,11 +1,12 @@
 ﻿// ==UserScript==
 // @name         Wikipedia extract goals
 // @namespace    sjorford@gmail.com
-// @version      2020.01.20.0
+// @version      2020.01.23.0
 // @author       Stuart Orford
 // @match        https://en.wikipedia.org/wiki/2019%E2%80%9320_Liverpool_F.C._season
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js
 // @require      https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
@@ -37,8 +38,13 @@ $(function() {
 		var matchCells = cell.closest('tr').prev('tr').find('td');
 		
 		var team = matchCells.eq(cell[0].cellIndex).text();
-		var date = matchCells.eq(0).find('.dtstart ').text();
-		var competition = matchCells.eq(0).find('small').text();
+		
+		var date = matchCells.eq(0).find('.dtstart').text();
+		if (!date) date = matchCells.eq(0).find('span').first().text();
+		date = moment(date).format('D MMM YYYY');
+		
+		var competition = img.closest('div.vevent').prevAll('h3, h2').first().find('.mw-headline').text();
+		//matchCells.eq(0).find('small').text();
 		
 		var name = img.prevUntil('br', 'a').attr('title').replace(/\(.*\)/, '').trim();
 		var times = img.nextUntil('br', 'small');
