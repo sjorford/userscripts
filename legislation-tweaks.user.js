@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.01.22.0
+// @version        2020.01.24.0
 // @match          http://www.legislation.gov.uk/*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
 // @match          file:///C:/Users/Stuart/Google%20Drive/Personal/Politics/ECOs/*
@@ -40,14 +40,14 @@ $(function() {
 		$('#year').val(year);
 		$('#number').val(number);
 		
+		// Highlight ECOs
+		$('<style>.sjo-electoral td {background-color: #ffc35bb3 !important;}</style>').appendTo('head');
+		$('#content tr:contains("Elect")').addClass('sjo-electoral');
+		
+		// Direct SI links to whole instrument
+		$('a[href*="/uksi/"]').attr('href', (i,href) => href.replace(/\/contents\//, '/'));
+		
 	}
-	
-	// Highlight ECOs
-	$('<style>.sjo-electoral td {background-color: #ffc35bb3 !important;}</style>').appendTo('head');
-	$('#content tr:contains("Elect")').addClass('sjo-electoral');
-	
-	// Direct SI links to whole instrument
-	$('a[href*="/uksi/"]').attr('href', (i,href) => href.replace(/\/contents\//, '/'));
 	
 	// Format "tables"
 	$('table .LegText').closest('tr').each((rowIndex, rowElement) => {
