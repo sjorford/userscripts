@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.01.24.0
+// @version        2020.01.31.0
 // @match          http://www.legislation.gov.uk/*
 // @match          file:///C:/Users/stuarto/Google%20Drive/Personal/Politics/ECOs/*
 // @match          file:///C:/Users/Stuart/Google%20Drive/Personal/Politics/ECOs/*
@@ -49,6 +49,7 @@ $(function() {
 		
 	}
 	
+	/*
 	// Format "tables"
 	$('table .LegText').closest('tr').each((rowIndex, rowElement) => {
 		
@@ -98,5 +99,6 @@ $(function() {
 		followingRows.each((index, element) => $('<td class="LegTDplain"></td>').text(district).prependTo(element));
 		row.remove();
 	});
+	*/
 	
 });
