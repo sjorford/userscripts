@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.06.21.1
+// @version        2019.08.24.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -16,6 +16,7 @@ jQuery(function() {
 		//'/boris1700/summer-olympics-silver-medal-countries': {moreColumns: true},
 		'/PumpkinBomb/summerolympics': {moreColumns: true},
 		'/ateweston85/european-cup--champions-league-semi-finalists': {moreColumns: true, styles: `td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}`},
+		'/g/originalunmembers': {unshuffleAnswers: true},
 	};
 	
 	$.each(games, (key, options) => {
@@ -23,6 +24,7 @@ jQuery(function() {
 			console.log(key, options);
 			
 			if (options.moreColumns) moreColumns();
+			if (options.unshuffleAnswers) unshuffleAnswers();
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -39,6 +41,51 @@ jQuery(function() {
 	function moreColumns() {
 		$(`<style>#page-wrapper {width: auto;}</style>`).appendTo('head');
 		$('#gameTable > tbody > tr:nth-of-type(2n)').each((index, element) => $(element).prev('tr').append(element.cells));
+	}
+	
+	function unshuffleAnswers() {
+		
+		var cells = $('.data tr:not(:has(th))');
+		var columns = $('.data');
+		var columnLengths = columns.toArray().map(e => $(e).find('tr:not(:has(th))').length);
+		//console.log(columnLengths);
+		
+		var timer = window.setInterval(_unshuffleAnswers, 50);
+		//window.setTimeout(_unshuffleAnswers, 100);
+		console.log('unshuffleAnswers', timer);
+		
+		function _unshuffleAnswers() {
+			if (!$('body').is('.active')) return;
+			
+			var unsortedCells = cells.filter((i, e) => {
+				var thisCell = $(e);
+				var index = cells.index(thisCell);
+				if (index == 0 || thisCell.text().trim() == '') return false;
+				var prevCell = cells.eq(index - 1);
+				return (prevCell.text().trim() == '' || prevCell.text().trim() > thisCell.text().trim());
+			});
+			//console.log('unsortedCells', unsortedCells);
+			
+			if (unsortedCells.length > 0) {
+				
+				var sortedCellsArray = cells.toArray().sort((a, b) => {
+					if (a.innerText.trim() == b.innerText.trim()) return 0;
+					if (a.innerText.trim() == '') return 1;
+					if (b.innerText.trim() == '') return -1;
+					return (a.innerText.trim() > b.innerText.trim() ? 1 : -1);
+				});
+				//console.log('sortedCellsArray', sortedCellsArray);
+				
+				var start = 0, end;
+				for (var i = 0; i < columns.length; i++) {
+					end = start + columnLengths[i];
+					columns.eq(i).append(sortedCellsArray.slice(start, end));
+					start = end;
+				}
+				
+			}
+			
+		}
 	}
 	
 	$(`<style>
