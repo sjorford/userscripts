@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.02.02.0
+// @version        2020.02.02.1
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -117,14 +117,15 @@ jQuery(function() {
 	$('.data th').click(event => {
 		
 		var tables = $('.data');
-		var rows = tables.find('tr').not(':has(th)');
+		var rows = tables.find('tr:has(td:visible)').not(':has(th)');
 		var numRows = tables.toArray().map(t => t.rows.length - 1);
 		
 		var header = $(event.target);
 		var col = header.prop('cellIndex');
 		var order = header.hasClass('sjo-ascending') ? -1 : 1;
-		console.log(header, col, order);
 		tables.find(`tr:first-of-type th:nth-of-type(${col+1})`).toggleClass('sjo-ascending', order == 1);
+		
+		console.log(col, order, numRows, rows);
 		
 		var sortedRows = rows.toArray().sort((a,b) => (a.cells[col].innerText > b.cells[col].innerText) ? order : (a.cells[col].innerText < b.cells[col].innerText) ? -order : 0);
 		tables.each((i,e) => $(e).append(sortedRows.splice(0, numRows[i])));
