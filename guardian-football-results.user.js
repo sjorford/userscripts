@@ -1,9 +1,11 @@
 ﻿// ==UserScript==
 // @name         Guardian football results
 // @namespace    sjorford@gmail.com
-// @version      2019.12.07.0
+// @version      2020.02.22.0
 // @author       Stuart Orford
 // @match        https://www.theguardian.com/football/results
+// @match        https://www.theguardian.com/football/*/results
+// @match        https://www.theguardian.com/football/*/fixtures
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -33,7 +35,7 @@ $(function() {
 	
 	function getData() {
 
-		var matches = $('.football-match--result').not('.sjo-done')
+		var matches = $('.football-match--result, .football-match').not('.sjo-done')
 		console.log(matches);
 		matches.each((i,e) => {
 
