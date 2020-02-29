@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Guardian football results
 // @namespace    sjorford@gmail.com
-// @version      2020.02.29.2
+// @version      2020.02.29.3
 // @author       Stuart Orford
 // @match        https://www.theguardian.com/football/results
 // @match        https://www.theguardian.com/football/*/results
@@ -33,11 +33,21 @@ $(function() {
 		.appendTo('body').wrap('<div class="sjo-wrapper"></div>')
 		.click(event => table.selectRange());
 	
+	var league = window.location.pathname.match(/football\/((.*)\/)?(results|fixtures)/)[2];
+	
 	var timer = window.setInterval(getData, 200);
 	window.console.log(timer, 'getData');
 	
 	function getData() {
-
+		
+		// Remove other leagues
+		if (league) {
+			$('.table--football caption a').not((i,e) => e.href.match(`\/football\/${league}$`))
+				.closest('.football-table__container').remove();
+		}
+		
+		$('.football-matches__day:not(:has(.football-table__container))').remove();
+		
 		var matches = $('.football-match--result, .football-match').not('.sjo-done')
 		matches.each((i,e) => {
 
