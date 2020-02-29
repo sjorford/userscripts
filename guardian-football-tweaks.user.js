@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Guardian football tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.02.29.0
+// @version      2020.02.29.1
 // @author       Stuart Orford
 // @match        https://www.theguardian.com/football/*
 // @grant        none
@@ -32,7 +32,7 @@ $(function() {
 		
 	}
 	
-	var resultsPath = window.location.pathname.match(/\/football\/(.*\/)?results/)[0];
+	var resultsPath = window.location.pathname.match(/(\/football\/(.*\/)?results)?/)[1];
 	if (resultsPath && $('.football-leagues__list').length == 0) {
 		var select = $('<select class="football-leagues__list" name="competitionUrl" id="football-leagues">')
 				.append(`<option value="/football/results">All results</option>`)
