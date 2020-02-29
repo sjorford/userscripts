@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Guardian football results
 // @namespace    sjorford@gmail.com
-// @version      2020.02.22.0
+// @version      2020.02.29.0
 // @author       Stuart Orford
 // @match        https://www.theguardian.com/football/results
 // @match        https://www.theguardian.com/football/*/results
@@ -11,6 +11,7 @@
 // @require      https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
+(function($) {
 $(function() {
 	
 	$(`<style>
@@ -62,3 +63,4 @@ $(function() {
 	}
 	
 });
+})(jQuery.noConflict());
