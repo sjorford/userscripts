@@ -1,10 +1,11 @@
 ﻿// ==UserScript==
 // @name         Guardian football results
 // @namespace    sjorford@gmail.com
-// @version      2020.02.29.1
+// @version      2020.02.29.2
 // @author       Stuart Orford
 // @match        https://www.theguardian.com/football/results
 // @match        https://www.theguardian.com/football/*/results
+// @match        https://www.theguardian.com/football/fixtures
 // @match        https://www.theguardian.com/football/*/fixtures
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
