@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.06.1
+// @version        2020.03.06.2
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -28,6 +28,10 @@ jQuery(function() {
 		'/g/originalunmembers': {
 			unshuffleAnswers: true
 		},
+		'/darinh/us-100k-cities-within-100miles-5-min-blitz': {
+			fn: autofill,
+			args: [["Abilene", "Albuquerque", "Amarillo", "Anchorage", "Billings", "Boise", "Cedar Rapids", "Corpus Christi", "Des Moines", "El Paso", "Fargo", "Green Bay", "Honolulu", "Jackson", "Laredo", "Little Rock", "Lubbock", "Memphis", "Midland", "Mobile", "Shreveport", "Sioux Falls", "Spokane", "Tallahassee", "Tulsa", "Wichita"]]
+		},
 	};
 	
 	$.each(games, (key, options) => {
@@ -40,9 +44,9 @@ jQuery(function() {
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
 			if (typeof options.fn == 'function') {
-				fn.call();
+				options.fn.apply(null, options.args);
 			} else if (Array.isArray(options.fn)) {
-				$.each(fn, (i,f) => f.call());
+				$.each(options.fn, (i,f) => f.call());
 			}
 			
 		}
@@ -154,5 +158,18 @@ jQuery(function() {
 			var gameinput = $('#gameinput').focus().val(value).trigger($.Event("input"));
 		}
 	});
+	
+	function autofill(answers) {
+		var gameinput = $('#gameinput');
+		var index = 0;
+		var timer = window.setInterval(_autofill, 50);
+		
+		function _autofill() {
+			if (!$('body').is('.active')) return;
+			if (index >= answers.length) return window.clearInterval(timer);
+			gameinput.val(answers[index++]).trigger($.Event("input"));
+		}
+		
+	}
 	
 });
