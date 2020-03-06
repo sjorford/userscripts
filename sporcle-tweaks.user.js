@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.06.0
+// @version        2020.03.06.1
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -12,11 +12,22 @@ jQuery(function() {
 	var $ = jQuery;
 	
 	var games = {
-		'/aheig82/top-5-medal-winning-countries-in-each-summer-olympics': {moreColumns: true},
-		//'/boris1700/summer-olympics-silver-medal-countries': {moreColumns: true},
-		'/PumpkinBomb/summerolympics': {moreColumns: true},
-		'/ateweston85/european-cup--champions-league-semi-finalists': {moreColumns: true, styles: `td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}`},
-		'/g/originalunmembers': {unshuffleAnswers: true},
+		'/aheig82/top-5-medal-winning-countries-in-each-summer-olympics': {
+			moreColumns: true,
+		},
+		'/boris1700/summer-olympics-silver-medal-countries': {
+			moreColumns: false,
+		},
+		'/PumpkinBomb/summerolympics': {
+			moreColumns: true,
+		},
+		'/ateweston85/european-cup--champions-league-semi-finalists': {
+			moreColumns: true, 
+			styles: `td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}`
+		},
+		'/g/originalunmembers': {
+			unshuffleAnswers: true
+		},
 	};
 	
 	$.each(games, (key, options) => {
