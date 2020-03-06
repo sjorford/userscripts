@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.06.2
+// @version        2020.03.06.3
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -30,7 +30,14 @@ jQuery(function() {
 		},
 		'/darinh/us-100k-cities-within-100miles-5-min-blitz': {
 			fn: autofill,
-			args: [["Abilene", "Albuquerque", "Amarillo", "Anchorage", "Billings", "Boise", "Cedar Rapids", "Corpus Christi", "Des Moines", "El Paso", "Fargo", "Green Bay", "Honolulu", "Jackson", "Laredo", "Little Rock", "Lubbock", "Memphis", "Midland", "Mobile", "Shreveport", "Sioux Falls", "Spokane", "Tallahassee", "Tulsa", "Wichita"]]
+			args: [[
+				"Abilene", "Albuquerque", "Amarillo", "Anchorage", "Billings", "Boise", "Cedar Rapids", "Corpus Christi", "Des Moines", "El Paso", "Fargo", "Green Bay", "Honolulu", 
+				"Jackson", "Laredo", "Little Rock", "Lubbock", "Memphis", "Midland", "Mobile", "Shreveport", "Sioux Falls", "Spokane", "Tallahassee", "Tulsa", "Wichita",
+				"Columbia", "Springfield", "Rochester", "Aurora", "Madison", "Akron", "Cleveland", "South Bend", "Flint", "Richmond", "Philadelphia", 
+				"Reno", "Visalia", "Los Angeles", "San Diego", "Jacksonville", "Baton Rouge", "Houston", "Oklahoma City", "Kansas City", "Omaha", "Salt Lake City", 
+				"Chandler", "Las Vegas", "Salem", "Seattle", "Brownsville", "Austin", "Denton", "Tampa", "Port St. Lucie", "Miami", "Savannah", "Fayetteville", "Winston-Salem", 
+				"Cincinnati", "Clarksville", "Chattanooga", "Atlanta", "Birmingham", 
+			]]
 		},
 	};
 	
