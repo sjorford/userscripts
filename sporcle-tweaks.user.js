@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.06.3
+// @version        2020.03.06.4
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -16,7 +16,8 @@ jQuery(function() {
 			moreColumns: true,
 		},
 		'/boris1700/summer-olympics-silver-medal-countries': {
-			moreColumns: false,
+			enabled: false,
+			moreColumns: true,
 		},
 		'/PumpkinBomb/summerolympics': {
 			moreColumns: true,
@@ -29,6 +30,7 @@ jQuery(function() {
 			unshuffleAnswers: true
 		},
 		'/darinh/us-100k-cities-within-100miles-5-min-blitz': {
+			enabled: false,
 			fn: autofill,
 			args: [[
 				"Abilene", "Albuquerque", "Amarillo", "Anchorage", "Billings", "Boise", "Cedar Rapids", "Corpus Christi", "Des Moines", "El Paso", "Fargo", "Green Bay", "Honolulu", 
@@ -44,6 +46,7 @@ jQuery(function() {
 	$.each(games, (key, options) => {
 		if (window.location.href.indexOf(key) >= 0) {
 			console.log(key, options);
+			if (!options.enabled) return;
 			
 			if (options.moreColumns) moreColumns();
 			if (options.unshuffleAnswers) unshuffleAnswers();
