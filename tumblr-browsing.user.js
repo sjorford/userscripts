@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Tumblr browsing
 // @namespace      sjorford@gmail.com
-// @version        2018.09.15.0
+// @version        2020.03.07.0
 // @author         Stuart Orford
 // @match          https://www.tumblr.com/dashboard
 // @match          https://www.tumblr.com/likes
@@ -16,6 +16,12 @@
 $(function() {
 	
 	var readPostIDs = (GM_getValue('sjo_tumblr_readPostIDs') || '').split(',');
+	console.log('readPostIDs', readPostIDs.length);
+	if (readPostIDs.length > 5000) {
+		readPostIDs = readPostIDs.slice(-4000);
+		console.log('readPostIDs', readPostIDs.length);
+		GM_setValue('sjo_tumblr_readPostIDs', readPostIDs.join(','));
+	}
 	
 	if (location.href.split('#')[0] == 'https://www.tumblr.com/dashboard') {
 		
@@ -59,7 +65,7 @@ $(function() {
 			$('.post_control.like').not('.liked').closest('li.post_container').removeClass('sjo-liked');
 		}
 		
-		setInterval(highlightReadPosts, 50);
+		setInterval(highlightReadPosts, 200);
 		
 		function highlightReadPosts() {
 			$.each(readPostIDs, (index, id) => {
