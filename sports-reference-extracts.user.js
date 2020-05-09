@@ -1,11 +1,13 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.02.0
+// @version      2020.05.09.0
 // @author       Stuart Orford
-// @match        https://www.pro-football-reference.com/years/*
+// @match        https://www.pro-football-reference.com/years/*/
+// @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
+// @require      https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
 $(function() {
@@ -25,7 +27,7 @@ $(function() {
 		.wrap('<div class="sjo-wrapper"></div>')
 		.wrap('<div class="sjo-box"></div>')
 		.click(function() {
-			selectRange(this);
+			$(this).selectRange();
 		});
 	
 	var path = window.location.pathname;
@@ -33,51 +35,158 @@ $(function() {
 	$(`<a class="sjo-link" href="${path.replace(year, year - 1)}">← ${year - 1}</a>`).insertBefore('.sjo-box');
 	$(`<a class="sjo-link" href="${path.replace(year, year + 1)}">${year + 1} →</a>`).insertBefore('.sjo-box');
 	
-	var sports = {'www.pro-football-reference.com': ['FB', 'NFL']}
-	var [sport, league] = sports[window.location.hostname];
-	var division = '';
+	var sports = {
+		'www.pro-football-reference.com': football,
+		'www.baseball-reference.com': baseball,
+	}
 	
-	$('.content_grid').first().find('tbody tr').each((i,e) => {
+	var fn = sports[window.location.hostname];
+	
+	var data = fn.call();
+	
+	$.each(data, (i,e) => {
 		
-		var tr = $(e);
-		var cells = tr.find('td, th');
-		
-		if (tr.is('.thead')) {
-			division = tr.text();
-		} else {
-			
-			var team = cells.eq(0).text().replace(/[\*\+]$/, '');
-			
-			var playoffs = '';
-			var playoffCell = $('#playoff_results td').filter((i,e) => e.innerText.trim() == team).last();
-			if (playoffCell[0]) {
-				if (playoffCell[0].cellIndex <= 3)
-					playoffs = 'Champ';
-				else
-					playoffs = playoffCell.closest('tr').find('th, td').first().text();
-			}
-			
-			var trNew = $('<tr></tr>').appendTo(table);
-			$('<td></td>').text(year).appendTo(trNew);
-			$('<td></td>').text(sport).appendTo(trNew);
-			$('<td></td>').text(league).appendTo(trNew);
-			$('<td></td>').text(division).appendTo(trNew);
-			$('<td></td>').text(team).appendTo(trNew);
-			$('<td></td>').text(cells.eq(1).text()).appendTo(trNew);
-			$('<td></td>').text(cells.eq(2).text()).appendTo(trNew);
-			$('<td></td>').text(cells.eq(3).text()).appendTo(trNew);
-			$('<td></td>').text(playoffs).appendTo(trNew);
-			
-		}
+		$('<tr></tr>').appendTo(table)
+			.addCell(year)
+			//.addCell(e.sport)
+			.addCell(e.league)
+			.addCell(e.division)
+			.addCell(e.team)
+			.addCell(e.W)
+			.addCell(e.L)
+			.addCell(e.T)
+			.addCell(e.playoffs);
 		
 	});
 	
-	function selectRange(element) {
-		var range = document.createRange();
-		range.selectNodeContents($(element).get(0));
-		var selection = window.getSelection();        
-		selection.removeAllRanges();
-		selection.addRange(range);
+	// ================================================================
+	
+	function football() {
+		
+		var data = [];
+		var division = '';
+		
+		$('.content_grid').first().find('.table_outer_container tbody tr').each((i,e) => {
+			
+			var tr = $(e);
+			var cells = tr.find('td, th');
+			
+			if (tr.is('.thead')) {
+				division = tr.text();
+				return;
+			}
+			
+			var dataRow = {
+				sport: 'Football',
+				league: $('#info h1 span').eq(1).text(),
+				division: division,
+			};
+			
+			dataRow.team = cells.eq(0).text().replace(/[\*\+]$/, '');
+			
+			dataRow.W = cells.eq(1).text();
+			dataRow.L = cells.eq(2).text();
+			
+			if (tr.closest('table').find('thead th:nth-of-type(4)').text().trim() == 'T') {
+				dataRow.T = cells.eq(3).text();
+			} else {
+				dataRow.T = 0;
+			}
+			
+			var playoffList = {
+				'WildCard':  'Wild Card',
+				'Division':  'Division',
+				'ConfChamp': 'Conference',
+				'Champ':     'League',
+				//'SuperBowl': 'Championship',
+			};
+			
+			var playoffCell = $('#playoff_results td').filter((i,e) => e.innerText.trim() == dataRow.team).last();
+			console.log(dataRow.team, playoffCell);
+			if (playoffCell[0]) {
+				if (playoffCell[0].cellIndex <= 3)
+					dataRow.playoffs = 'Champions';
+				else
+					dataRow.playoffs = playoffCell.closest('tr').find('th, td').first().text();
+					if (playoffList[dataRow.playoffs]) dataRow.playoffs = playoffList[dataRow.playoffs];
+			} else {
+				if (cells.eq(0).text().match(/\*/))
+					dataRow.playoffs = 'Champions';
+			}
+			
+			data.push(dataRow);
+			
+		});
+		
+		return data;
+		
+	}
+
+	// ================================================================
+	
+	function baseball() {
+		
+		var data = [];
+		var division = '';
+		
+		$('[id="all_standings"]').find('section_heading h2, .table_outer_container tbody tr').each((i,e) => {
+			
+			var tr = $(e);
+			var cells = tr.find('td, th');
+			
+			if (tr.is('h2')) {
+				division = tr.text().replace(/ Division/, '');
+				return;
+			}
+			
+			var dataRow = {
+				sport: 'Baseball',
+				league: 'AL/NL',
+				division: division,
+			};
+			
+			dataRow.team = cells.eq(0).text().replace(/[\*\+]$/, '');
+			
+			dataRow.W = cells.eq(1).text();
+			dataRow.L = cells.eq(2).text();
+			
+			var playoffList = {
+				'Wild Card Game':     'Wild Card',
+				'AL Division Series': 'Division',
+				'NL Division Series': 'Division',
+				'ALCS':               'Conference',
+				'NLCS':               'Conference',
+				'World Series':       'Championship',
+			};
+			
+			var playoffRow = $('#postseason a')
+				.filter((i,e) => e.innerText.trim() == dataRow.team)
+				.first().closest('tr');
+			if (playoffRow[0]) {
+				if (playoffRow[0].rowIndex == 1)
+					dataRow.playoffs = 'Winner';
+				else
+					dataRow.playoffs = playoffList[playoffRow.find('td').first().text()];
+			}
+			
+			data.push(dataRow);
+			
+		});
+		
+		return data;
+		
+	}
+	
+	// ================================================================
+	
+	function basketball() {
+		
+	}
+	
+	// ================================================================
+	
+	function hockey() {
+		
 	}
 	
 });
