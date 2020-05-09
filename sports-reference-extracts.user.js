@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.09.0
+// @version      2020.05.09.1
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -127,21 +127,30 @@ $(function() {
 	function baseball() {
 		
 		var data = [];
+		var league = '';
 		var division = '';
 		
-		$('[id="all_standings"]').find('section_heading h2, .table_outer_container tbody tr').each((i,e) => {
+		$('[id="all_standings"]').find('[id="div_standings"], .section_heading h2, .table_outer_container tbody tr').each((i,e) => {
 			
 			var tr = $(e);
 			var cells = tr.find('td, th');
 			
+			if (tr.is('[id="div_standings"]')) {
+				if (league == '')
+					league = 'AL';
+				else
+					league = 'NL';
+				return;
+			}
+			
 			if (tr.is('h2')) {
-				division = tr.text().replace(/ Division/, '');
+				division = league + ' ' + tr.text().trim().replace(/ Division/, '');
 				return;
 			}
 			
 			var dataRow = {
 				sport: 'Baseball',
-				league: 'AL/NL',
+				league: league,
 				division: division,
 			};
 			
@@ -154,19 +163,20 @@ $(function() {
 				'Wild Card Game':     'Wild Card',
 				'AL Division Series': 'Division',
 				'NL Division Series': 'Division',
-				'ALCS':               'Conference',
-				'NLCS':               'Conference',
-				'World Series':       'Championship',
+				'ALCS':               'League',
+				'NLCS':               'League',
+				'World Series':       'World Series',
 			};
 			
-			var playoffRow = $('#postseason a')
-				.filter((i,e) => e.innerText.trim() == dataRow.team)
-				.first().closest('tr');
-			if (playoffRow[0]) {
-				if (playoffRow[0].rowIndex == 1)
-					dataRow.playoffs = 'Winner';
-				else
+			var playoffLink = $('#postseason a')
+				.filter((i,e) => e.innerText.trim() == dataRow.team).first();
+			if (playoffLink.length > 0) {
+				var playoffRow = playoffLink.closest('tr');
+				if (playoffRow[0].rowIndex == 0 && playoffLink.parent().is('strong')) {
+					dataRow.playoffs = 'Champions';
+				} else {
 					dataRow.playoffs = playoffList[playoffRow.find('td').first().text()];
+				}
 			}
 			
 			data.push(dataRow);
