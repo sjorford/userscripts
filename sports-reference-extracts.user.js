@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.10.1
+// @version      2020.05.10.2
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -87,29 +87,26 @@ $(function() {
 			
 			if (tr.closest('table').find('thead th:nth-of-type(4)').text().trim() == 'T') {
 				dataRow.T = cells.eq(3).text();
-			} else {
-				dataRow.T = 0;
+				if (dataRow.T == 0) dataRow.T = '';
 			}
 			
 			var playoffList = {
-				'WildCard':  'Wild Card',
-				'Division':  'Division',
-				'ConfChamp': 'Conference',
-				'Champ':     'League',
-				'SuperBowl': 'SuperBowl',
+				'WildCard':  'WC',
+				'Division':  'Div',
+				'ConfChamp': 'Conf',
+				'Champ':     'Ch',
+				'SuperBowl': 'SB',
 			};
 			
-			var playoffCell = $('#playoff_results td').filter((i,e) => e.innerText.trim() == dataRow.team).last();
-			if (playoffCell[0]) {
-				if (playoffCell[0].cellIndex <= 3)
-					dataRow.playoffs = 'Champions';
-				else
-					dataRow.playoffs = playoffCell.closest('tr').find('th, td').first().text();
-					if (playoffList[dataRow.playoffs]) dataRow.playoffs = playoffList[dataRow.playoffs];
-			} else {
-				if (cells.eq(0).text().match(/\*/))
-					dataRow.playoffs = 'Champions';
-			}
+			var playoffs = [];
+			if ($('#playoff_results').length == 0)
+				if (cells.eq(0).text().match(/\*/)) playoffs.push('W');
+			$('#playoff_results td').filter((i,e) => e.innerText.trim() == dataRow.team).each((i,e) => {
+				var round = $(e).closest('tr').find('th').first().text().trim();
+				playoffs.push(playoffList[round]);
+				if (e.cellIndex <= 3 && $(e).closest('tr').next('tr').length == 0) playoffs.push('W');
+			});
+			dataRow.playoffs = playoffs.join(' › ');
 			
 			data.push(dataRow);
 			
@@ -145,24 +142,24 @@ $(function() {
 				.text().trim().replace(/ Division/, '');
 			
 			var playoffList = {
-				'Wild Card Game':     'Wild Card',
-				'AL Division Series': 'Division',
-				'NL Division Series': 'Division',
-				'ALCS':               'League',
-				'NLCS':               'League',
-				'World Series':       'World Series',
+				'Wild Card Game':     'WC',
+				'AL Division Series': 'Div',
+				'NL Division Series': 'Div',
+				'ALCS':               'Ch',
+				'NLCS':               'Ch',
+				'World Series':       'WS',
 			};
 			
-			var playoffLink = $('#postseason a')
-				.filter((i,e) => e.innerText.trim() == dataRow.team).first();
-			if (playoffLink.length > 0) {
-				var playoffRow = playoffLink.closest('tr');
-				if (playoffRow[0].rowIndex == 0 && playoffLink.parent().is('strong')) {
-					dataRow.playoffs = 'Champions';
-				} else {
-					dataRow.playoffs = playoffList[playoffRow.find('td').first().text()];
-				}
-			}
+			var playoffs = [];
+			$('#postseason a').each((i,e) => {
+				var link = $(e);
+				if (link.text().trim() != dataRow.team) return;
+				var round = link.closest('tr').find('td').first().text().trim();
+				if (link.parent().is('strong') && link.closest('tr')[0].rowIndex == 0) playoffs.push('W');
+				playoffs.push(playoffList[round]);
+			});
+			playoffs.reverse();
+			dataRow.playoffs = playoffs.join(' › ');
 			
 			data.push(dataRow);
 			
@@ -200,8 +197,7 @@ $(function() {
 			
 			if (tr.closest('table').find('thead th:nth-of-type(4)').text().trim() == 'T') {
 				dataRow.T = cells.eq(3).text();
-			} else {
-				dataRow.T = 0;
+				if (dataRow.T == 0) dataRow.T = '';
 			}
 			
 			var playoffs = [];
