@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.10.2
+// @version      2020.05.10.3
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -190,7 +190,7 @@ $(function() {
 				season: '="' + $('#info h1 span').eq(0).text() + '"',
 				league: $('#info h1 span').eq(1).text(),
 				division: division,
-				team: cells.eq(0).text().trim().replace(/[\*\+]?\s+\(\d+\)$/, ''),
+				team: cells.eq(0).text().trim().replace(/[\*\+]?(\s+\(\d+\))?$/, ''),
 				W: cells.eq(1).text(),
 				L: cells.eq(2).text(),
 			};
@@ -210,8 +210,12 @@ $(function() {
 					playoffs.push('F');
 				} else if (round.match(/Conference Finals/)) {
 					playoffs.push('CF');
+				} else if (round.match(/Division Finals/)) {
+					playoffs.push('DF');
 				} else if (round.match(/Conference Semifinals/)) {
-					playoffs.push('SF');
+					playoffs.push('CSF');
+				} else if (round.match(/Division Semifinals/)) {
+					playoffs.push('DSF');
 				} else if (round.match(/First Round/)) {
 					playoffs.push('R1');
 				} else {
