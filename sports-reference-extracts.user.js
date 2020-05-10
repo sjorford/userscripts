@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.10.4
+// @version      2020.05.10.6
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -216,8 +216,15 @@ $(function() {
 					playoffs.push('CSF');
 				} else if (round.match(/Division Semifinals/)) {
 					playoffs.push('DSF');
+				} else if (round.match(/Semifinals/)) {
+					playoffs.push('SF');
+				} else if (round.match(/Quarterfinals/)) {
+					playoffs.push('QF');
 				} else if (round.match(/First Round/)) {
 					playoffs.push('R1');
+				} else if (round.match(/Round Robin/)) {
+					playoffs.push('RR');
+				} else if (round.match(/Tiebreaker/)) {
 				} else {
 					playoffs.push('?');
 				}
