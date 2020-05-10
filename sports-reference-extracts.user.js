@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.10.0
+// @version      2020.05.10.1
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -190,7 +190,7 @@ $(function() {
 			}
 			
 			var dataRow = {
-				season: $('#info h1 span').eq(0).text(),
+				season: '="' + $('#info h1 span').eq(0).text() + '"',
 				league: $('#info h1 span').eq(1).text(),
 				division: division,
 				team: cells.eq(0).text().trim().replace(/[\*\+]?\s+\(\d+\)$/, ''),
