@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Sports Reference extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.05.10.7
+// @version      2020.05.10.8
 // @author       Stuart Orford
 // @match        https://www.pro-football-reference.com/years/*/
 // @match        https://www.baseball-reference.com/leagues/MLB/*-standings.shtml
@@ -275,6 +275,9 @@ $(function() {
 			if (colT) dataRow.T = cells.eq(colT).text();
 			
 			var playoffList = {
+				'Preliminary Round':         'PR',
+				'Quarter-Finals':            'QF',
+				'Semi-Finals':               'SF',
 				'First Round':               'R1',
 				'Second Round':              'R2',
 				'Division Semi-Finals':      'DSF',
