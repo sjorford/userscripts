@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2020.02.28.0
+// @version        2020.06.15.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -112,12 +112,14 @@ $(function() {
 		}
 		
 	}
+	*/
 	
 	var wikidataLink = $('#t-wikibase a');
 	if (wikidataLink.length > 0) {
-		wikidataLink.text(wikidataLink.attr('href').match(/Q\d+/)[0]).css({backgroundColor: 'gold'});
+		wikidataLink.text('Wikidata ' + wikidataLink.attr('href').match(/Q\d+/)[0]);
 	}
 	
+	/*
 	if (window.location.href == 'https://en.wikipedia.org/wiki/User:DumbBOT/ProdSummary') {
 		$('td').filter((i,e) => e.innerText.trim() == "Fails WP:NFOOTY as the RPFL is now not a WP:FPL league.").closest('tr').hide();
 	}
