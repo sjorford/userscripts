@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.06.4
+// @version        2020.07.07.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -27,7 +27,7 @@ jQuery(function() {
 			styles: `td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}`
 		},
 		'/g/originalunmembers': {
-			unshuffleAnswers: true
+			unshuffleAnswers: true,
 		},
 		'/darinh/us-100k-cities-within-100miles-5-min-blitz': {
 			enabled: false,
@@ -39,14 +39,17 @@ jQuery(function() {
 				"Reno", "Visalia", "Los Angeles", "San Diego", "Jacksonville", "Baton Rouge", "Houston", "Oklahoma City", "Kansas City", "Omaha", "Salt Lake City", 
 				"Chandler", "Las Vegas", "Salem", "Seattle", "Brownsville", "Austin", "Denton", "Tampa", "Port St. Lucie", "Miami", "Savannah", "Fayetteville", "Winston-Salem", 
 				"Cincinnati", "Clarksville", "Chattanooga", "Atlanta", "Birmingham", 
-			]]
+			]],
+		},
+		'/puckett86/state-by-city': {
+			unshuffleAnswers: true,
 		},
 	};
 	
 	$.each(games, (key, options) => {
 		if (window.location.href.indexOf(key) >= 0) {
 			console.log(key, options);
-			if (!options.enabled) return;
+			if (options.enabled === false) return;
 			
 			if (options.moreColumns) moreColumns();
 			if (options.unshuffleAnswers) unshuffleAnswers();
@@ -73,10 +76,8 @@ jQuery(function() {
 		var cells = $('.data tr:not(:has(th))');
 		var columns = $('.data');
 		var columnLengths = columns.toArray().map(e => $(e).find('tr:not(:has(th))').length);
-		//console.log(columnLengths);
 		
 		var timer = window.setInterval(_unshuffleAnswers, 50);
-		//window.setTimeout(_unshuffleAnswers, 100);
 		console.log('unshuffleAnswers', timer);
 		
 		function _unshuffleAnswers() {
@@ -89,7 +90,6 @@ jQuery(function() {
 				var prevCell = cells.eq(index - 1);
 				return (prevCell.text().trim() == '' || prevCell.text().trim() > thisCell.text().trim());
 			});
-			//console.log('unsortedCells', unsortedCells);
 			
 			if (unsortedCells.length > 0) {
 				
@@ -99,7 +99,6 @@ jQuery(function() {
 					if (b.innerText.trim() == '') return -1;
 					return (a.innerText.trim() > b.innerText.trim() ? 1 : -1);
 				});
-				//console.log('sortedCellsArray', sortedCellsArray);
 				
 				var start = 0, end;
 				for (var i = 0; i < columns.length; i++) {
