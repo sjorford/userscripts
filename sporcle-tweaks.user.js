@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.07.07.0
+// @version        2020.07.19.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -127,6 +127,8 @@ jQuery(function() {
 			['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'CA', 'IN', 'OH', 'TX', 'NC', 'WA', 'CO', 'TX', 'MI', 'DC', 'MA', 'TN', 'TN', 'OR', 'OK', 'NV', 'MD', 'KY', 'WI', 'NM', 'AZ', 'CA', 'CA', 'MO', 'CA', 'AZ', 'GA', 'CO', 'VA', 'NC', 'NE', 'FL', 'CA', 'MN', 'OK', 'KS', 'LA', 'TX', 'OH', 'CA', 'FL', 'CO', 'HI', 'CA', 'CA', 'TX', 'CA', 'MO', 'KY', 'CA', 'PA', 'MN', 'AK', 'OH', 'NV', 'NC', 'TX', 'NJ', 'OH', 'NE', 'FL', 'CA', 'NJ', 'AZ', 'IN', 'NY', 'NC', 'FL', 'CA', 'TX', 'TX', 'WI', 'AZ', 'VA', 'NV', 'NC', 'AZ', 'FL', 'TX', 'AZ', 'TX', 'VA', 'NV', 'CA', 'LA', 'VA', 'ID', 'CA'],
 		'us_cities_by_peak_rank':
 			['NY', 'CA', 'IL', 'PA', 'MD', 'MA', 'LA', 'NY', 'TX', 'MI', 'MO', 'SC', 'OH', 'AZ', 'CA', 'OH', 'PA', 'TX', 'TX', 'MA', 'PA', 'CA', 'PA', 'NY', 'RI', 'DC', 'RI', 'NY', 'PA', 'CA', 'VA', 'MA', 'FL', 'IN', 'WI', 'NJ', 'KY', 'VA', 'MA', 'MA', 'PA', 'TX', 'TN', 'NH', 'MA', 'OH', 'MN', 'ME', 'TX', 'MA', 'NC', 'VA', 'CT', 'NY', 'NY', 'GA', 'MA', 'TX', 'WA', 'MO', 'NY', 'DC', 'CT', 'NE', 'VA', 'CO', 'MN', 'CT', 'PA', 'NY', 'OR', 'GA', 'MA', 'NY'],
+		'1mil_europe':
+			['Russia', 'Turkey', 'UK', 'France', 'Spain', 'Germany', 'Russia', 'Italy', 'Germany', 'Spain', 'Germany', 'Italy', 'Italy', 'Greece', 'Ukraine', 'Germany', 'Netherlands', 'UK', 'UK', 'Germany', 'Hungary', 'Portugal', 'Netherlands', 'Poland', 'Germany', 'Poland', 'Germany', 'Romania', 'Austria', 'Sweden', 'UK', 'Belgium', 'Belarus', 'France', 'UK', 'Russia', 'Spain', 'Italy', 'Ukraine', 'France', 'UK', 'Denmark', 'Germany', 'UK', 'Ukraine', 'UK', 'Russia', 'Russia', 'Serbia', 'Czechia', 'Ukraine', 'Switzerland', 'Ireland', 'UK', 'Bulgaria', 'Russia', 'Spain', 'France', 'Russia', 'Finland', 'Russia', 'Germany', 'Norway', 'Portugal', 'Germany', 'UK', 'Russia', 'Russia', 'Ukraine', 'Russia', 'Russia', 'Belgium', 'France', 'France', 'Spain'],
 	};
 	
 	var gameKey = window.location.href.split('/').slice(-1)[0].replace(/-/g, '_');
