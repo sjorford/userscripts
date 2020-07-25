@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.07.19.0
+// @version        2020.07.25.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -44,6 +44,9 @@ jQuery(function() {
 		'/puckett86/state-by-city': {
 			unshuffleAnswers: true,
 		},
+		'/puckett86/taking-up-lots-of-space': {
+			autofillForcedOrder: true,
+		},
 	};
 	
 	$.each(games, (key, options) => {
@@ -53,6 +56,7 @@ jQuery(function() {
 			
 			if (options.moreColumns) moreColumns();
 			if (options.unshuffleAnswers) unshuffleAnswers();
+			if (options.autofillForcedOrder) autofillForcedOrder();
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -179,6 +183,56 @@ jQuery(function() {
 			if (!$('body').is('.active')) return;
 			if (index >= answers.length) return window.clearInterval(timer);
 			gameinput.val(answers[index++]).trigger($.Event("input"));
+		}
+		
+	}
+	
+	function autofillForcedOrder() {
+		var gameinput = $('#gameinput');
+		var valueCells = $('.d_value:visible');
+		var knownValues = [''];
+		var mainTimer = window.setInterval(_autofill, 100);
+		
+		function _autofill() {
+			if (!$('body').is('.active')) return;
+			var currentValues = valueCells.toArray().map(e => e.innerText.trim());
+			for (var i = 0; i < currentValues.length; i++) {
+				if (knownValues.indexOf(currentValues[i]) < 0) {
+					
+					window.clearInterval(mainTimer);
+					var newValue = currentValues[i];
+					knownValues.push(newValue);
+					
+					valueCells.filter((i,e) => e.innerText.trim() != '').addClass('sjo-checked');
+					var valueTimer = window.setInterval(_autofillValue, 20);
+					break;
+					
+					function _autofillValue() {
+						
+						var uncheckedCells = valueCells.not('.sjo-checked');
+						if (uncheckedCells.length == 0) {
+							window.clearInterval(valueTimer);
+							valueCells.removeClass('sjo-checked');
+							gameinput.val('');
+							$('#nextButton').click();
+							mainTimer = window.setInterval(_autofill, 100);
+							return;
+						}
+						
+						var activeCell = $('.valueactive');
+						
+						if (activeCell.is('.sjo-checked')) {
+							$('#nextButton').click();
+							return;
+						}
+						
+						activeCell.addClass('sjo-checked')
+						gameinput.val(newValue).trigger($.Event("input"));
+						
+					}
+					
+				}
+			}
 		}
 		
 	}
