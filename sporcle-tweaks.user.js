@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.07.25.0
+// @version        2020.07.26.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -10,6 +10,8 @@
 jQuery(function() {
 	
 	var $ = jQuery;
+	
+	$('.mainNav:has(:contains("Live Trivia")) .dropdown').remove();
 	
 	var games = {
 		'/aheig82/top-5-medal-winning-countries-in-each-summer-olympics': {
