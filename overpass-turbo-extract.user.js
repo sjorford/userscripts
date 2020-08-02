@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Overpass Turbo extract
 // @namespace    sjorford@gmail.com
-// @version      2020.08.02.1
+// @version      2020.08.02.2
 // @author       Stuart Orford
 // @match        https://overpass-turbo.eu/
 // @grant        none
@@ -40,7 +40,7 @@ $(function() {
 		var tbody = $('<tbody></tbody>').appendTo(table);
 		var header = $('<tr></tr>').appendTo(thead);
 		
-		var tags = 'name	shop	amenity	craft	tourism	leisure	office	healthcare	emergency	opening_hours	opening_hours:covid19	fee	highway	crossing	crossing_ref	kerb	tactile_paving	addr:housename	addr:housenumber	addr:street	addr:city	addr:postcode	phone	email	website	facebook	operator	brand	brand:wikipedia	brand:wikidata	takeaway	delivery	cuisine	fhrs:id	collection_times	ref	waste	power	generator:type	generator:source	generator:method	generator:output:electricity	location	substation	barrier	stile	traffic_calming	entrance	natural	steps	information	backrest	capacity	outdoor_seating	dispensing	historic	beauty	man_made	club	openbenches:id'.split('\t');
+		var tags = 'shop	amenity	craft	tourism	leisure	office	healthcare	emergency	power	highway	traffic_calming	barrier	natural	name	brand	brand:wikipedia	brand:wikidata	operator	opening_hours	opening_hours:covid19	fee	addr:housename	addr:housenumber	addr:street	addr:city	addr:postcode	phone	email	website	facebook	takeaway	delivery	cuisine	fhrs:id	collection_times	ref	waste	crossing	crossing_ref	kerb	tactile_paving	generator:type	generator:source	generator:method	generator:output:electricity	location'.split('\t');
 		
 		$.each(tags, (i,tag) => $('<th></th>').text(tag).appendTo(header));
 		
