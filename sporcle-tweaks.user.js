@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.07.26.0
+// @version        2020.08.09.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -49,6 +49,11 @@ jQuery(function() {
 		'/puckett86/taking-up-lots-of-space': {
 			autofillForcedOrder: true,
 		},
+		'/mszzz/most-populous-us-cities-': {
+			trimAnswers: {
+				replace: /^\d+\)\s*|,\s*[A-Z]{2}$/g,
+			},
+		},
 	};
 	
 	$.each(games, (key, options) => {
@@ -59,6 +64,7 @@ jQuery(function() {
 			if (options.moreColumns) moreColumns();
 			if (options.unshuffleAnswers) unshuffleAnswers();
 			if (options.autofillForcedOrder) autofillForcedOrder();
+			if (options.trimAnswers) trimAnswers(options.trimAnswers);
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -70,6 +76,46 @@ jQuery(function() {
 			
 		}
 	});
+	
+	function trimAnswers(options) {
+		
+		/* FIXME: move right-aligned answers closer to markers
+		$('.d_value, .marker').show();
+		$('.d_value').each((i,e) => {
+			var slot = $(e);
+			var marker = $(`#${e.id.replace(/slot/, 'marker')}`);
+			console.log(marker.offset().top, marker.offset().left, marker.width(), slot.offset().top, slot.offset().left, slot.width());
+		});
+		$('.d_value, .marker').hide();
+		*/
+		
+		var timer, start;
+		$('body').on('keypress', '#gameinput', event => {
+			if (!timer) {
+				timer = window.setInterval(_trimAnswers, 100);
+				start = Date.now();
+			}
+		});
+		
+		function _trimAnswers() {
+			if (Date.now() - start > 1000) {
+				window.clearInterval(timer);
+				timer = null;
+			}
+			$('.d_value').filter(':visible').each((i,e) => {
+				if (e.innerText.match(options.replace)) {
+					e.innerText = e.innerText.replace(options.replace, '');
+					window.clearInterval(timer);
+					timer = null;
+					var slot = $(e);
+					var marker = $(`#${e.id.replace(/slot/, 'marker')}`);
+					//console.log(marker.offset().top, marker.offset().left, marker.width(), slot.offset().top, slot.offset().left, slot.width());
+					//window.setTimeout(() => {console.log(marker.offset().top, marker.offset().left, marker.width(), slot.offset().top, slot.offset().left, slot.width());}, 2000);
+				}
+			});
+		}
+		
+	}
 	
 	// Widen the play area and double the number of columns
 	function moreColumns() {
