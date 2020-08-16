@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.16.1
+// @version        2020.08.16.2
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -10,8 +10,8 @@
 $(function() {
 	
 	$(`<style>
+		.sjo-highlight {background-color: #ffd700a3;}
 		.sjo-electoral td {background-color: #ffc35bb3 !important;}
-		.sjo-highlight {background-color: gold;}
 	</style>`).appendTo('head');
 
 	// Repopulate search boxes
@@ -53,9 +53,9 @@ $(function() {
 	
 	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
 		var match;
-		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4})(?!\d)(.*)$/s)) {
+		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|\d+ wards|\d+ divisions|is (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
 			var before = document.createTextNode(match[1]);
-			var after  = document.createTextNode(match[3]);
+			var after  = document.createTextNode(match[4]);
 			$('<span class="sjo-highlight"></span>').text(match[2]).insertAfter(e).before(before).after(after);
 			e.remove();
 			e = after;
