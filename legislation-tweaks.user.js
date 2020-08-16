@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.16.6
+// @version        2020.08.16.7
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -53,9 +53,9 @@ $(function() {
 	
 	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
 		var match;
-		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|\d+ (electoral )?(wards|divisions)|is (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
+		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|\d+ ((county )?electoral )?(wards|divisions)|is (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
 			var before = document.createTextNode(match[1]);
-			var after  = document.createTextNode(match[6]);
+			var after  = document.createTextNode(match[7]);
 			$('<span class="sjo-highlight"></span>').text(match[2]).insertAfter(e).before(before).after(after);
 			e.remove();
 			e = after;
