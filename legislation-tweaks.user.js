@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.16.2
+// @version        2020.08.16.3
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -10,7 +10,7 @@
 $(function() {
 	
 	$(`<style>
-		.sjo-highlight {background-color: #ffd700a3;}
+		.sjo-highlight {background-color: #ffd700a3 !important;}
 		.sjo-electoral td {background-color: #ffc35bb3 !important;}
 	</style>`).appendTo('head');
 
@@ -60,6 +60,13 @@ $(function() {
 			e.remove();
 			e = after;
 		}
+	});
+	
+	$('.LegTable').each((i,e) => {
+		var table = $(e);
+		var total = table.find('*').not(':has(*)').filter((i,e) => e.innerText.trim().match(/^\d$/))
+							.toArray().reduce((Σ,e) => Σ += (e.innerText - 0), 0);
+		table.before(`Total: <span class="sjo-highlight">${total}</span>`);
 	});
 	
 });
