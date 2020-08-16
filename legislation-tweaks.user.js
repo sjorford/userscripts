@@ -2,13 +2,18 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.16.0
+// @version        2020.08.16.1
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
 
 $(function() {
 	
+	$(`<style>
+		.sjo-electoral td {background-color: #ffc35bb3 !important;}
+		.sjo-highlight {background-color: gold;}
+	</style>`).appendTo('head');
+
 	// Repopulate search boxes
 	var pageTitle = $('#pageTitle').text().trim();
 	if (['Search Results', 'Page Not Found'].indexOf(pageTitle) >= 0) {
@@ -39,12 +44,22 @@ $(function() {
 		$('#number').val(number);
 		
 		// Highlight ECOs
-		$('<style>.sjo-electoral td {background-color: #ffc35bb3 !important;}</style>').appendTo('head');
 		$('#content tr:contains("Elect")').addClass('sjo-electoral');
 		
 		// Direct SI links to whole instrument
 		$('a[href*="/uksi/"]').attr('href', (i,href) => href.replace(/\/contents\//, '/'));
 		
 	}
+	
+	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
+		var match;
+		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4})(?!\d)(.*)$/s)) {
+			var before = document.createTextNode(match[1]);
+			var after  = document.createTextNode(match[3]);
+			$('<span class="sjo-highlight"></span>').text(match[2]).insertAfter(e).before(before).after(after);
+			e.remove();
+			e = after;
+		}
+	});
 	
 });
