@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.17.4
+// @version        2020.08.17.5
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -64,7 +64,7 @@ $(function() {
 	
 	$('.LegTable').each((i,e) => {
 		var table = $(e);
-		var total = table.find('tbody *').not(':has(*)').filter((i,e) => e.innerText.trim().match(/^\d$/))
+		var total = table.find('tbody td').filter((i,e) => e.cellIndex > 0).filter((i,e) => e.innerText.trim().match(/^\d$/))
 							.toArray().reduce((Σ,e) => Σ += (e.innerText - 0), 0);
 		table.before(`Total: <span class="sjo-highlight">${total}</span>`);
 	});
