@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.17.1
+// @version        2020.08.17.2
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -53,7 +53,7 @@ $(function() {
 	
 	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
 		var match;
-		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|(\d+|(\w+ty)(-(nine|eight|seven|six|five|four|three|two|one))?|nine|eight|seven|six|five|\w+teen\b) ((county|district) )?(electoral )?(wards|divisions)|is (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
+		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|(\d+|(\w+ty)(-(nine|eight|seven|six|five|four|three|two|one))?|nine|eight|seven|six|five|\w+teen\b|ten|eleven|twelve|oodles) ((county|district) )?(electoral )?(wards|divisions)|is (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
 			var before = document.createTextNode(match[1]);
 			var after  = document.createTextNode(match[match.length - 1]);
 			$('<span class="sjo-highlight"></span>').text(match[2]).insertAfter(e).before(before).after(after);
