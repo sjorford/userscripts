@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.17.6
+// @version        2020.08.18.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -12,6 +12,21 @@ $(function() {
 	$(`<style>
 		.sjo-highlight {background-color: #ffd700a3 !important;}
 		.sjo-electoral td {background-color: #ffc35bb3 !important;}
+		#navigation {
+			float: none !important;
+			width: auto !important;
+			min-height: auto !important;}
+		#content {
+			float: none !important;}
+		#tools {
+			float: none !important;
+			width: auto !important;
+			min-height: auto !important;}
+		#tools .section {
+			float: none !important;
+			vertical-align: top !important;
+			display: inline-block !important;
+			border-bottom: 0px !important;}
 	</style>`).appendTo('head');
 
 	// Repopulate search boxes
