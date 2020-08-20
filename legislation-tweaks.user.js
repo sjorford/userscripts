@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.18.0
+// @version        2020.08.20.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -27,6 +27,8 @@ $(function() {
 			vertical-align: top !important;
 			display: inline-block !important;
 			border-bottom: 0px !important;}
+		#layout2 {
+			width: 764px !important;}
 	</style>`).appendTo('head');
 
 	// Repopulate search boxes
