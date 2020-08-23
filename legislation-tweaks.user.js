@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.20.1
+// @version        2020.08.23.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -29,6 +29,10 @@ $(function() {
 			border-bottom: 0px !important;}
 		#layout2 {
 			width: 764px !important;}
+		td.bilingual.cy {
+			display: none !important;}
+		tr.sjo-traffic * {
+			color: lightgray !important;}
 	</style>`).appendTo('head');
 
 	// Repopulate search boxes
@@ -64,8 +68,12 @@ $(function() {
 		$('#content tr').filter((i,e) => e.innerText.match(/Elect|Structural Change/)).addClass('sjo-electoral');
 		
 		// Direct SI links to whole instrument
-		$('a').filter((i,e) => e.href.match(/\/(uksi|ssi|wsi)\//)).attr('href', (i,href) => href.replace(/\/contents\//, '/'));
-		
+		var siLinks = $('a').filter((i,e) => e.href.match(/\/(uksi|ssi|wsi)\//));
+        siLinks.attr('href', (i,href) => href.replace(/\/contents\//, '/'));
+        
+        // Hide traffic restrictions
+        siLinks.filter((i,e) => e.innerText.match(/(Restriction|Prohibition) of Traffic|Speed Limit/)).closest('tr').addClass('sjo-traffic');
+        
 	}
 	
 	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
@@ -85,5 +93,5 @@ $(function() {
 							.toArray().reduce((Σ,e) => Σ += (e.innerText - 0), 0);
 		table.before(`Total: <span class="sjo-highlight">${total}</span>`);
 	});
-	
+    
 });
