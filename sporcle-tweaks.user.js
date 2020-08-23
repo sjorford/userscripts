@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.09.0
+// @version        2020.08.23.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -181,6 +181,8 @@ jQuery(function() {
 			['NY', 'CA', 'IL', 'PA', 'MD', 'MA', 'LA', 'NY', 'TX', 'MI', 'MO', 'SC', 'OH', 'AZ', 'CA', 'OH', 'PA', 'TX', 'TX', 'MA', 'PA', 'CA', 'PA', 'NY', 'RI', 'DC', 'RI', 'NY', 'PA', 'CA', 'VA', 'MA', 'FL', 'IN', 'WI', 'NJ', 'KY', 'VA', 'MA', 'MA', 'PA', 'TX', 'TN', 'NH', 'MA', 'OH', 'MN', 'ME', 'TX', 'MA', 'NC', 'VA', 'CT', 'NY', 'NY', 'GA', 'MA', 'TX', 'WA', 'MO', 'NY', 'DC', 'CT', 'NE', 'VA', 'CO', 'MN', 'CT', 'PA', 'NY', 'OR', 'GA', 'MA', 'NY'],
 		'1mil_europe':
 			['Russia', 'Turkey', 'UK', 'France', 'Spain', 'Germany', 'Russia', 'Italy', 'Germany', 'Spain', 'Germany', 'Italy', 'Italy', 'Greece', 'Ukraine', 'Germany', 'Netherlands', 'UK', 'UK', 'Germany', 'Hungary', 'Portugal', 'Netherlands', 'Poland', 'Germany', 'Poland', 'Germany', 'Romania', 'Austria', 'Sweden', 'UK', 'Belgium', 'Belarus', 'France', 'UK', 'Russia', 'Spain', 'Italy', 'Ukraine', 'France', 'UK', 'Denmark', 'Germany', 'UK', 'Ukraine', 'UK', 'Russia', 'Russia', 'Serbia', 'Czechia', 'Ukraine', 'Switzerland', 'Ireland', 'UK', 'Bulgaria', 'Russia', 'Spain', 'France', 'Russia', 'Finland', 'Russia', 'Germany', 'Norway', 'Portugal', 'Germany', 'UK', 'Russia', 'Russia', 'Ukraine', 'Russia', 'Russia', 'Belgium', 'France', 'France', 'Spain'],
+		'european_cup__champions_league_semi_finalists':
+			['ESP', 'FRA', 'SCO', 'ITA', 'ESP', 'ITA', 'ENG', 'SRB', 'ESP', 'ITA', 'ENG', 'HUN', 'ESP', 'FRA', 'ESP', 'SUI', 'ESP', 'GER', 'ESP', 'SCO', 'POR', 'ESP', 'GER', 'AUT', 'POR', 'ESP', 'BEL', 'ENG', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ESP', 'GER', 'SUI', 'ITA', 'POR', 'ENG', 'HUN', 'ESP', 'SRB', 'ITA', 'ENG', 'SCO', 'ITA', 'CZE', 'BUL', 'ENG', 'POR', 'ITA', 'ESP', 'ITA', 'NED', 'ENG', 'SVK', 'NED', 'SCO', 'ENG', 'POL', 'NED', 'GRE', 'ESP', 'SRB', 'NED', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ENG', 'ESP', 'GER', 'ESP', 'SCO', 'HUN', 'GER', 'ENG', 'ESP', 'FRA', 'GER', 'FRA', 'NED', 'ESP', 'ENG', 'GER', 'UKR', 'SUI', 'ENG', 'BEL', 'GER', 'ITA', 'ENG', 'SWE', 'AUT', 'GER', 'ENG', 'GER', 'NED', 'ESP', 'ENG', 'ESP', 'GER', 'ITA', 'ENG', 'GER', 'BEL', 'BUL', 'GER', 'ITA', 'ESP', 'POL', 'ENG', 'ITA', 'ROM', 'SCO', 'ITA', 'ENG', 'FRA', 'GRE', 'ROM', 'ESP', 'BEL', 'SWE', 'POR', 'GER', 'UKR', 'ESP', 'NED', 'POR', 'ESP', 'ROM', 'ITA', 'ROM', 'TUR', 'ESP', 'ITA', 'POR', 'GER', 'FRA', 'SRB', 'FRA', 'GER', 'RUS', 'ESP', 'ITA', 'SRB', 'CZE', 'FRA', 'ITA', 'SWE', 'SCO', 'ITA', 'ESP', 'FRA', 'POR', 'NED', 'ITA', 'GER', 'FRA', 'ITA', 'NED', 'FRA', 'GRE', 'GER', 'ITA', 'NED', 'ENG', 'ESP', 'ITA', 'GER', 'FRA', 'ENG', 'GER', 'UKR', 'ITA', 'ESP', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ENG', 'ESP', 'ESP', 'GER', 'ESP', 'ENG', 'ITA', 'ITA', 'ITA', 'ESP', 'POR', 'FRA', 'ENG', 'ESP', 'ENG', 'ITA', 'ENG', 'NED', 'ESP', 'ENG', 'ITA', 'ESP', 'ITA', 'ENG', 'ENG', 'ENG', 'ENG', 'ENG', 'ESP', 'ENG', 'ESP', 'ENG', 'ENG', 'ENG', 'ITA', 'GER', 'ESP', 'FRA', 'ESP', 'ENG', 'ESP', 'GER', 'ENG', 'GER', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ESP', 'ESP', 'ESP', 'GER', 'ENG', 'ESP', 'ITA', 'GER', 'ESP', 'ESP', 'ESP', 'ENG', 'GER', 'ESP', 'ITA', 'ESP', 'FRA', 'ESP', 'ENG', 'GER', 'ITA', 'ENG', 'ENG', 'NED', 'ESP',],
 	};
 	
 	var gameKey = window.location.href.split('/').slice(-1)[0].replace(/-/g, '_');
