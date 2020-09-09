@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.08.23.0
+// @version        2020.09.09.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -196,8 +196,8 @@ jQuery(function() {
 		if (event.originalEvent.key === 'ArrowDown' ? $('#nextButton').click() : event.originalEvent.key === 'ArrowUp' ? $('#previousButton').click() : '');
 	});
 	
-	// Click headers to sort
-	$('.data th').click(event => {
+	// Double-click headers to sort
+	$('.data th').dblclick(event => {
 		
 		var tables = $('.data');
 		var rows = tables.find('tr:has(td:visible)').not(':has(th)');
@@ -215,9 +215,8 @@ jQuery(function() {
 		
 	});
 	
-	// Double-click to retry value
-	$('.d_value').dblclick(event => {
-		console.log(event);
+	// Click to retry value
+	$('.d_value').click(event => {
 		var value = event.target.innerText.trim();
 		if (value != '') {
 			var gameinput = $('#gameinput').focus().val(value).trigger($.Event("input"));
