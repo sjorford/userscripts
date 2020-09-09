@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2020.08.24.0
+// @version        2020.09.09.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -16,7 +16,7 @@
 
 var debug = false;
 
-$(function() {
+(function($) {
 	
 	var teamsMap = {
 		'AFR':		'',
@@ -289,7 +289,7 @@ $(function() {
 		selection.addRange(range);
 	}
 	
-});
+})($.noConflict());
 
 String.prototype.toProperCase = String.prototype.toProperCase || function () {
     return this.replace(/\w\S*/g, function(word) {return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();});
