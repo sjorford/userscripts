@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.15.1
+// @version      2020.09.15.2
 // @author       Stuart Orford
 // @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob&x=0&y=0
 // @match        https://search.espncricinfo.com/ci/content/player/search.html?search=bob&x=0&y=0
@@ -14,13 +14,13 @@
 (function($) {
 	
 	$(`<style>
-		.sjo-wrapper {width: 100%;}
-		.sjo-box {border: 1px solid blue; width: auto; background-color: white; font-family: Calibri; font-size: 11pt; overflow: scroll; max-height: 200px; padding: 0.5em;}
-		.sjo-table td {margin: 0px; padding: 2px 5px; font-size: small;}
+		.sjo-wrapper {width: 100%; clear: both;}
+		.sjo-box {border: 1px solid blue; width: auto; background-color: white; overflow: scroll; max-height: 200px; padding: 0.5em;}
+		.sjo-table td {margin: 0px; padding: 2px 5px; font-family: Calibri; font-size: 11pt;}
 	</style>`).appendTo('head');
 	
 	// Add export table
-	var table = $('<table class="sjo-table"></table>');
+	var table = $('<table class="sjo-table"></table>')
 		.appendTo('body')
 		.wrap('<div class="sjo-wrapper"></div>')
 		.wrap('<div class="sjo-box"></div>');
@@ -95,8 +95,10 @@
 		if (match1) {
 			if (match1[4]) {
 				return (match1[3] + match1[4]) - 0;
+			} else if ((match1[3] - match1[2] + 100) % 100 == 1) {
+				return ((match1[1] + match1[2]) - 0) + 1;
 			} else {
-				return (match1[1] + match1[3]) - 0;
+				return '?';
 			}
 		} else if (match2) {
 			return match2[0] - 0;
@@ -168,7 +170,6 @@
 					var yearTo = getYearTo(fieldValue);
 					if (!data.yearTo || yearTo > data.yearTo) data.yearTo = yearTo;
 				} else if (fieldName.match(/span$/)) {
-					console.log('Bob extracts', 'cricinfoPage', fieldValue);
 					var seasons = fieldValue.match(/^(\S+).*?(\S+)$/);
 					var yearFrom = getYearFrom(seasons[1]);
 					var yearTo   = getYearTo  (seasons[2]);
