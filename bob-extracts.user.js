@@ -1,10 +1,11 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.15.3
+// @version      2020.09.15.4
 // @author       Stuart Orford
 // @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
+// @match        https://www.rugbyleagueproject.org/search/?q=bob
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -33,6 +34,7 @@
 	var scrapers = {
 		'search.espncricinfo.com': {urls: cricinfoURLs, page: cricinfoPage},
 		'stats.espnscrum.com': {urls: scrumURLs, page: scrumPage},
+		'www.rugbyleagueproject.org': {urls: rugbyLeagueURLs, page: rugbyLeaguePage},
 	};
 	
 	// Start queue
@@ -111,10 +113,19 @@
 	function cleanDate(dateString) {
 		if (!dateString) return dateString;
 		var trimmedString = dateString.trim();
+		
+		// January 1, 2000
 		var match = trimmedString.match(/^(\w{3,}) (\d{1,2}), (\d{4})$/);
 		if (match) return match[2] + ' ' + match[1].substr(0, 3) + ' ' + match[3];
+		
+		// 1 January 2000
 		match = trimmedString.match(/^(\d{1,2}) (\w{3,}) (\d{4})$/);
 		if (match) return match[1] + ' ' + match[2].substr(0, 3) + ' ' + match[3];
+		
+		// Monday, 1st January, 2000
+		var match = trimmedString.match(/^\w{3,}, (\d{1,2})\w{2} (\w{3,}), (\d{4})$/);
+		if (match) return match[1] + ' ' + match[2].substr(0, 3) + ' ' + match[3];
+		
 		return trimmedString;
 	}
 	
@@ -213,7 +224,7 @@
 			}
 		});
 		
-		$('.engineTable', doc).filter(':contains("Test career"), :contains("English Premiership")', doc)
+		$('.engineTable', doc).filter(':contains("Test career"), :contains("English Premiership")')
 			.find('tbody tr').each((i,e) => {
 				var match = $('td', e).eq(1).text().trim().match(/^(\d{4})\D+(\d{4})$/);
 				var yearFrom = match[1] - 0;
@@ -221,6 +232,56 @@
 				if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
 				if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
 			});
+		
+		return data;
+	}
+	
+	// ================================================================
+	// Rugby League Project
+	// ================================================================
+	
+	function rugbyLeagueURLs() {
+		var links = $('.list tr:has(h3)').first().nextUntil('tr:has(h3)')
+			.filter((i,e) => e.innerText.trim().match(/Bob /)).find('a');
+		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
+	}
+	
+	function rugbyLeaguePage(doc) {
+		console.log('Bob extracts', 'rugbyLeaguePage');
+		var data = {};
+		
+		data.sport = 'Rugby league';
+		data.name = doc.filter('h1').text().trim();
+		
+		// Get nationality from international matches
+		data.nationality = [...new Set(
+			$('.list tr:contains("International")', doc)
+				.nextUntil('tr:contains("Club Career")')
+				.find('.text a').toArray().map(a => a.innerText.trim()))].join(', ');
+		
+		data.fullName = data.name;
+		
+		$('.stats dt', doc).each((i,e) => {
+			var fieldName = $(e).text().trim();
+			var fieldValue = $(e).next('dd').text().trim();
+			if (fieldName == 'Full Name') {
+				data.fullName = fieldValue;
+			} else if (fieldName == 'Born') {
+				var match = fieldValue.match(/.*?\d{4}/)
+				if (match) data.dateOfBirth = cleanDate(match[0]);
+			} else if (fieldName == 'Died') {
+				var match = fieldValue.match(/.*?\d{4}/)
+				if (match) data.dateOfDeath = cleanDate(match[0]);
+			}
+		});
+
+		$('.total td:nth-of-type(2)', doc).each((i,e) => {
+			var match = $(e).text().trim().match(/^(\d{4})(?:\D+(\d{4}))?$/);
+			var yearFrom = match[1] - 0;
+			var yearTo   = match[2] ? match[2] - 0 : yearFrom;
+			if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
+			if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
+		});
 		
 		return data;
 	}
