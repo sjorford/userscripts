@@ -1,10 +1,10 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.15.2
+// @version      2020.09.15.3
 // @author       Stuart Orford
-// @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob&x=0&y=0
-// @match        https://search.espncricinfo.com/ci/content/player/search.html?search=bob&x=0&y=0
+// @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob
+// @match        http://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -32,6 +32,7 @@
 	// Set up list of functions
 	var scrapers = {
 		'search.espncricinfo.com': {urls: cricinfoURLs, page: cricinfoPage},
+		'stats.espnscrum.com': {urls: scrumURLs, page: scrumPage},
 	};
 	
 	// Start queue
@@ -135,7 +136,6 @@
 		return links.toArray().map(a => a.href);
 	}
 	
-	//
 	function cricinfoPage(doc) {
 		console.log('Bob extracts', 'cricinfoPage');
 		var data = {};
@@ -176,6 +176,50 @@
 					if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
 					if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
 				}
+			});
+		
+		return data;
+	}
+	
+	// ================================================================
+	// ESPNscrum
+	// ================================================================
+	
+	function scrumURLs() {
+		var links = $('#gurusearch_player tr')
+			.filter((i,e) => e.innerText.trim().match(/\(Bob /)).find('a');
+		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
+	}
+	
+	function scrumPage(doc) {
+		console.log('Bob extracts', 'scrumPage');
+		var data = {};
+		
+		data.sport = 'Rugby union';
+		data.name = doc.find('.scrumPlayerName').text().trim();
+		data.nationality = doc.find('.scrumPlayerCountry').text().trim();
+		
+		$('.scrumPlayerDesc', doc).each((i,e) => {
+			var fieldName = $('b', e).detach().text().trim();
+			var fieldValue = $(e).text().trim();
+			if (fieldName == 'Full name') {
+				data.fullName = fieldValue;
+			} else if (fieldName == 'Born') {
+				var match = fieldValue.match(/.*?\d{4}/)
+				if (match) data.dateOfBirth = cleanDate(match[0]);
+			} else if (fieldName == 'Died') {
+				var match = fieldValue.match(/.*?\d{4}/)
+				if (match) data.dateOfDeath = cleanDate(match[0]);
+			}
+		});
+		
+		$('.engineTable', doc).filter(':contains("Test career"), :contains("English Premiership")', doc)
+			.find('tbody tr').each((i,e) => {
+				var match = $('td', e).eq(1).text().trim().match(/^(\d{4})\D+(\d{4})$/);
+				var yearFrom = match[1] - 0;
+				var yearTo   = match[2] - 0;
+				if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
+				if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
 			});
 		
 		return data;
