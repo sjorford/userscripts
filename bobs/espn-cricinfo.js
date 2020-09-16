@@ -1,23 +1,14 @@
-
 	// ================================================================
 	// ESPNcricinfo
 	// ================================================================
-	
-	// https://www.espncricinfo.com/search/_/type/players/q/bob
-	// new search results page, only lists 50 Bobs
-	function cricketURLs__BAD() {
-		var links = $('.player__Results__Item a')
-			.filter((i,e) => $('.LogoTile__Title', e).text().trim().match(/Bob /));
-		return links.toArray().map(a => a.href);
-	}
-	
-	function cricketURLs() {
+
+	function cricketURLs($) {
 		var links = $('a.ColumnistSmry')
 			.filter((i,e) => e.innerText.trim().match(/\(Bob /));
 		return links.toArray().map(a => a.href);
 	}
-	
-	function cricketPage(doc) {
+
+	function cricketPage($, doc) {
 		console.log('Bob extracts', 'cricketPage');
 		var data = {};
 		
