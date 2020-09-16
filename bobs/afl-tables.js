@@ -2,12 +2,12 @@
 	// AFL Tables
 	// ================================================================
 	
-	function aflTablesURLs() {
+	function aflTablesURLs($) {
 		var links = $('a').filter((i,e) => e.href.match(/\d{4}s?\.html$/));
 		return links.toArray().map(a => a.href.replace(/s\.html$/, '.html'));
 	}
 	
-	function aflTablesPage(doc, url) {
+	function aflTablesPage($, doc, url) {
 		console.log('Bob extracts', 'aflTablesPage');
 		var data = {};
 		

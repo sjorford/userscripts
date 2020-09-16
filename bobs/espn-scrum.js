@@ -2,13 +2,13 @@
 	// ESPNscrum
 	// ================================================================
 	
-	function espnScrumURLs() {
+	function espnScrumURLs($) {
 		var links = $('#gurusearch_player tr')
 			.filter((i,e) => e.innerText.trim().match(/\(Bob /)).find('a');
 		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
 	}
 	
-	function espnScrumPage(doc) {
+	function espnScrumPage($, doc) {
 		console.log('Bob extracts', 'espnScrumPage');
 		var data = {};
 		

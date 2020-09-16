@@ -2,13 +2,13 @@
 	// Rugby League Project
 	// ================================================================
 	
-	function rugbyLeagueProjectURLs() {
+	function rugbyLeagueProjectURLs($) {
 		var links = $('.list tr:has(h3)').first().nextUntil('tr:has(h3)')
 			.filter((i,e) => e.innerText.trim().match(/Bob /)).find('a');
 		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
 	}
 	
-	function rugbyLeagueProjectPage(doc) {
+	function rugbyLeagueProjectPage($, doc) {
 		console.log('Bob extracts', 'rugbyLeagueProjectPage');
 		var data = {};
 		
