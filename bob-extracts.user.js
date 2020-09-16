@@ -1,12 +1,13 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.16.3
+// @version      2020.09.16.4
 // @author       Stuart Orford
 // @match        http*://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http*://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
 // @match        https://www.rugbyleagueproject.org/search/?q=bob
 // @match        https://afltables.com/afl/stats/stats_idx.html
+// @match        https://australianfootball.com/search/advanced_search
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -41,6 +42,7 @@
 		'stats.espnscrum.com':        {urls: espnScrumURLs,          page: espnScrumPage},
 		'www.rugbyleagueproject.org': {urls: rugbyLeagueProjectURLs, page: rugbyLeagueProjectPage},
 		'afltables.com':              {urls: aflTablesURLs,          page: aflTablesPage},
+		'australianfootball.com':     {urls: australianFootballURLs, page: australianFootballPage},
 	};
 	
 	// Register helper functions
@@ -138,7 +140,7 @@
 	
 	function cleanDate(dateString) {
 		if (!dateString) return dateString;
-		var trimmedString = dateString.trim();
+		var trimmedString = dateString.trim().replace(/(\d{4}).*$/, '$1');
 		
 		// January 1, 2000
 		var match = trimmedString.match(/^(\w{3,}) (\d{1,2}), (\d{4})$/);
