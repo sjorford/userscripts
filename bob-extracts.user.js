@@ -1,11 +1,12 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.15.4
+// @version      2020.09.16.0
 // @author       Stuart Orford
 // @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
 // @match        https://www.rugbyleagueproject.org/search/?q=bob
+// @match        https://afltables.com/afl/stats/stats_idx.html
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -30,12 +31,7 @@
 			$(this).selectRange();
 		});
 	
-	// Set up list of functions
-	var scrapers = {
-		'search.espncricinfo.com': {urls: cricinfoURLs, page: cricinfoPage},
-		'stats.espnscrum.com': {urls: scrumURLs, page: scrumPage},
-		'www.rugbyleagueproject.org': {urls: rugbyLeagueURLs, page: rugbyLeaguePage},
-	};
+	var scrapers = registerScrapers();
 	
 	// Start queue
 	start();
@@ -45,9 +41,9 @@
 		queue = scrapers[window.location.hostname].urls();
 		console.log('Bob extracts', 'start', queue.length);
 		if (queue.length > 0) {
-			nextPage()
+			nextPage();
 		} else {
-			window.setTimeout(start, 1000)
+			window.setTimeout(start, 1000);
 		}
 	}
 	
@@ -65,19 +61,30 @@
 	
 	function scrapePage(response) {
 		var doc = $(response.responseText);
+		var url = response.finalUrl;
 		
-		var data = scrapers[window.location.hostname].page($(doc));
+		var data = scrapers[window.location.hostname].page(doc, url);
 		
-		var row = $('<tr></tr>').appendTo(table);
-		$('<td></td>').text(data.name)        .appendTo(row);
-		$('<td></td>').text(data.fullName)    .appendTo(row);
-		$('<td></td>').text(data.dateOfBirth) .appendTo(row);
-		$('<td></td>').text(data.dateOfDeath) .appendTo(row);
-		$('<td></td>').text(data.nationality) .appendTo(row);
-		$('<td></td>').text(data.sport)       .appendTo(row);
-		$('<td></td>').text(data.yearFrom)    .appendTo(row);
-		$('<td></td>').text(data.yearTo)      .appendTo(row);
-		$('<td></td>').text(response.finalUrl).appendTo(row);
+		if (data.type == 'urls') {
+			
+			// Add new URLs to queue
+			queue = queue.concat(data.urls.filter(url => queue.indexOf(url) < 0));
+			
+		} else {
+			
+			// Add Bob to table
+			var row = $('<tr></tr>').appendTo(table);
+			$('<td></td>').text(data.name)       .appendTo(row);
+			$('<td></td>').text(data.fullName)   .appendTo(row);
+			$('<td></td>').text(data.dateOfBirth).appendTo(row);
+			$('<td></td>').text(data.dateOfDeath).appendTo(row);
+			$('<td></td>').text(data.nationality).appendTo(row);
+			$('<td></td>').text(data.sport)      .appendTo(row);
+			$('<td></td>').text(data.yearFrom)   .appendTo(row);
+			$('<td></td>').text(data.yearTo)     .appendTo(row);
+			$('<td></td>').text(url)             .appendTo(row);
+			
+		}
 		
 		nextPage();
 	}
@@ -106,7 +113,7 @@
 		} else if (match2) {
 			return match2[0] - 0;
 		} else {
-			return null
+			return null;
 		}
 	}
 	
@@ -135,20 +142,20 @@
 	
 	// https://www.espncricinfo.com/search/_/type/players/q/bob
 	// new search results page, only lists 50 Bobs
-	function cricinfoURLs__BAD() {
+	function cricketURLs__BAD() {
 		var links = $('.player__Results__Item a')
 			.filter((i,e) => $('.LogoTile__Title', e).text().trim().match(/Bob /));
 		return links.toArray().map(a => a.href);
 	}
 	
-	function cricinfoURLs() {
+	function cricketURLs() {
 		var links = $('a.ColumnistSmry')
 			.filter((i,e) => e.innerText.trim().match(/\(Bob /));
 		return links.toArray().map(a => a.href);
 	}
 	
-	function cricinfoPage(doc) {
-		console.log('Bob extracts', 'cricinfoPage');
+	function cricketPage(doc) {
+		console.log('Bob extracts', 'cricketPage');
 		var data = {};
 		
 		data.sport = 'Cricket';
@@ -158,14 +165,13 @@
 		$('.ciPlayerinformationtxt', doc).each((i,e) => {
 			var fieldName = $('b', e).text().trim();
 			var fieldValue = $('span', e).text().trim();
+			var matchDate = fieldValue.match(/.*?\d{4}/);
 			if (fieldName == 'Full name') {
 				data.fullName = fieldValue;
 			} else if (fieldName == 'Born') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfBirth = cleanDate(match[0]);
+				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
 			} else if (fieldName == 'Died') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfDeath = cleanDate(match[0]);
+				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
 			}
 		});
 		
@@ -196,13 +202,13 @@
 	// ESPNscrum
 	// ================================================================
 	
-	function scrumURLs() {
+	function rugbyUnionURLs() {
 		var links = $('#gurusearch_player tr')
 			.filter((i,e) => e.innerText.trim().match(/\(Bob /)).find('a');
 		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
 	}
 	
-	function scrumPage(doc) {
+	function rugbyUnionPage(doc) {
 		console.log('Bob extracts', 'scrumPage');
 		var data = {};
 		
@@ -213,14 +219,13 @@
 		$('.scrumPlayerDesc', doc).each((i,e) => {
 			var fieldName = $('b', e).detach().text().trim();
 			var fieldValue = $(e).text().trim();
+			var matchDate = fieldValue.match(/.*?\d{4}/);
 			if (fieldName == 'Full name') {
 				data.fullName = fieldValue;
 			} else if (fieldName == 'Born') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfBirth = cleanDate(match[0]);
+				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
 			} else if (fieldName == 'Died') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfDeath = cleanDate(match[0]);
+				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
 			}
 		});
 		
@@ -254,24 +259,24 @@
 		data.name = doc.filter('h1').text().trim();
 		
 		// Get nationality from international matches
+		// Exclude "NSW Firsts" etc.
 		data.nationality = [...new Set(
 			$('.list tr:contains("International")', doc)
 				.nextUntil('tr:contains("Club Career")')
-				.find('.text a').toArray().map(a => a.innerText.trim()))].join(', ');
-		
-		data.fullName = data.name;
+				.find('.text a')
+				.filter((i,e) => !e.innerText.trim().match(/^[A-Z]{3}/))
+				.toArray().map(a => a.innerText.trim()))].join(', ');
 		
 		$('.stats dt', doc).each((i,e) => {
 			var fieldName = $(e).text().trim();
 			var fieldValue = $(e).next('dd').text().trim();
+			var matchDate = fieldValue.match(/.*?\d{4}/);
 			if (fieldName == 'Full Name') {
 				data.fullName = fieldValue;
 			} else if (fieldName == 'Born') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfBirth = cleanDate(match[0]);
+				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
 			} else if (fieldName == 'Died') {
-				var match = fieldValue.match(/.*?\d{4}/)
-				if (match) data.dateOfDeath = cleanDate(match[0]);
+				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
 			}
 		});
 
@@ -284,6 +289,59 @@
 		});
 		
 		return data;
+	}
+	
+	// ================================================================
+	// AFL Tables
+	// ================================================================
+	
+	function aussieRulesURLs() {
+		var links = $('a').filter((i,e) => e.href.match(/\d{4}s?\.html$/));
+		return links.toArray().map(a => a.href.replace(/s\.html$/, '.html'));
+	}
+	
+	function aussieRulesPage(doc, url) {
+		console.log('Bob extracts', 'aussieRulesPage');
+		var data = {};
+		
+		// Scrape player URLs from year summary pages
+		if (!url.match(/players/)) {
+			data.type = 'urls';
+			data.urls = $('a[href^="players"]', doc).filter((i,e) => e.textContent.match(/, Bob/))
+				.toArray().map(a => a.href);
+			return data;
+		}
+		
+		data.sport = 'Aussie rules';
+		data.name = $('h1', doc).text().trim();
+		
+		try {
+			data.dateOfBirth = $('b', doc).filter((i,e) => e.textContent.trim() == 'Born:')[0].nextSibling.textContent.replace(/[-\(]/g, ' ').trim();
+		} catch (error) {
+		}
+		
+		try {
+			data.dateOfDeath = $('b', doc).filter((i,e) => e.textContent.trim() == 'Died:')[0].nextSibling.textContent.replace(/[-\(]/g, ' ').trim();
+		} catch (error) {
+		}
+		
+		var links = $('a', doc);
+		var yearLinks = links.filter((i,e) => e.textContent.trim().match(/^\d{4}$/));
+		data.yearFrom = yearLinks.first().text();
+		data.yearTo   = yearLinks.last() .text();
+		
+		return data;
+	}
+	
+	// ================================================================
+	
+	function registerScrapers() {
+		return {
+			'search.espncricinfo.com':    {urls: cricketURLs,     page: cricketPage},
+			'stats.espnscrum.com':        {urls: rugbyUnionURLs,  page: rugbyUnionPage},
+			'www.rugbyleagueproject.org': {urls: rugbyLeagueURLs, page: rugbyLeaguePage},
+			'afltables.com':              {urls: aussieRulesURLs, page: aussieRulesPage},
+		};
 	}
 	
 })($.noConflict());
