@@ -23,9 +23,9 @@
 			if (fieldName == 'Full name') {
 				data.fullName = fieldValue;
 			} else if (fieldName == 'Born') {
-				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
+				if (matchDate) data.dateOfBirth = $.sjo.cleanDate(matchDate[0]);
 			} else if (fieldName == 'Died') {
-				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
+				if (matchDate) data.dateOfDeath = $.sjo.cleanDate(matchDate[0]);
 			}
 		});
 		
@@ -35,15 +35,15 @@
 				var fieldName = $('td:first-of-type', e).text().trim();
 				var fieldValue = $('td:last-of-type', e).text().trim();
 				if (fieldName.match(/debut$/)) {
-					var yearFrom = getYearFrom(fieldValue);
+					var yearFrom = $.sjo.getYearFrom(fieldValue);
 					if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
 				} else if (fieldName.match(/^Last/)) {
-					var yearTo = getYearTo(fieldValue);
+					var yearTo = $.sjo.getYearTo(fieldValue);
 					if (!data.yearTo || yearTo > data.yearTo) data.yearTo = yearTo;
 				} else if (fieldName.match(/span$/)) {
 					var seasons = fieldValue.match(/^(\S+).*?(\S+)$/);
-					var yearFrom = getYearFrom(seasons[1]);
-					var yearTo   = getYearTo  (seasons[2]);
+					var yearFrom = $.sjo.getYearFrom(seasons[1]);
+					var yearTo   = $.sjo.getYearTo  (seasons[2]);
 					if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
 					if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
 				}
