@@ -2,14 +2,14 @@
 	// ESPNcricinfo
 	// ================================================================
 
-	function cricketURLs($) {
+	function espnCricinfoURLs($) {
 		var links = $('a.ColumnistSmry')
 			.filter((i,e) => e.innerText.trim().match(/\(Bob /));
 		return links.toArray().map(a => a.href);
 	}
 
-	function cricketPage($, doc) {
-		console.log('Bob extracts', 'cricketPage');
+	function espnCricinfoPage($, doc) {
+		console.log('Bob extracts', 'espnCricinfoPage');
 		var data = {};
 		
 		data.sport = 'Cricket';
