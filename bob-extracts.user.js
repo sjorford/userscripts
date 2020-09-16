@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.16.4
+// @version      2020.09.16.5
 // @author       Stuart Orford
 // @match        http*://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http*://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
@@ -16,6 +16,7 @@
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/espn-scrum.js
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/rugby-league-project.js
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/afl-tables.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/australian-football.js
 // ==/UserScript==
 
 (function($) {
