@@ -1,10 +1,10 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.16.0
+// @version      2020.09.16.1
 // @author       Stuart Orford
-// @match        http://search.espncricinfo.com/ci/content/player/search.html?search=bob
-// @match        http://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
+// @match        http*://search.espncricinfo.com/ci/content/player/search.html?search=bob
+// @match        http*://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
 // @match        https://www.rugbyleagueproject.org/search/?q=bob
 // @match        https://afltables.com/afl/stats/stats_idx.html
 // @run-at       document-idle
@@ -307,7 +307,7 @@
 		// Scrape player URLs from year summary pages
 		if (!url.match(/players/)) {
 			data.type = 'urls';
-			data.urls = $('a[href^="players"]', doc).filter((i,e) => e.textContent.match(/, Bob/))
+			data.urls = $('a[href^="players"]', doc).filter((i,e) => e.textContent.match(/, Bob(\s|$)/))
 				.toArray().map(a => a.href);
 			return data;
 		}
