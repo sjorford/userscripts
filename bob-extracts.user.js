@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.16.1
+// @version      2020.09.16.3
 // @author       Stuart Orford
 // @match        http*://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http*://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
@@ -11,6 +11,10 @@
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @require      https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/espn-cricinfo.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/espn-scrum.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/rugby-league-project.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/afl-tables.js
 // ==/UserScript==
 
 (function($) {
@@ -31,14 +35,27 @@
 			$(this).selectRange();
 		});
 	
-	var scrapers = registerScrapers();
+	// Register scrapers
+	var scrapers = {
+		'search.espncricinfo.com':    {urls: espnCricinfoURLs,       page: espnCricinfoPage},
+		'stats.espnscrum.com':        {urls: espnScrumURLs,          page: espnScrumPage},
+		'www.rugbyleagueproject.org': {urls: rugbyLeagueProjectURLs, page: rugbyLeagueProjectPage},
+		'afltables.com':              {urls: aflTablesURLs,          page: aflTablesPage},
+	};
+	
+	// Register helper functions
+	$.sjo = {
+		getYearFrom: getYearFrom,
+		getYearTo:   getYearTo,
+		cleanDate:   cleanDate,
+	};
 	
 	// Start queue
 	start();
 	
 	function start() {
 		console.log('Bob extracts', 'start', window.location.hostname);
-		queue = scrapers[window.location.hostname].urls();
+		queue = scrapers[window.location.hostname].urls($);
 		console.log('Bob extracts', 'start', queue.length);
 		if (queue.length > 0) {
 			nextPage();
@@ -63,7 +80,7 @@
 		var doc = $(response.responseText);
 		var url = response.finalUrl;
 		
-		var data = scrapers[window.location.hostname].page(doc, url);
+		var data = scrapers[window.location.hostname].page($, doc, url);
 		
 		if (data.type == 'urls') {
 			
@@ -90,6 +107,8 @@
 	}
 	
 	// Helper functions
+	// ================================================================
+	
 	function getYearFrom(text) {
 		var match = text.match(/(\d{4})/);
 		if (match) {
@@ -134,214 +153,6 @@
 		if (match) return match[1] + ' ' + match[2].substr(0, 3) + ' ' + match[3];
 		
 		return trimmedString;
-	}
-	
-	// ================================================================
-	// ESPNcricinfo
-	// ================================================================
-	
-	// https://www.espncricinfo.com/search/_/type/players/q/bob
-	// new search results page, only lists 50 Bobs
-	function cricketURLs__BAD() {
-		var links = $('.player__Results__Item a')
-			.filter((i,e) => $('.LogoTile__Title', e).text().trim().match(/Bob /));
-		return links.toArray().map(a => a.href);
-	}
-	
-	function cricketURLs() {
-		var links = $('a.ColumnistSmry')
-			.filter((i,e) => e.innerText.trim().match(/\(Bob /));
-		return links.toArray().map(a => a.href);
-	}
-	
-	function cricketPage(doc) {
-		console.log('Bob extracts', 'cricketPage');
-		var data = {};
-		
-		data.sport = 'Cricket';
-		data.name = doc.find('.ciPlayernametxt h1').text().trim();
-		data.nationality = doc.find('.ciPlayernametxt h3').text().trim();
-		
-		$('.ciPlayerinformationtxt', doc).each((i,e) => {
-			var fieldName = $('b', e).text().trim();
-			var fieldValue = $('span', e).text().trim();
-			var matchDate = fieldValue.match(/.*?\d{4}/);
-			if (fieldName == 'Full name') {
-				data.fullName = fieldValue;
-			} else if (fieldName == 'Born') {
-				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
-			} else if (fieldName == 'Died') {
-				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
-			}
-		});
-		
-		$('.ciPlayertextbottomborder:contains("Career statistics")', doc)
-			.nextUntil('.ciPlayertextbottomborder', '.engineTable')
-			.first().find('tr').each((i,e) => {
-				var fieldName = $('td:first-of-type', e).text().trim();
-				var fieldValue = $('td:last-of-type', e).text().trim();
-				if (fieldName.match(/debut$/)) {
-					var yearFrom = getYearFrom(fieldValue);
-					if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
-				} else if (fieldName.match(/^Last/)) {
-					var yearTo = getYearTo(fieldValue);
-					if (!data.yearTo || yearTo > data.yearTo) data.yearTo = yearTo;
-				} else if (fieldName.match(/span$/)) {
-					var seasons = fieldValue.match(/^(\S+).*?(\S+)$/);
-					var yearFrom = getYearFrom(seasons[1]);
-					var yearTo   = getYearTo  (seasons[2]);
-					if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
-					if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
-				}
-			});
-		
-		return data;
-	}
-	
-	// ================================================================
-	// ESPNscrum
-	// ================================================================
-	
-	function rugbyUnionURLs() {
-		var links = $('#gurusearch_player tr')
-			.filter((i,e) => e.innerText.trim().match(/\(Bob /)).find('a');
-		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
-	}
-	
-	function rugbyUnionPage(doc) {
-		console.log('Bob extracts', 'scrumPage');
-		var data = {};
-		
-		data.sport = 'Rugby union';
-		data.name = doc.find('.scrumPlayerName').text().trim();
-		data.nationality = doc.find('.scrumPlayerCountry').text().trim();
-		
-		$('.scrumPlayerDesc', doc).each((i,e) => {
-			var fieldName = $('b', e).detach().text().trim();
-			var fieldValue = $(e).text().trim();
-			var matchDate = fieldValue.match(/.*?\d{4}/);
-			if (fieldName == 'Full name') {
-				data.fullName = fieldValue;
-			} else if (fieldName == 'Born') {
-				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
-			} else if (fieldName == 'Died') {
-				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
-			}
-		});
-		
-		$('.engineTable', doc).filter(':contains("Test career"), :contains("English Premiership")')
-			.find('tbody tr').each((i,e) => {
-				var match = $('td', e).eq(1).text().trim().match(/^(\d{4})\D+(\d{4})$/);
-				var yearFrom = match[1] - 0;
-				var yearTo   = match[2] - 0;
-				if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
-				if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
-			});
-		
-		return data;
-	}
-	
-	// ================================================================
-	// Rugby League Project
-	// ================================================================
-	
-	function rugbyLeagueURLs() {
-		var links = $('.list tr:has(h3)').first().nextUntil('tr:has(h3)')
-			.filter((i,e) => e.innerText.trim().match(/Bob /)).find('a');
-		return links.toArray().map(a => a.href.replace(/\?.*/, ''));
-	}
-	
-	function rugbyLeaguePage(doc) {
-		console.log('Bob extracts', 'rugbyLeaguePage');
-		var data = {};
-		
-		data.sport = 'Rugby league';
-		data.name = doc.filter('h1').text().trim();
-		
-		// Get nationality from international matches
-		// Exclude "NSW Firsts" etc.
-		data.nationality = [...new Set(
-			$('.list tr:contains("International")', doc)
-				.nextUntil('tr:contains("Club Career")')
-				.find('.text a')
-				.filter((i,e) => !e.innerText.trim().match(/^[A-Z]{3}/))
-				.toArray().map(a => a.innerText.trim()))].join(', ');
-		
-		$('.stats dt', doc).each((i,e) => {
-			var fieldName = $(e).text().trim();
-			var fieldValue = $(e).next('dd').text().trim();
-			var matchDate = fieldValue.match(/.*?\d{4}/);
-			if (fieldName == 'Full Name') {
-				data.fullName = fieldValue;
-			} else if (fieldName == 'Born') {
-				if (matchDate) data.dateOfBirth = cleanDate(matchDate[0]);
-			} else if (fieldName == 'Died') {
-				if (matchDate) data.dateOfDeath = cleanDate(matchDate[0]);
-			}
-		});
-
-		$('.total td:nth-of-type(2)', doc).each((i,e) => {
-			var match = $(e).text().trim().match(/^(\d{4})(?:\D+(\d{4}))?$/);
-			var yearFrom = match[1] - 0;
-			var yearTo   = match[2] ? match[2] - 0 : yearFrom;
-			if (!data.yearFrom || yearFrom < data.yearFrom) data.yearFrom = yearFrom;
-			if (!data.yearTo   || yearTo   > data.yearTo)   data.yearTo   = yearTo;
-		});
-		
-		return data;
-	}
-	
-	// ================================================================
-	// AFL Tables
-	// ================================================================
-	
-	function aussieRulesURLs() {
-		var links = $('a').filter((i,e) => e.href.match(/\d{4}s?\.html$/));
-		return links.toArray().map(a => a.href.replace(/s\.html$/, '.html'));
-	}
-	
-	function aussieRulesPage(doc, url) {
-		console.log('Bob extracts', 'aussieRulesPage');
-		var data = {};
-		
-		// Scrape player URLs from year summary pages
-		if (!url.match(/players/)) {
-			data.type = 'urls';
-			data.urls = $('a[href^="players"]', doc).filter((i,e) => e.textContent.match(/, Bob(\s|$)/))
-				.toArray().map(a => a.href);
-			return data;
-		}
-		
-		data.sport = 'Aussie rules';
-		data.name = $('h1', doc).text().trim();
-		
-		try {
-			data.dateOfBirth = $('b', doc).filter((i,e) => e.textContent.trim() == 'Born:')[0].nextSibling.textContent.replace(/[-\(]/g, ' ').trim();
-		} catch (error) {
-		}
-		
-		try {
-			data.dateOfDeath = $('b', doc).filter((i,e) => e.textContent.trim() == 'Died:')[0].nextSibling.textContent.replace(/[-\(]/g, ' ').trim();
-		} catch (error) {
-		}
-		
-		var links = $('a', doc);
-		var yearLinks = links.filter((i,e) => e.textContent.trim().match(/^\d{4}$/));
-		data.yearFrom = yearLinks.first().text();
-		data.yearTo   = yearLinks.last() .text();
-		
-		return data;
-	}
-	
-	// ================================================================
-	
-	function registerScrapers() {
-		return {
-			'search.espncricinfo.com':    {urls: cricketURLs,     page: cricketPage},
-			'stats.espnscrum.com':        {urls: rugbyUnionURLs,  page: rugbyUnionPage},
-			'www.rugbyleagueproject.org': {urls: rugbyLeagueURLs, page: rugbyLeaguePage},
-			'afltables.com':              {urls: aussieRulesURLs, page: aussieRulesPage},
-		};
 	}
 	
 })($.noConflict());
