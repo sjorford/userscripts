@@ -24,9 +24,10 @@
 		data.dateOfDeath = $.sjo.cleanDate(getKeyFacts('Died'));
 		
 		var match = $('.totals_row td:nth-of-type(2)', doc).text().trim().match(/^(\d{4})(?:.+(\d{4}))?$/);
-		
-		data.yearFrom = match[1] - 0;
-		data.yearTo   = match[2] ? match[2] - 0 : data.yearFrom;
+		if (match) {
+			data.yearFrom = match[1] - 0;
+			data.yearTo   = match[2] ? match[2] - 0 : data.yearFrom;
+		}
 		
 		return data;
 	}
