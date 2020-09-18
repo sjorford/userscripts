@@ -24,6 +24,7 @@
 		// JSON file per player with competition years
 		if (url.match(/clientfile/)) {
 			data.type = 'partial';
+			if (!doc.plrs[0].tours) return data;
 			doc.plrs[0].tours.forEach(tour => {
 				var yearFrom = tour.detail[0].year
 				var yearTo   = tour.detail[tour.detail.length - 1].year
