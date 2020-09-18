@@ -1,13 +1,14 @@
 ﻿// ==UserScript==
 // @name         Bob extracts
 // @namespace    sjorford@gmail.com
-// @version      2020.09.16.5
+// @version      2020.09.18.0
 // @author       Stuart Orford
 // @match        http*://search.espncricinfo.com/ci/content/player/search.html?search=bob
 // @match        http*://stats.espnscrum.com/statsguru/rugby/stats/analysis.html?search=bob
 // @match        https://www.rugbyleagueproject.org/search/?q=bob
 // @match        https://afltables.com/afl/stats/stats_idx.html
 // @match        https://australianfootball.com/search/advanced_search
+// @match        https://www.pgatour.com/players.html
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
@@ -17,6 +18,7 @@
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/rugby-league-project.js
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/afl-tables.js
 // @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/australian-football.js
+// @require      https://raw.githubusercontent.com/sjorford/userscripts/master/bobs/pga-tour.js
 // ==/UserScript==
 
 (function($) {
@@ -44,6 +46,7 @@
 		'www.rugbyleagueproject.org': {urls: rugbyLeagueProjectURLs, page: rugbyLeagueProjectPage},
 		'afltables.com':              {urls: aflTablesURLs,          page: aflTablesPage},
 		'australianfootball.com':     {urls: australianFootballURLs, page: australianFootballPage},
+		'www.pgatour.com':            {urls: pgaTourURLs,            page: pgaTourPage},
 	};
 	
 	// Register helper functions
@@ -72,15 +75,19 @@
 		if (queue.length == 0) return;
 		var url = queue.shift();
 		console.log('Bob extracts', 'nextPage', url);
-		GM_xmlhttpRequest({
+		var request = {
 			method: 'GET',
 			url: url,
 			onload: scrapePage,
-		});
+		}
+		if (url.match(/json/)) request.responseType = 'json';
+		GM_xmlhttpRequest(request);
 	}
 	
+	var partialData;
+	
 	function scrapePage(response) {
-		var doc = $(response.responseText);
+		var doc = response.response ? response.response : $(response.responseText);
 		var url = response.finalUrl;
 		
 		var data = scrapers[window.location.hostname].page($, doc, url);
@@ -90,8 +97,23 @@
 			// Add new URLs to queue
 			queue = queue.concat(data.urls.filter(url => queue.indexOf(url) < 0));
 			
+		} else if (data.type == 'partial') {
+			
+			// Save partial data
+			if (partialData) {
+				partialData = {...partialData, ...data}
+			} else {
+				partialData = data;
+			}
+			
 		} else {
 			
+			// Merge with previous partial data
+			if (partialData) {
+				data = {...partialData, ...data};
+				partialData = null;
+			}
+
 			// Add Bob to table
 			var row = $('<tr></tr>').appendTo(table);
 			$('<td></td>').text(data.name)       .appendTo(row);
