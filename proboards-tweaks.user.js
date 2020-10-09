@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
 // @include     https://vote-2012.proboards.com/*
-// @version     2020.10.09.0
+// @version     2020.10.09.1
 // @grant       none
 // ==/UserScript==
 
@@ -18,8 +18,8 @@ $(function() {
 			{display: none !important;}
 		
 		body {
-			overflow: auto !important,
-			position: revert !important
+			overflow: auto !important;
+			position: revert !important;
 		}
 		
 		tr.bookmarked.new {background-color: #ffd700b3 !important;}
