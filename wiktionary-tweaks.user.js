@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.10.1
+// @version      2020.10.10.2
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -14,8 +14,7 @@ $(function() {
 	$(`<style>
 		.sjo-toc {width: 100%;}
 		.sjo-toc-columns {column-width: 12em;}
-		.sjo-toc-columns .tocnumber {display: inline-block; width: 23px;}
-		xxx.sjo-flag {display: inline-block; width: 23px;}
+		.sjo-toc-flag {display: inline-block; width: 23px;}
 	</style>`).appendTo('head');
 	
 	var flagBaseURL = '//upload.wikimedia.org/wikipedia/commons/thumb/';
@@ -30,7 +29,7 @@ $(function() {
 	
 	tocEntries.each((i,e) => {
 		var link = $(e).children('a');
-		var marker = link.find('.tocnumber').empty();
+		var marker = link.find('.tocnumber').addClass('sjo-toc-flag').empty();
 		var lang = link.find('.toctext').text().trim();
 		if (flagURLs[lang]) {
 			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(marker); //.wrap('<span class="sjo-flag"></span>');
@@ -51,6 +50,7 @@ $(function() {
 			'Burmese':             '8/8c/Flag_of_Myanmar.svg/23px-Flag_of_Myanmar.svg.png',
 			'Cambodian':           '8/83/Flag_of_Cambodia.svg/23px-Flag_of_Cambodia.svg.png',
 			'Catalan':             'c/ce/Flag_of_Catalonia.svg/23px-Flag_of_Catalonia.svg.png',
+			'Central Kurdish':     '3/35/Flag_of_Kurdistan.svg/23px-Flag_of_Kurdistan.svg.png',
 			'Chinese':             'f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png',
 			'Cornish':             'b/b8/Flag_of_Cornwall.svg/23px-Flag_of_Cornwall.svg.png',
 			'Czech':               'c/cb/Flag_of_the_Czech_Republic.svg/23px-Flag_of_the_Czech_Republic.svg.png',
