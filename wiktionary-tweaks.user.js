@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.10.2
+// @version      2020.10.10.3
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -38,6 +38,7 @@ $(function() {
 	
 	function getFlagIconURLs() {
 		return {
+			'Afrikaans':           'a/af/Flag_of_South_Africa.svg/23px-Flag_of_South_Africa.svg.png',
 			'Albanian':            '3/36/Flag_of_Albania.svg/21px-Flag_of_Albania.svg.png',
 			'Amharic':             '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Arabic':              '0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png',
@@ -89,7 +90,9 @@ $(function() {
 			'Maltese':             '7/73/Flag_of_Malta.svg/23px-Flag_of_Malta.svg.png',
 			'Mandarin':            'f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png',
 			'Manx':                'b/bc/Flag_of_the_Isle_of_Man.svg/23px-Flag_of_the_Isle_of_Man.svg.png',
+			'Marshallese':         '2/2e/Flag_of_the_Marshall_Islands.svg/23px-Flag_of_the_Marshall_Islands.svg.png',
 			'Mauritian Creole':    '7/77/Flag_of_Mauritius.svg/23px-Flag_of_Mauritius.svg.png',
+			'Middle Dutch':        '2/20/Flag_of_the_Netherlands.svg/23px-Flag_of_the_Netherlands.svg.png',
 			'Middle English':      'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
 			'Middle French':       'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
 			'Moldovan':            '2/27/Flag_of_Moldova.svg/23px-Flag_of_Moldova.svg.png',
@@ -101,6 +104,10 @@ $(function() {
 			'Norwegian Nynorsk':   'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
 			'Old English':         'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
 			'Old French':          'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
+			'Old High German':     'b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png',
+			'Old Irish':           '4/45/Flag_of_Ireland.svg/23px-Flag_of_Ireland.svg.png',
+			'Old Norse':           'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
+			'Old Saxon':           'b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png',
 			'Oromo':               '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Pennsylvania German': 'f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png',
 			'Persian':             'c/ca/Flag_of_Iran.svg/23px-Flag_of_Iran.svg.png',
