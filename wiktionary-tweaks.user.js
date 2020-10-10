@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.10.0
+// @version      2020.10.10.1
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -43,7 +43,8 @@ $(function() {
 			'Amharic':             '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Arabic':              '0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png',
 			'Armenian':            '2/2f/Flag_of_Armenia.svg/23px-Flag_of_Armenia.svg.png',
-			'Azerbaijanian':       'd/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png',
+			'Azerbaijani':         'd/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png',
+			'Basque':              '2/2d/Flag_of_the_Basque_Country.svg/23px-Flag_of_the_Basque_Country.svg.png',
 			'Belarusian':          '8/85/Flag_of_Belarus.svg/23px-Flag_of_Belarus.svg.png',
 			'Breton':              '2/29/Flag_of_Brittany_(Gwenn_ha_du).svg/23px-Flag_of_Brittany_(Gwenn_ha_du).svg.png',
 			'Bulgarian':           '9/9a/Flag_of_Bulgaria.svg/23px-Flag_of_Bulgaria.svg.png',
@@ -84,30 +85,36 @@ $(function() {
 			'Luxembourgish':       'd/da/Flag_of_Luxembourg.svg/23px-Flag_of_Luxembourg.svg.png',
 			'Macedonian':          '7/79/Flag_of_North_Macedonia.svg/23px-Flag_of_North_Macedonia.svg.png',
 			'Malagasy':            'b/bc/Flag_of_Madagascar.svg/23px-Flag_of_Madagascar.svg.png',
-			'Malaysian':           '6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png',
+			'Malay':               '6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png',
 			'Maltese':             '7/73/Flag_of_Malta.svg/23px-Flag_of_Malta.svg.png',
 			'Mandarin':            'f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png',
 			'Manx':                'b/bc/Flag_of_the_Isle_of_Man.svg/23px-Flag_of_the_Isle_of_Man.svg.png',
 			'Mauritian Creole':    '7/77/Flag_of_Mauritius.svg/23px-Flag_of_Mauritius.svg.png',
+			'Middle English':      'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
+			'Middle French':       'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
 			'Moldovan':            '2/27/Flag_of_Moldova.svg/23px-Flag_of_Moldova.svg.png',
 			'Mongolian':           '4/4c/Flag_of_Mongolia.svg/23px-Flag_of_Mongolia.svg.png',
 			'Montenegrin':         '6/64/Flag_of_Montenegro.svg/23px-Flag_of_Montenegro.svg.png',
 			'Nauruan':             '3/30/Flag_of_Nauru.svg/23px-Flag_of_Nauru.svg.png',
 			'Nepalese':            '9/9b/Flag_of_Nepal.svg/16px-Flag_of_Nepal.svg.png',
+			'Norwegian Bokmål':    'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
 			'Norwegian Nynorsk':   'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
+			'Old English':         'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
+			'Old French':          'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
 			'Oromo':               '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Pennsylvania German': 'f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png',
 			'Persian':             'c/ca/Flag_of_Iran.svg/23px-Flag_of_Iran.svg.png',
 			'Polish':              '1/12/Flag_of_Poland.svg/23px-Flag_of_Poland.svg.png',
 			'Portuguese':          '5/5c/Flag_of_Portugal.svg/23px-Flag_of_Portugal.svg.png',
 			'Romanian':            '7/73/Flag_of_Romania.svg/23px-Flag_of_Romania.svg.png',
+			'Romansch':            'f/f3/Flag_of_Switzerland.svg/16px-Flag_of_Switzerland.svg.png',
 			'Russian':             'f/f3/Flag_of_Russia.svg/23px-Flag_of_Russia.svg.png',
 			'Scots':               '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Scottish Gaelic':     '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Serbo-Croatian':      '6/61/Flag_of_Yugoslavia_(1946-1992).svg/23px-Flag_of_Yugoslavia_(1946-1992).svg.png',
 			'Slovakian':           'e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png',
 			'Slovene':             'f/f0/Flag_of_Slovenia.svg/23px-Flag_of_Slovenia.svg.png',
-			'Somalian':            'a/a0/Flag_of_Somalia.svg/23px-Flag_of_Somalia.svg.png',
+			'Somali':              'a/a0/Flag_of_Somalia.svg/23px-Flag_of_Somalia.svg.png',
 			'Spanish':             '9/9a/Flag_of_Spain.svg/23px-Flag_of_Spain.svg.png',
 			'Swedish':             '4/4c/Flag_of_Sweden.svg/23px-Flag_of_Sweden.svg.png',
 			'Taiwanese':           '7/72/Flag_of_the_Republic_of_China.svg/23px-Flag_of_the_Republic_of_China.svg.png',
