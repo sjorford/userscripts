@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.10.3
+// @version      2020.10.18.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -43,6 +43,7 @@ $(function() {
 			'Amharic':             '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Arabic':              '0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png',
 			'Armenian':            '2/2f/Flag_of_Armenia.svg/23px-Flag_of_Armenia.svg.png',
+			'Asturian':            '3/3e/Flag_of_Asturias.svg/23px-Flag_of_Asturias.svg.png',
 			'Azerbaijani':         'd/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png',
 			'Basque':              '2/2d/Flag_of_the_Basque_Country.svg/23px-Flag_of_the_Basque_Country.svg.png',
 			'Belarusian':          '8/85/Flag_of_Belarus.svg/23px-Flag_of_Belarus.svg.png',
