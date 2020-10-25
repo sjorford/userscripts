@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.25.0
+// @version      2020.10.25.1
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -45,6 +45,7 @@ $(function() {
 			'Albanian':            '3/36/Flag_of_Albania.svg/21px-Flag_of_Albania.svg.png',
 			'Amharic':             '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Arabic':              '0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png',
+			'Aragon':              '1/18/Flag_of_Aragon.svg/23px-Flag_of_Aragon.svg.png',
 			'Armenian':            '2/2f/Flag_of_Armenia.svg/23px-Flag_of_Armenia.svg.png',
 			'Asturian':            '3/3e/Flag_of_Asturias.svg/23px-Flag_of_Asturias.svg.png',
 			'Azerbaijani':         'd/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png',
@@ -103,6 +104,7 @@ $(function() {
 			'Nepalese':            '9/9b/Flag_of_Nepal.svg/16px-Flag_of_Nepal.svg.png',
 			'Norwegian Bokmål':    'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
 			'Norwegian Nynorsk':   'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
+			'Occitan':             '6/6d/Flag_of_Occitania_(with_star).svg/23px-Flag_of_Occitania_(with_star).svg.png',
 			'Oromo':               '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Pennsylvania German': 'f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png',
 			'Persian':             'c/ca/Flag_of_Iran.svg/23px-Flag_of_Iran.svg.png',
