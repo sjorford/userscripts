@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.18.0
+// @version      2020.10.25.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -14,7 +14,8 @@ $(function() {
 	$(`<style>
 		.sjo-toc {width: 100%;}
 		.sjo-toc-columns {column-width: 12em;}
-		.sjo-toc-flag {display: inline-block; width: 23px;}
+		.sjo-toc-flag {display: inline-block; width: 23px; box-sizing: border-box; padding-right: 0 !important; margin-right: 0.5em;}
+		.sjo-toc-flag-empty {border: 1px dotted darkgray; height: 14px; vertical-align: middle;}
 	</style>`).appendTo('head');
 	
 	var flagBaseURL = '//upload.wikimedia.org/wikipedia/commons/thumb/';
@@ -32,7 +33,9 @@ $(function() {
 		var marker = link.find('.tocnumber').addClass('sjo-toc-flag').empty();
 		var lang = link.find('.toctext').text().trim();
 		if (flagURLs[lang]) {
-			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(marker); //.wrap('<span class="sjo-flag"></span>');
+			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(marker);
+		} else {
+			marker.addClass('sjo-toc-flag-empty');
 		}
 	});
 	
@@ -93,9 +96,6 @@ $(function() {
 			'Manx':                'b/bc/Flag_of_the_Isle_of_Man.svg/23px-Flag_of_the_Isle_of_Man.svg.png',
 			'Marshallese':         '2/2e/Flag_of_the_Marshall_Islands.svg/23px-Flag_of_the_Marshall_Islands.svg.png',
 			'Mauritian Creole':    '7/77/Flag_of_Mauritius.svg/23px-Flag_of_Mauritius.svg.png',
-			'Middle Dutch':        '2/20/Flag_of_the_Netherlands.svg/23px-Flag_of_the_Netherlands.svg.png',
-			'Middle English':      'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
-			'Middle French':       'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
 			'Moldovan':            '2/27/Flag_of_Moldova.svg/23px-Flag_of_Moldova.svg.png',
 			'Mongolian':           '4/4c/Flag_of_Mongolia.svg/23px-Flag_of_Mongolia.svg.png',
 			'Montenegrin':         '6/64/Flag_of_Montenegro.svg/23px-Flag_of_Montenegro.svg.png',
@@ -103,12 +103,6 @@ $(function() {
 			'Nepalese':            '9/9b/Flag_of_Nepal.svg/16px-Flag_of_Nepal.svg.png',
 			'Norwegian Bokmål':    'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
 			'Norwegian Nynorsk':   'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
-			'Old English':         'b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png',
-			'Old French':          'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
-			'Old High German':     'b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png',
-			'Old Irish':           '4/45/Flag_of_Ireland.svg/23px-Flag_of_Ireland.svg.png',
-			'Old Norse':           'd/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png',
-			'Old Saxon':           'b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png',
 			'Oromo':               '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Pennsylvania German': 'f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png',
 			'Persian':             'c/ca/Flag_of_Iran.svg/23px-Flag_of_Iran.svg.png',
@@ -120,6 +114,7 @@ $(function() {
 			'Scots':               '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Scottish Gaelic':     '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Serbo-Croatian':      '6/61/Flag_of_Yugoslavia_(1946-1992).svg/23px-Flag_of_Yugoslavia_(1946-1992).svg.png',
+			'Slovak':              'e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png',
 			'Slovakian':           'e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png',
 			'Slovene':             'f/f0/Flag_of_Slovenia.svg/23px-Flag_of_Slovenia.svg.png',
 			'Somali':              'a/a0/Flag_of_Somalia.svg/23px-Flag_of_Somalia.svg.png',
