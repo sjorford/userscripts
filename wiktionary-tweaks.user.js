@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.10.25.1
+// @version      2020.11.19.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @grant        none
@@ -45,7 +45,7 @@ $(function() {
 			'Albanian':            '3/36/Flag_of_Albania.svg/21px-Flag_of_Albania.svg.png',
 			'Amharic':             '7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png',
 			'Arabic':              '0/0d/Flag_of_Saudi_Arabia.svg/23px-Flag_of_Saudi_Arabia.svg.png',
-			'Aragon':              '1/18/Flag_of_Aragon.svg/23px-Flag_of_Aragon.svg.png',
+			'Aragonese':           '1/18/Flag_of_Aragon.svg/23px-Flag_of_Aragon.svg.png',
 			'Armenian':            '2/2f/Flag_of_Armenia.svg/23px-Flag_of_Armenia.svg.png',
 			'Asturian':            '3/3e/Flag_of_Asturias.svg/23px-Flag_of_Asturias.svg.png',
 			'Azerbaijani':         'd/dd/Flag_of_Azerbaijan.svg/23px-Flag_of_Azerbaijan.svg.png',
@@ -56,7 +56,6 @@ $(function() {
 			'Burmese':             '8/8c/Flag_of_Myanmar.svg/23px-Flag_of_Myanmar.svg.png',
 			'Cambodian':           '8/83/Flag_of_Cambodia.svg/23px-Flag_of_Cambodia.svg.png',
 			'Catalan':             'c/ce/Flag_of_Catalonia.svg/23px-Flag_of_Catalonia.svg.png',
-			'Central Kurdish':     '3/35/Flag_of_Kurdistan.svg/23px-Flag_of_Kurdistan.svg.png',
 			'Chinese':             'f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png',
 			'Cornish':             'b/b8/Flag_of_Cornwall.svg/23px-Flag_of_Cornwall.svg.png',
 			'Czech':               'c/cb/Flag_of_the_Czech_Republic.svg/23px-Flag_of_the_Czech_Republic.svg.png',
@@ -68,6 +67,7 @@ $(function() {
 			'Filipino':            '9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png',
 			'Finnish':             'b/bc/Flag_of_Finland.svg/23px-Flag_of_Finland.svg.png',
 			'French':              'c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png',
+			'West Frisian':        'c/ca/Frisian_flag.svg/22px-Frisian_flag.svg.png',
 			'Galician':            '6/64/Flag_of_Galicia.svg/23px-Flag_of_Galicia.svg.png',
 			'Georgian':            '0/0f/Flag_of_Georgia.svg/23px-Flag_of_Georgia.svg.png',
 			'German':              'b/ba/Flag_of_Germany.svg/23px-Flag_of_Germany.svg.png',
@@ -85,6 +85,8 @@ $(function() {
 			'Kazakh':              'd/d3/Flag_of_Kazakhstan.svg/23px-Flag_of_Kazakhstan.svg.png',
 			'Korean':              '0/09/Flag_of_South_Korea.svg/23px-Flag_of_South_Korea.svg.png',
 			'Kurdish':             '3/35/Flag_of_Kurdistan.svg/23px-Flag_of_Kurdistan.svg.png',
+			'Central Kurdish':     '3/35/Flag_of_Kurdistan.svg/23px-Flag_of_Kurdistan.svg.png',
+			'Northern Kurdish':    '3/35/Flag_of_Kurdistan.svg/23px-Flag_of_Kurdistan.svg.png',
 			'Laotian':             '5/56/Flag_of_Laos.svg/23px-Flag_of_Laos.svg.png',
 			'Latvian':             '8/84/Flag_of_Latvia.svg/23px-Flag_of_Latvia.svg.png',
 			'Lithuanian':          '1/11/Flag_of_Lithuania.svg/23px-Flag_of_Lithuania.svg.png',
@@ -116,6 +118,7 @@ $(function() {
 			'Scots':               '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Scottish Gaelic':     '1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png',
 			'Serbo-Croatian':      '6/61/Flag_of_Yugoslavia_(1946-1992).svg/23px-Flag_of_Yugoslavia_(1946-1992).svg.png',
+			'Sicilian':            'b/ba/Flag_of_Sicily_%28revised%29.svg/23px-Flag_of_Sicily_%28revised%29.svg.png',
 			'Slovak':              'e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png',
 			'Slovakian':           'e/e6/Flag_of_Slovakia.svg/23px-Flag_of_Slovakia.svg.png',
 			'Slovene':             'f/f0/Flag_of_Slovenia.svg/23px-Flag_of_Slovenia.svg.png',
@@ -127,6 +130,7 @@ $(function() {
 			'Turkish':             'b/b4/Flag_of_Turkey.svg/23px-Flag_of_Turkey.svg.png',
 			'Ukrainian':           '4/49/Flag_of_Ukraine.svg/23px-Flag_of_Ukraine.svg.png',
 			'Uzbek':               '8/84/Flag_of_Uzbekistan.svg/23px-Flag_of_Uzbekistan.svg.png',
+			'Venetian':            'd/d5/Flag_of_Veneto.svg/23px-Flag_of_Veneto.svg.png',
 			'Vietnamese':          '2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png',
 			'Welsh':               'a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg/23px-Flag_of_Wales_%281959%E2%80%93present%29.svg.png',
 		}
