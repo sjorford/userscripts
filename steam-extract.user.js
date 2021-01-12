@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.01.12.0
+// @version        2021.01.12.1
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -90,8 +90,8 @@ $(function() {
 			$.each(globalAchievements, (key, global) => {
 				var mine = myAchievements[key];
 				var row = $('<tr></tr>').appendTo(table);
-				//$('<td></td>').text(gameName).appendTo(row);
-				//$('<td></td>').appendTo(row);
+				$('<td></td>').text(gameName).appendTo(row);
+				$('<td></td>').appendTo(row);
 				$('<td></td>').text(global.name).appendTo(row);
 				$('<td></td>').text(mine ? mine.unlock : '').appendTo(row);
 				$('<td></td>').text(global.desc).appendTo(row);
