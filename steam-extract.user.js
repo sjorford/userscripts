@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.01.12.1
+// @version        2021.01.12.2
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -27,7 +27,7 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	var table;
-	var games = $('.gameListRow');
+	var games = $('.gameListRow:contains("View Stats")');
 	games.find('.bottom_controls').append('<a class="pullup_item sjo-extract" href="#"><div class="menu_ico"><img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/ico_stats.png" width="16" height="16" border="0"></div>Extract stats</a>');
 	
 	$('.sjo-extract').click(event => {
