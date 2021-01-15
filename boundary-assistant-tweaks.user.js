@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Boundary Assistant tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.01.15.0
+// @version      2020.01.15.1
 // @author       Stuart Orford
 // @match        https://boundaryassistant.org/PlanBuilder/index.html?v=1.52
 // @grant        none
@@ -12,7 +12,7 @@
 $(function() {
 	
 	$(`<style>
-		.sjo-label {margin-bottom: auto;}
+		.sjo-label {margin-bottom: auto; width: 100%;}
 	</style>`).appendTo('head');
 	
 	var timer = window.setInterval(addLabels, 1000);
