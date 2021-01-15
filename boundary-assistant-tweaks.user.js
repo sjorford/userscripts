@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Boundary Assistant tweaks
 // @namespace    sjorford@gmail.com
-// @version      2020.01.15.1
+// @version      2020.01.15.2
 // @author       Stuart Orford
 // @match        https://boundaryassistant.org/PlanBuilder/index.html?v=1.52
 // @grant        none
@@ -23,18 +23,19 @@ $(function() {
 		var inputs = $('input[name="constnum"]');
 		if (inputs.length <= 1) return;
 		
-		console.log('addLabels', 'clearInterval');
-		window.clearInterval(timer);
-		
 		inputs.each((i,e) => {
-			console.log('addLabels', i);
+			
 			var input = $(e);
 			var id = input.attr('id');
 			if (!id) {
 				id = 'sjo-constnum-' + i;
 				input.attr('id', id);
 			}
-			input.closest('td').next('td').html((i,html) => `<label class="sjo-label" for="${id}">${html}</label>`);
+			
+			var labelCell = input.closest('td').next('td');
+			if (labelCell.has('label').length > 0) return;
+			labelCell.html((i,html) => `<label class="sjo-label" for="${id}">${html}</label>`);
+			
 		});
 		
 	}
