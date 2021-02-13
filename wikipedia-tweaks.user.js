@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.01.29.0
+// @version        2021.02.13.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -125,8 +125,10 @@ $(function() {
 	*/
 	
 	var wikidataLink = $('#t-wikibase a');
+	var wikidataID;
 	if (wikidataLink.length > 0) {
-		wikidataLink.text('Wikidata ' + wikidataLink.attr('href').match(/Q\d+/)[0]);
+		wikidataID = wikidataLink.attr('href').match(/Q\d+/)[0];
+		wikidataLink.text('Wikidata ' + wikidataID);
 	}
 	
 	/*
@@ -134,5 +136,44 @@ $(function() {
 		$('td').filter((i,e) => e.innerText.trim() == "Fails WP:NFOOTY as the RPFL is now not a WP:FPL league.").closest('tr').hide();
 	}
 	*/
+	
+	window.setTimeout(lords, 1000);
+	function lords() {
+		
+		var data = {};
+		
+		var pageText;
+		var infobox = $('.infobox').first();
+		if (infobox.length > 0) {
+			if (infobox.parent().is('.mw-parser-output')) {
+				pageText = $('.infobox').nextAll().text();
+			} else {
+				pageText = $('.infobox').parentsUntil('.mw-parser-output').last().nextAll().text();
+			}
+		} else {
+			pageText = $('#mw-content-text').text();
+		}
+		pageText = pageText.replace(/\s+/g, ' ').trim();
+		//console.log(pageText.substr(0, 500).replace(/\s+/g, ' '));
+		
+		var pageName = $('#firstHeading').text();
+		[,data.name,data.title] = pageName.match(/^([^,]+)(?:, (Baron[- 'A-Za-z]+))?( \()?/);
+		console.log(data);
+		if (!data.title) {
+			data.title = pageText.match(/(Baron[- 'A-Za-z]+[a-z])/)[1];
+		}
+		console.log(data);
+		
+		[,data.dob,data.dod] = pageText.match(/(?:b(?:\.|orn) |\([^\)]*)(\d\d? \w+ \d{4})(?:[^\)]+?(\d\d? \w+ \d{4}))?/);
+		console.log(data);
+		
+		data.wikidata = wikidataID;
+		
+		var output = $('<textarea style=""></textarea>')
+			.text([data.name, data.title, data.dob, data.dod, data.wikidata].join('\t'))
+			.prependTo('#mw-content-text')
+			.click((event) => event.target.select());
+		
+	}
 	
 });
