@@ -164,7 +164,7 @@ $(function() {
 		}
 		console.log(data);
 		
-		[,data.dob,data.dod] = pageText.match(/(?:b(?:\.|orn) |\([^\)]*)(\d\d? \w+ \d{4})(?:[^\)]+?(\d\d? \w+ \d{4}))?/);
+		[,data.dob,data.dod] = pageText.match(/(?:b(?:\.|orn) |\([^\)]*?)(\d\d? \w+ \d{4})(?:[^\)]+?(\d\d? \w+ \d{4}))?/);
 		console.log(data);
 		
 		data.wikidata = wikidataID;
