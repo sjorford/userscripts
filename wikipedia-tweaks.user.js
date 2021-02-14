@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.02.14.0
+// @version        2021.02.14.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -137,7 +137,8 @@ $(function() {
 	}
 	*/
 	
-	window.setTimeout(lords, 1000);
+	lords();
+	
 	function lords() {
 		
 		var data = {};
@@ -154,18 +155,14 @@ $(function() {
 			pageText = $('#mw-content-text').text();
 		}
 		pageText = pageText.replace(/\s+/g, ' ').trim();
-		//console.log(pageText.substr(0, 500).replace(/\s+/g, ' '));
 		
 		var pageName = $('#firstHeading').text();
 		[,data.name,data.title] = pageName.match(/^([^,(]+)(?:, (Baron[- 'A-Za-z]+))?( \()?/);
-		console.log(data);
 		if (!data.title) {
 			data.title = pageText.match(/(Baron[- 'A-Za-z]+[a-z])/)[1];
 		}
-		console.log(data);
 		
 		[,data.dob,data.dod] = pageText.match(/(?:b(?:\.|orn) |\([^\)]*?)(\d\d? \w+ \d{4})(?:[^\)]+?(\d\d? \w+ \d{4}))?/);
-		console.log(data);
 		
 		data.wikidata = wikidataID;
 		
