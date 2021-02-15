@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.02.14.1
+// @version        2021.02.15.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -157,7 +157,7 @@ $(function() {
 		pageText = pageText.replace(/\s+/g, ' ').trim();
 		
 		var pageName = $('#firstHeading').text();
-		[,data.name,data.title] = pageName.match(/^([^,(]+)(?:, (Baron[- 'A-Za-z]+))?( \()?/);
+		[,data.name,data.title] = pageName.match(/^([^,(]+)(?:, ((?:\d?(?:1st|2nd|3rd|\dth) )?(?:Baron|Viscount|Earl|Countess|Marquess|Duke|Duchess)[- 'A-Za-z]+))?( \()?/);
 		if (!data.title) {
 			data.title = pageText.match(/(Baron[- 'A-Za-z]+[a-z])/)[1];
 		}
