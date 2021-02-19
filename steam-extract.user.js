@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.01.12.2
+// @version        2021.02.19.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @grant          none
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
@@ -60,9 +60,9 @@ $(function() {
 				if (unlockText) {
 					var name = $('.achieveTxt h3', row).text();
 					var desc = $('.achieveTxt h5', row).text();
-					console.log(unlockText);
+					var img = $('.achieveImgHolder img', row).attr('src');
 					var unlock = unlockText.trim().match(/^Unlocked (\d\d? [A-Z][a-z][a-z](?:, \d\d\d\d)?)/)[1];
-					var key = name + '|' + desc;
+					var key = name + '|' + desc + '|' + img;
 					myAchievements[key] = {name: name, desc: desc, unlock: unlock};
 				}
 			});
@@ -77,8 +77,9 @@ $(function() {
 				var row = $(e);
 				var name = $('.achieveTxt h3', row).text();
 				var desc = $('.achieveTxt h5', row).text();
+				var img = $('.achieveImgHolder img', row).attr('src');
 				var percent = $('.achievePercent', row).text();
-				var key = name + '|' + desc;
+				var key = name + '|' + desc + '|' + img;
 				globalAchievements[key] = {name: name, desc: desc, percent: percent};
 			});
 			if (myAchievements) outputTable();
@@ -87,15 +88,35 @@ $(function() {
 		function outputTable() {
 			console.log('myAchievements', myAchievements);
 			console.log('globalAchievements', globalAchievements);
+			
+			var tableData = [];
 			$.each(globalAchievements, (key, global) => {
 				var mine = myAchievements[key];
+				
+				tableData.push({
+					name: global.name,
+					unlock: mine ? mine.unlock : '',
+					desc: global.desc,
+					percent: global.percent,
+				});
+				
+				var dupes = $.grep(tableData, (data,i) => data.name == global.name);
+				if (dupes.length > 1) {
+					$.each(dupes, (i,data) => data.dupe = i + 1);
+				}
+				
+			});
+			console.log('tableData', tableData);
+			
+			$.each(tableData, (i,data) => {
+				var name = data.name + (data.dupe ? ' [' + data.dupe + ']' : '');
 				var row = $('<tr></tr>').appendTo(table);
 				$('<td></td>').text(gameName).appendTo(row);
 				$('<td></td>').appendTo(row);
-				$('<td></td>').text(global.name).appendTo(row);
-				$('<td></td>').text(mine ? mine.unlock : '').appendTo(row);
-				$('<td></td>').text(global.desc).appendTo(row);
-				$('<td></td>').text(global.percent).appendTo(row);
+				$('<td></td>').text(name).appendTo(row);
+				$('<td></td>').text(data.unlock).appendTo(row);
+				$('<td></td>').text(data.desc).appendTo(row);
+				$('<td></td>').text(data.percent).appendTo(row);
 			});
 		}
 		
