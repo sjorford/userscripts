@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2020.09.09.0
+// @version        2021.03.04.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -238,14 +238,18 @@ var debug = false;
 					
 				// Split partners
 				case 'partners':
-					var href2 = a.eq(1).attr('href');
-					return [
-						href.split('/player/')[1].split('.html')[0],
-						text.split(', ')[0],
-						href2.split('/player/')[1].split('.html')[0],
-						text.split(', ')[1].split(' (')[0],
-						parseTeams(text.split(' (')[1].replace(/[)]$/, ''))
-					];
+					if (href) {
+						var href2 = a.eq(1).attr('href');
+						return [
+							href.split('/player/')[1].split('.html')[0],
+							text.split(', ')[0],
+							href2.split('/player/')[1].split('.html')[0],
+							text.split(', ')[1].split(' (')[0],
+							parseTeams(text.split(' (')[1].replace(/[)]$/, ''))
+						];
+					} else {
+						return text;
+					}
 					
 				case 'scorecard':
 					return [
