@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.02.15.1
+// @version        2021.05.30.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -43,6 +43,9 @@ $(function() {
 			width: auto;
 			padding: 0 2px 0 20px;
 		}
+		
+		/* bug in Timeless skin? */
+		.toccolours {display: table-cell;}
 		
 	</style>`).appendTo('head');
 	
@@ -137,7 +140,7 @@ $(function() {
 	}
 	*/
 	
-	lords();
+	//lords();
 	
 	function lords() {
 		
