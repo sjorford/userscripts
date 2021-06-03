@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
 // @include     https://vote-2012.proboards.com/*
-// @version     2020.10.09.1
+// @version     2021.06.03.0
 // @grant       none
 // ==/UserScript==
 
@@ -30,5 +30,14 @@ $(function() {
 		.post .content article h3.title {display: none;}
 		
 	</style>`).appendTo('head');
+	
+	var blocklist = ['carlton43', 'boogieeck'];
+	$('a.user-link, .message span.name').filter((i,e) => blocklist.indexOf(e.innerText.trim()) >= 0).closest('.post').hide();
+	
+	$('li.ui-pagination-page a').click(event => {
+		event.preventDefault();
+		window.location = event.target.href;
+		return false;
+	});
 	
 });
