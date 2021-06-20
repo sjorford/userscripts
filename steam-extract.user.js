@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.06.03.0
+// @version        2021.06.20.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @grant          none
@@ -54,17 +54,16 @@ $(function() {
 		function processMyAchievements(data) {
 			var doc = $(data);
 			console.log('processMyAchievements', doc);
-			myAchievements = {};
+			myAchievements = [];
 			$('.achieveRow', doc).each((i,e) => {
 				var row = $(e);
-				var unlockText = $('.achieveUnlockTime', row).text();
+				var unlockText = $('.achieveUnlockTime', row).text().trim();
 				if (unlockText) {
 					var name = $('.achieveTxt h3', row).text();
 					var desc = $('.achieveTxt h5', row).text();
 					var img = $('.achieveImgHolder img', row).attr('src');
-					var unlock = unlockText.trim().match(/^Unlocked (\d\d? [A-Z][a-z][a-z](?:, \d\d\d\d)?)/)[1];
-					var key = name + '|' + desc + '|' + img;
-					myAchievements[key] = {name: name, desc: desc, unlock: unlock};
+					var unlock = unlockText.match(/^Unlocked (\d\d? [A-Z][a-z][a-z](?:, \d\d\d\d)?)/)[1];
+					myAchievements.push({name: name, desc: desc, img: img, unlock: unlock});
 				}
 			});
 			if (globalAchievements) outputTable();
@@ -73,15 +72,14 @@ $(function() {
 		function processGlobalAchievements(data) {
 			var doc = $(data);
 			console.log('processGlobalAchievements', doc);
-			globalAchievements = {};
+			globalAchievements = [];
 			$('.achieveRow', doc).each((i,e) => {
 				var row = $(e);
 				var name = $('.achieveTxt h3', row).text();
 				var desc = $('.achieveTxt h5', row).text();
 				var img = $('.achieveImgHolder img', row).attr('src');
 				var percent = $('.achievePercent', row).text();
-				var key = name + '|' + desc + '|' + img;
-				globalAchievements[key] = {name: name, desc: desc, percent: percent};
+				globalAchievements.push({name: name, desc: desc, img: img, percent: percent});
 			});
 			if (myAchievements) outputTable();
 		}
@@ -90,26 +88,37 @@ $(function() {
 			console.log('myAchievements', myAchievements);
 			console.log('globalAchievements', globalAchievements);
 			
-			var tableData = [];
-			$.each(globalAchievements, (key, global) => {
-				var mine = myAchievements[key];
-				
-				tableData.push({
-					name: global.name,
-					unlock: mine ? mine.unlock : '',
-					desc: global.desc,
-					percent: global.percent,
+			$.each(myAchievements, (index, mine) => {
+				$.each(globalAchievements, (index, global) => {
+					if (global.matched) return;
+					if (global.name == mine.name && global.img == mine.img) {
+						if (global.desc == mine.desc || global.desc == '') {
+							global.unlock = mine.unlock;
+							if (global.desc == '') global.desc = mine.desc;
+							global.matched = true;
+							mine.matched = true;
+						}
+					}
 				});
-				
-				var dupes = $.grep(tableData, (data,i) => data.name.toLowerCase() == global.name.toLowerCase());
+			});
+			
+			// Add my unmatched achievements
+			$.each(myAchievements, (key, mine) => {
+				if (mine.matched) return;
+				mine.percent = '#N/A';
+				globalAchievements.push(mine);
+			});
+			
+			// Mark duplicate names
+			$.each(globalAchievements, (key, global) => {
+				var dupes = $.grep(globalAchievements, (data,i) => data.name.toLowerCase() == global.name.toLowerCase());
 				if (dupes.length > 1) {
 					$.each(dupes, (i,data) => data.dupe = i + 1);
 				}
-				
 			});
-			console.log('tableData', tableData);
 			
-			$.each(tableData, (i,data) => {
+			console.log('globalAchievements', globalAchievements);
+			$.each(globalAchievements, (i,data) => {
 				var name = data.name + (data.dupe ? ' [' + data.dupe + ']' : '');
 				var row = $('<tr></tr>').appendTo(table);
 				$('<td></td>').text(gameName).appendTo(row);
