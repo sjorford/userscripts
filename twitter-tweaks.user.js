@@ -2,7 +2,7 @@
 // @name        Twitter tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
-// @version     2019.02.17.1
+// @version     2021.06.29.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -36,5 +36,23 @@ $(function() {
 			event.preventDefault();
 		}
 	});
+	
+	var delay = 100;
+	var timer = window.setInterval(notInterested, delay);
+	
+	function notInterested() {
+		var button = $('#topic-not-interested-button0, #topic-not-interested-button1, #topic-not-interested-button2, #topic-not-interested-button3, #topic-not-interested-button4, #topic-not-interested-button5').first();
+		if (button.length > 0) {
+			button.click();
+			delay = 100;
+			window.clearInterval(timer);
+			timer = window.setInterval(notInterested, delay);
+		} else {
+			if (delay < 5000) delay = delay * 2;
+			window.clearInterval(timer);
+			timer = window.setInterval(notInterested, delay);
+		}
+		
+	}
 	
 });
