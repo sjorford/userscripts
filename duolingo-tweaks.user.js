@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Duolingo tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.23.0
+// @version      2021.07.27.0
 // @author       Stuart Orford
-// @match        https://www.duolingo.com/learn
+// @match        https://www.duolingo.com/*
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
