@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Duolingo tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.29.0
+// @version      2021.07.30.0
 // @author       Stuart Orford
 // @match        https://www.duolingo.com/*
 // @grant        none
@@ -33,7 +33,7 @@ $(function() {
 		var wordBank = $('[data-test="word-bank"]').not('.sjo-sorted');
 		if (wordBank.length == 0) {
 			noWordBank++;
-			if (noWordBank >= 300 && delayWordBank == 100) {
+			if (noWordBank >= 3000 && delayWordBank == 100) {
 				window.clearInterval(timerWordBank);
 				delayWordBank = 1000;
 				timerWordBank = window.setInterval(sortWordBank, delayWordBank);
