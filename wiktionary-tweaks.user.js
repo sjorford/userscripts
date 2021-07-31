@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.31.0
+// @version      2021.07.31.1
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @exclude      https://en.wiktionary.org/wiki/*:*
@@ -37,15 +37,26 @@ $(function() {
 		
 		var tocLink = $(e).children('a');
 		var tocMarker = tocLink.find('.tocnumber').addClass('sjo-toc-flag').empty();
-		var heading = $(tocLink.attr('href'));
-		var headingMarker = $('<span class="sjo-heading-flag"></span>').prependTo(heading);
 		
 		var lang = tocLink.find('.toctext').text().trim();
 		if (flagURLs[lang]) {
 			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(tocMarker);
-			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(headingMarker);
 		} else {
 			tocMarker.addClass('sjo-flag-empty');
+		}
+		
+	});
+	
+	$('h2 .mw-headline').each((i,e) => {
+		
+		var heading = $(e);
+		var headingMarker = $('<span class="sjo-heading-flag"></span>').prependTo(heading);
+		
+		var lang = heading.text().trim();
+		console.log(lang);
+		if (flagURLs[lang]) {
+			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(headingMarker);
+		} else {
 			headingMarker.addClass('sjo-flag-empty');
 		}
 		
