@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.28.0
+// @version      2021.07.31.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
+// @exclude      https://en.wiktionary.org/wiki/*:*
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
@@ -18,7 +19,7 @@ $(function() {
 		.sjo-toc-flag img {height: 100%;}
 		.sjo-toc-flag.sjo-flag-empty {border: 1px dotted darkgray; vertical-align: middle;}
 		.sjo-heading-flag {width: 46px; height: 28px; display: inline-block; margin-right: 5px;}
-		.sjo-heading-flag img {height: 100%; position: relative; bottom: 2px; border: 1px solid #eee; border-bottom: none;}
+		.sjo-heading-flag img {max-height: 100%; max-width: 100%; position: relative; bottom: 2px; border: 1px solid #eee; border-bottom: none;}
 		.sjo-heading-flag.sjo-flag-empty {display: none;}
 	</style>`).appendTo('head');
 	
@@ -76,6 +77,7 @@ $(function() {
 			'Esperanto':           'b/b7/Flag_of_Europe.svg/230px-Flag_of_Europe.svg.png',
 			'Faroese':             '3/3c/Flag_of_the_Faroe_Islands.svg/210px-Flag_of_the_Faroe_Islands.svg.png',
 			'Filipino':            '9/99/Flag_of_the_Philippines.svg/230px-Flag_of_the_Philippines.svg.png',
+			'Tagalog':             '9/99/Flag_of_the_Philippines.svg/230px-Flag_of_the_Philippines.svg.png',
 			'Finnish':             'b/bc/Flag_of_Finland.svg/230px-Flag_of_Finland.svg.png',
 			'French':              'c/c3/Flag_of_France.svg/230px-Flag_of_France.svg.png',
 			'West Frisian':        'c/ca/Frisian_flag.svg/220px-Frisian_flag.svg.png',
