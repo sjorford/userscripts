@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.31.1
+// @version      2021.07.31.2
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @exclude      https://en.wiktionary.org/wiki/*:*
@@ -81,6 +81,7 @@ $(function() {
 			'Catalan':             'c/ce/Flag_of_Catalonia.svg/230px-Flag_of_Catalonia.svg.png',
 			'Chinese':             'f/fa/Flag_of_the_People%27s_Republic_of_China.svg/230px-Flag_of_the_People%27s_Republic_of_China.svg.png',
 			'Cornish':             'b/b8/Flag_of_Cornwall.svg/230px-Flag_of_Cornwall.svg.png',
+			'Corsican':            '7/7c/Flag_of_Corsica.svg/383px-Flag_of_Corsica.svg.png',
 			'Czech':               'c/cb/Flag_of_the_Czech_Republic.svg/230px-Flag_of_the_Czech_Republic.svg.png',
 			'Danish':              '9/9c/Flag_of_Denmark.svg/200px-Flag_of_Denmark.svg.png',
 			'Dutch':               '2/20/Flag_of_the_Netherlands.svg/230px-Flag_of_the_Netherlands.svg.png',
