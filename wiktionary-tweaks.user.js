@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.07.31.2
+// @version      2021.08.01.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @exclude      https://en.wiktionary.org/wiki/*:*
@@ -106,6 +106,7 @@ $(function() {
 			'Indonesian':          '9/9f/Flag_of_Indonesia.svg/230px-Flag_of_Indonesia.svg.png',
 			'Irish':               '4/45/Flag_of_Ireland.svg/230px-Flag_of_Ireland.svg.png',
 			'Italian':             '0/03/Flag_of_Italy.svg/230px-Flag_of_Italy.svg.png',
+			'Jamaican Creole':     '0/0a/Flag_of_Jamaica.svg/383px-Flag_of_Jamaica.svg.png',
 			'Japanese':            '9/9e/Flag_of_Japan.svg/230px-Flag_of_Japan.svg.png',
 			'Kazakh':              'd/d3/Flag_of_Kazakhstan.svg/230px-Flag_of_Kazakhstan.svg.png',
 			'Korean':              '0/09/Flag_of_South_Korea.svg/230px-Flag_of_South_Korea.svg.png',
@@ -129,6 +130,7 @@ $(function() {
 			'Montenegrin':         '6/64/Flag_of_Montenegro.svg/230px-Flag_of_Montenegro.svg.png',
 			'Nauruan':             '3/30/Flag_of_Nauru.svg/230px-Flag_of_Nauru.svg.png',
 			'Nepali':              '9/9b/Flag_of_Nepal.svg/160px-Flag_of_Nepal.svg.png',
+			'Yoruba':              '7/79/Flag_of_Nigeria.svg/383px-Flag_of_Nigeria.svg.png',
 			'Norwegian Bokmål':    'd/d9/Flag_of_Norway.svg/210px-Flag_of_Norway.svg.png',
 			'Norwegian Nynorsk':   'd/d9/Flag_of_Norway.svg/210px-Flag_of_Norway.svg.png',
 			'Occitan':             '6/6d/Flag_of_Occitania_(with_star).svg/230px-Flag_of_Occitania_(with_star).svg.png',
@@ -140,6 +142,7 @@ $(function() {
 			'Romanian':            '7/73/Flag_of_Romania.svg/230px-Flag_of_Romania.svg.png',
 			'Romansch':            'f/f3/Flag_of_Switzerland.svg/160px-Flag_of_Switzerland.svg.png',
 			'Russian':             'f/f3/Flag_of_Russia.svg/230px-Flag_of_Russia.svg.png',
+			'Sardinian':           '4/4e/Flag_of_Sardinia%2C_Italy.svg/375px-Flag_of_Sardinia%2C_Italy.svg.png',
 			'Scots':               '1/10/Flag_of_Scotland.svg/230px-Flag_of_Scotland.svg.png',
 			'Scottish Gaelic':     '1/10/Flag_of_Scotland.svg/230px-Flag_of_Scotland.svg.png',
 			'Serbo-Croatian':      '6/61/Flag_of_Yugoslavia_(1946-1992).svg/230px-Flag_of_Yugoslavia_(1946-1992).svg.png',
@@ -152,6 +155,7 @@ $(function() {
 			'Swedish':             '4/4c/Flag_of_Sweden.svg/230px-Flag_of_Sweden.svg.png',
 			'Taiwanese':           '7/72/Flag_of_the_Republic_of_China.svg/230px-Flag_of_the_Republic_of_China.svg.png',
 			'Thai':                'a/a9/Flag_of_Thailand.svg/230px-Flag_of_Thailand.svg.png',
+			'Tok Pisin':           'e/e3/Flag_of_Papua_New_Guinea.svg/340px-Flag_of_Papua_New_Guinea.svg.png',
 			'Turkish':             'b/b4/Flag_of_Turkey.svg/230px-Flag_of_Turkey.svg.png',
 			'Ukrainian':           '4/49/Flag_of_Ukraine.svg/230px-Flag_of_Ukraine.svg.png',
 			'Uzbek':               '8/84/Flag_of_Uzbekistan.svg/230px-Flag_of_Uzbekistan.svg.png',
