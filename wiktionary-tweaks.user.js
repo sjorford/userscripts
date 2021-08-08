@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.08.01.0
+// @version      2021.08.08.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @exclude      https://en.wiktionary.org/wiki/*:*
@@ -53,7 +53,6 @@ $(function() {
 		var headingMarker = $('<span class="sjo-heading-flag"></span>').prependTo(heading);
 		
 		var lang = heading.text().trim();
-		console.log(lang);
 		if (flagURLs[lang]) {
 			$('<img></img>').attr('src', flagBaseURL + flagURLs[lang]).appendTo(headingMarker);
 		} else {
@@ -61,6 +60,15 @@ $(function() {
 		}
 		
 	});
+	
+	window.setTimeout(resetScroll, 0);
+	
+	function resetScroll() {
+		if (window.location.hash) {
+			var heading = $('.mw-headline').filter((i,e) => ('#' + e.id) == window.location.hash);
+			if (heading.length > 0) heading[0].scrollIntoView();
+		}
+	}
 	
 	function getFlagIconURLs() {
 		return {
