@@ -2,7 +2,7 @@
 // @name           OpenStreetMap history
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.08.09.0
+// @version        2021.08.09.1
 // @match          https://www.openstreetmap.org/*
 // @grant          none
 // ==/UserScript==
@@ -25,8 +25,8 @@ $(function() {
 	
 	function markupHistory() {
 		
-	var log = $('.browse-node, .browse-way, .browse-relation');
-	log.each((i,e) => {
+	var log = $('.browse-node, .browse-way, .browse-relation').not('.sjo-processed');
+	log.addClass('sjo-processed').each((i,e) => {
 		
 		var thisTable = log.eq(i).find('.browse-tag-list');
 		if (thisTable.length == 0) {
