@@ -2,7 +2,7 @@
 // @name           OpenStreetMap history
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.07.16.0
+// @version        2021.08.09.0
 // @match          https://www.openstreetmap.org/*
 // @grant          none
 // ==/UserScript==
@@ -16,7 +16,16 @@ $(function() {
 		.sjo-history-bearing {display: inline-block;}
 	</style>`).appendTo('head');
 	
-	var log = $('.browse-node, .browse-way');
+	$('.secondary-actions a[href$="/history"]').click(event => {
+		var timer = window.setInterval(markupHistory, 100);
+		window.setTimeout(() => {window.clearInterval(timer);}, 5000);
+	});
+	
+	markupHistory();
+	
+	function markupHistory() {
+		
+	var log = $('.browse-node, .browse-way, .browse-relation');
 	log.each((i,e) => {
 		
 		var thisTable = log.eq(i).find('.browse-tag-list');
@@ -65,6 +74,8 @@ $(function() {
 		}
 		
 	});
+	
+	}
 	
 	// https://www.movable-type.co.uk/scripts/latlong.html
 	function geoChange(lat1, lon1, lat2, lon2) {
