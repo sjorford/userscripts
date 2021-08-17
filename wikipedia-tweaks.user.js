@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.08.06.0
+// @version        2021.08.17.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -31,6 +31,7 @@ $(function() {
 		.toccolours {display: table-cell;}
 		
 		.mw-category-group h3 {display: none;}
+		.read-more-container {display: none;}
 		
 	</style>`).appendTo('head');
 	
