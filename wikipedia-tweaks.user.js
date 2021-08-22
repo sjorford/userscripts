@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.08.17.0
+// @version        2021.08.18.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -16,10 +16,9 @@ $(function() {
 		
 	$(`<style>
 		
-		/* th > div.plainlinks.hlist.navbar.mini {display: none;} */
+		th > div.plainlinks.hlist.navbar-mini {display: none;}
 		#pt-userpage, #pt-mytalk, #pt-sandbox, #pt-mycontris, #pt-watchlist {display: none;}
 		/* #mw-page-header-links, .mw-editsection {display: none;} */
-		/* .navbar-mini {display: none !important;} */
 		
 		#ca-history a {
 			text-indent: inherit;
