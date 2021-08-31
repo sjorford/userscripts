@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           David Boothroyd tweaks
 // @namespace      sjorford@gmail.com
-// @version        2021.08.31.0
+// @version        2021.08.31.1
 // @author         Stuart Orford
 // @match          https://www.localcouncils.co.uk/*
 // @grant          none
@@ -17,7 +17,7 @@ $(function() {
 	var list = $('h2:contains("Result") + ul');
 	list.find('li').each((i,e) => {
 		
-		e.innerHTML = e.innerHTML.replace(/((?:[A-Z&]\S+ )+)((?:ward|division) )/, '<strong>$1</strong>$2');
+		e.innerHTML = e.innerHTML.replace(/\b((?:[A-Z&]\S+ |and )+)((?:ward|division) )/, '<strong>$1</strong>$2');
 		
 		var dateMatch = e.innerText.match(/\d{1,2} [JFMASOND][a-z]+( \d{4})?/);
 		if (dateMatch) {
