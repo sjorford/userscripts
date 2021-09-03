@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wiktionary tweaks
 // @namespace    sjorford@gmail.com
-// @version      2021.08.08.0
+// @version      2021.09.03.0
 // @author       Stuart Orford
 // @match        https://en.wiktionary.org/wiki/*
 // @exclude      https://en.wiktionary.org/wiki/*:*
@@ -169,7 +169,7 @@ $(function() {
 			'Uzbek':               '8/84/Flag_of_Uzbekistan.svg/230px-Flag_of_Uzbekistan.svg.png',
 			'Venetian':            'd/d5/Flag_of_Veneto.svg/230px-Flag_of_Veneto.svg.png',
 			'Vietnamese':          '2/21/Flag_of_Vietnam.svg/230px-Flag_of_Vietnam.svg.png',
-			'Welsh':               'a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg/230px-Flag_of_Wales_%281959%E2%80%93present%29.svg.png',
+			'Welsh':               'd/dc/Flag_of_Wales.svg/383px-Flag_of_Wales.svg.png',
 		}
 	}
 	
