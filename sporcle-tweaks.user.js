@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.09.09.0
+// @version        2021.09.07.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -23,6 +23,12 @@ jQuery(function() {
 		},
 		'/PumpkinBomb/summerolympics': {
 			moreColumns: true,
+		},
+		'/Bumble/worldcupteams': {
+			styles: `
+			th.h_name,  td.d_name  {width: 15%;} 
+			th.h_value, td.d_value {width: 55%;} 
+			th.h_extra, td.d_extra {width: 30%;}`
 		},
 		'/ateweston85/european-cup--champions-league-semi-finalists': {
 			moreColumns: true, 
