@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.0
+// @version        2021.09.08.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -17,29 +17,6 @@
 var debug = false;
 
 (function($) {
-	
-	var teamsMap = {
-		'AFR':		'',
-		'ASIA':		'',
-		'AUS':		'Aus',
-		'BDESH':	'Ban',
-		'BMUDA':	'Ber',
-		'ENG':		'Eng',
-		'HKG':		'HK',
-		'ICC': 		'',
-		'INDIA': 	'Ind',
-		'KENYA':	'Ken',
-		'NL':		'Neth',
-		'PAK':		'Pak',
-		'PNG':		'PNG',
-		'NZ':		'NZ',
-		'SA':		'SA',
-		'SL':		'SL',
-		'UAE':		'UAE',
-		'WI':		'WI',
-		'WORLD': 	'',
-		'ZIM':		'Zim',
-	};
 	
 	// Process all tables
 	$('.engineTable').each(function (index, element) {
@@ -137,18 +114,7 @@ var debug = false;
 		}
 			
 		function parseTeams(teams) {
-			var newArray = [];
-			teams.split('/').forEach(function(element) {
-				var teamKey = element.toUpperCase();
-				if (teamsMap.hasOwnProperty(teamKey)) {
-					if (teamsMap[teamKey] !== '') {
-						newArray.push(teamsMap[teamKey]);
-					}
-				} else {
-					newArray.push(element.toProperCase());
-				}
-			});
-			return newArray.join('/');
+			return teams;
 		}
 		
 		function parseCell(index, element) {
