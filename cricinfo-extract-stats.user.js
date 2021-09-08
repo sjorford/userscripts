@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.3
+// @version        2021.09.08.4
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -22,6 +22,9 @@ var debug = false;
 	$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 	
 	var mainTable = $('tr.data1').closest('.engineTable');
+	if (mainTable.length == 0) return;
+	
+	findMatchIDs(document);
 	processTable(mainTable);
 	
 	// Add a button to retrieve all pages
@@ -55,6 +58,7 @@ var debug = false;
 			$.get(pageURL, data => {
 				console.log('processing...');
 				var doc = $(data);
+				findMatchIDs(doc);
 				var newHTML = doc.find('tr.data1').closest('tbody').html();
 				mainTable.find('tbody').append(newHTML);
 				nextPage++;
@@ -63,6 +67,19 @@ var debug = false;
 			
 		}
 		
+	}
+	
+	// Find match number from popup menu
+	function findMatchIDs(doc) {
+		$('.data1', doc).each((i,e) => {
+			var tr = $(e);
+			var matchLink = $('#engine-dd' + (i + 1), doc).find('a[href*="/match/"]');
+			if (matchLink.length > 0) {
+				var matchID = matchLink.attr('href').split('/match/')[1].split('.html')[0];
+				console.log(matchID);
+				tr.attr('data-sjo-matchid', matchID);
+			}
+		});
 	}
 	
 	// ==============================================================
@@ -142,10 +159,8 @@ var debug = false;
 			}
 			
 			// Find match number from popup menu
-			var match = $('#engine-dd' + (index + 1)).find('a[href*="/match/"]');
-			if (match.length > 0) {
-				results.push(match.attr('href').split('/match/')[1].split('.html')[0]);
-			}
+			var matchID = thisRow.data('sjo-matchid');
+			if (matchID) results.push(matchID);
 			
 			// Add data to export row
 				var exportRow = $('<tr></tr>').appendTo(exportTable);
