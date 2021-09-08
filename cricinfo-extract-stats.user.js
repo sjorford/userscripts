@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.8
+// @version        2021.09.08.9
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -255,10 +255,11 @@ var debug = false;
 					}
 					
 				case 'score':
-					if (text == '-' || text == 'DNB' || text == 'TDNB') {
-						return ['-', '', ''];
+					var scoreParts = text.match(/^(\d+)(?:\/(\d+))?(d)?$/);
+					if (!scoreParts) {
+						return [text, '', ''];
 					} else {
-						return text.match(/^(\d+)(?:\/(\d+))?(d)?$/).slice(1);
+						return scoreParts.slice(1);
 					}
 					
 				// Split fielding figures into total/catches/stumpings
