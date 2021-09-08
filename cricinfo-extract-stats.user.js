@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.2
+// @version        2021.09.08.3
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -18,6 +18,8 @@
 var debug = false;
 
 (function($) {
+	
+	$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 	
 	var mainTable = $('tr.data1').closest('.engineTable');
 	processTable(mainTable);
@@ -42,7 +44,10 @@ var debug = false;
 		getNextPage();
 		
 		function getNextPage() {
-			if (nextPage > numPages[2]) return;
+			if (nextPage > numPages[2]) {
+				processTable(mainTable);
+				return;
+			}
 			
 			var pageURL = baseURL.replace(/\bpage=\d+/, 'page=' + nextPage);
 			console.log(pageURL);
@@ -93,6 +98,7 @@ var debug = false;
 		exportTable.selectRange();
 
 		function createExportBox() {
+			$('.sjobox').remove();
 			
 			// Add export table
 			exportTable = $('<table class="sjotable"></table>')
@@ -101,7 +107,6 @@ var debug = false;
 				.click(function() {
 					selectRange(this);
 				});
-			$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 				
 		}
 		
