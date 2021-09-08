@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.03.04.0
+// @version        2021.09.08.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -267,6 +267,13 @@ var debug = false;
 						return [''].concat(text.split(' '));
 					} else {
 						return text.replace(' & ', ' ').split(' ');
+					}
+					
+				case 'overs':
+					if (text.match(/x/)) {
+						return text.split('x');
+					} else {
+						return [text, ''];
 					}
 					
 				case '':
