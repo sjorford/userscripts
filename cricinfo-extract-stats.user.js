@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.5
+// @version        2021.09.08.6
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -122,7 +122,7 @@ var debug = false;
 				.appendTo('#ciHomeContent, #scrumContent')
 				.wrap('<div class="sjobox" style="display: inline-block; border: 1px solid blue; background-color: white; font-size: 8pt; overflow: scroll; max-height: 200px;"></div>')
 				.click(function() {
-					selectRange(this);
+					exportTable.selectRange();
 				});
 				
 		}
