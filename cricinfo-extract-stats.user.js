@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.1
+// @version        2021.09.08.2
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -11,6 +11,7 @@
 // @include        https://stats.espnscrum.com/*
 // @run-at         document-end
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @grant          none
 // ==/UserScript==
 
@@ -18,14 +19,49 @@ var debug = false;
 
 (function($) {
 	
-	// Process all tables
-	$('.engineTable').each(function (index, element) {
-		processTable($(element));
-	});
-
-	// Select the data for copying
-	selectRange('.sjotable');
-
+	var mainTable = $('tr.data1').closest('.engineTable');
+	processTable(mainTable);
+	
+	// Add a button to retrieve all pages
+	var paginationTable = $('a.PaginationLink').first().closest('.engineTable');
+	var numPages = paginationTable.find('td').first().text().trim().match(/^Page (\d+) of (\d+)$/)
+	if (numPages && numPages[1] === '1') {
+		var allPagesButton = $('<a class="PaginationLink" href="#">Retrieve all pages</a>')
+				.insertAfter(paginationTable).click(retrieveAllPages);
+	}
+	
+	function retrieveAllPages(event) {
+		event.preventDefault();
+		
+		allPagesButton.hide();
+		numPages[1] = numPages[1] - 0;
+		numPages[2] = numPages[2] - 0;
+		
+		var baseURL = $('a.PaginationLink').filter((i,e) => e.innerText.trim() == 'Next').attr('href');
+		var nextPage = 2;
+		getNextPage();
+		
+		function getNextPage() {
+			if (nextPage > numPages[2]) return;
+			
+			var pageURL = baseURL.replace(/\bpage=\d+/, 'page=' + nextPage);
+			console.log(pageURL);
+			
+			$.get(pageURL, data => {
+				console.log('processing...');
+				var doc = $(data);
+				var newHTML = doc.find('tr.data1').closest('tbody').html();
+				mainTable.find('tbody').append(newHTML);
+				nextPage++;
+				getNextPage();
+			});
+			
+		}
+		
+	}
+	
+	// ==============================================================
+	
 	function processTable(mainTable) {
 		if (debug) console.log('processTable', mainTable);
 		
@@ -54,7 +90,8 @@ var debug = false;
 		
 		// Process data rows
 		mainTable.find('.data1, .data2').each(processRow);
-		
+		exportTable.selectRange();
+
 		function createExportBox() {
 			
 			// Add export table
@@ -256,14 +293,6 @@ var debug = false;
 				
 		}
 		
-	}
-	
-	function selectRange(element) {
-		var range = document.createRange();
-		range.selectNodeContents($(element).get(0));
-		var selection = window.getSelection();        
-		selection.removeAllRanges();
-		selection.addRange(range);
 	}
 	
 })($.noConflict());
