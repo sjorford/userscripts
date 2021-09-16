@@ -2,14 +2,19 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.09.07.0
+// @version        2021.09.16.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
 
 jQuery(function() {
-	
 	var $ = jQuery;
+	
+	$(`<style>
+		#bg-temp.shifted {margin-top: auto;}
+		#leaderboard-wrapper {display: none;}
+		.sjo-hint {color: #bbb;}
+	</style>`).appendTo('head');
 	
 	$('.mainNav:has(:contains("Live Trivia")) .dropdown').remove();
 	
@@ -60,6 +65,28 @@ jQuery(function() {
 				replace: /^\d+\)\s*|,\s*[A-Z]{2}$/g,
 			},
 		},
+		'/guilherme_4/us-cities-by-n-states': {
+			hints: ['NY', 'NC', 'NV', 'NM', 'NE', 'NC', 'NV', 'NJ', 'NC', 'NJ', 'NE', 'NC', 'NY', 'NV', 'NV', 'NC', 'NY', 'NY', 'NC', 'NC', 'NJ', 'NY', 'NJ', 'ND', 'NH', 'NC', 'NC', 'NM', 'NV', 'NJ', 'NC', 'NM'],
+		},
+		'/Unidentifiedkiwi/ultimate_usmetro': {
+			hints: ['NY-NJ-PA', 'CA', 'IL-IN-WI', 'TX', 'TX', 'PA-NJ-DE-MD', 'DC-VA-MD-WV', 'FL', 'GA', 'MA-NH', 'CA', 'CA', 'MI', 'AZ', 'WA', 'MN-WI', 'CA', 'FL', 'MO-IL', 'MD', 'CO', 'PA', 'OR-WA', 'TX', 'CA', 'FL', 'OH-KY-IN', 'OH', 'MO-KS', 'NV', 'CA', 'OH', 'NC-SC', 'TX', 'IN', 'VA-NC', 'TN', 'RI-MA', 'WI', 'FL', 'TN-MS-AR', 'KY-IN', 'OK', 'VA', 'CT', 'LA', 'NC', 'UT', 'NY', 'AL', 'NY', 'AZ', 'HI', 'OK', 'CA', 'CT', 'NM', 'NE-IA', 'NY', 'CT', 'CA', 'OH', 'CA', 'PA-NJ', 'TX', 'LA', 'MA', 'TX', 'MI', 'SC', 'NC', 'AR', 'FL', 'TN', 'OH', 'CA', 'MA', 'SC', 'NY', 'NY', 'CO', 'OH', 'SC', 'FL', 'ID', 'KS', 'FL', 'IA', 'WI', 'PA', 'OH-PA', 'GA-SC', 'UT', 'PA', 'MS', 'FL', 'UT', 'TN-GA', 'PA', 'CA', 'ME', 'NC', 'FL', 'CA', 'NC', 'KY', 'AR-MO', 'WA', 'MI', 'FL', 'CA', 'MO', 'PA', 'TX', 'NV', 'NC', 'FL', 'CA', 'AL', 'MI', 'CA', 'IN', 'CA', 'TX', 'PA', 'AL', 'TX', 'OH', 'LA', 'NH', 'OR', 'TX', 'AK', 'IA-IL', 'IL', 'AL', 'NC', 'FL', 'NC', 'NJ', 'NC', 'IN-KY', 'GA', 'OR', 'IL', 'MI', 'FL', 'MI', 'FL', 'IN-MI', 'TN-VA', 'WI', 'VA', 'NE', 'CO', 'WV', 'GA-AL', 'AR-OK', 'CO', 'NY', 'TX', 'WV-KY-OH', 'SC', 'PA', 'MN-WI', 'TN-KY', 'LA', 'SC', 'NJ', 'CT', 'CA', 'MD-WV', 'FL', 'MI', 'CA', 'WA', 'IA', 'CA', 'CO', 'WA', 'TX', 'WA', 'VA', 'TX', 'MS', 'NY', 'WA', 'TX', 'KS', 'GA', 'SD', 'IL', 'TX', 'WI', 'AL', 'CA', 'TX', 'MA', 'NM', 'TX'],
+		},
+		'us_cities_official_2010_population': {
+			hints: ['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'FL', 'IN', 'CA', 'TX', 'OH', 'TX', 'NC', 'MI', 'TX', 'TN', 'MD', 'MA', 'WA', 'DC', 'TN', 'CO', 'KY', 'WI', 'OR', 'NV', 'OK', 'NM', 'AZ', 'CA', 'CA', 'CA', 'MO', 'AZ', 'VA', 'GA', 'CO', 'NE', 'NC', 'FL', 'OH', 'OK', 'CA', 'HI', 'MN', 'KS', 'TX', 'CA', 'LA', 'CA', 'FL', 'CO', 'CA', 'MO', 'PA', 'TX', 'CA', 'OH', 'KY', 'AK', 'CA', 'OH', 'MN', 'NJ', 'NC', 'NY', 'TX', 'NE', 'NV', 'IN', 'NJ', 'FL', 'CA', 'VA', 'FL', 'AZ', 'TX', 'WI', 'NC', 'TX', 'LA', 'NC', 'TX', 'AZ', 'NV', 'FL', 'VA', 'AZ', 'NV', 'TX', 'CA', 'CA', 'AL', 'NY', 'CA', 'WA', 'AZ', 'VA', 'AL', 'ID', 'VA', 'IA', 'CA', 'NC', 'LA', 'OH', 'WA', 'IL', 'CA', 'CA', 'NY', 'GA', 'AL', 'AR', 'CA', 'CA', 'TX', 'CA', 'GA', 'MI', 'UT', 'FL', 'MA', 'VA', 'AL', 'TN', 'RI', 'CA', 'TX', 'TX', 'MS', 'KS', 'CA', 'CA', 'TN', 'CA', 'FL', 'CA', 'FL', 'CA', 'WA', 'AZ', 'MO', 'CA', 'OR', 'FL', 'OR', 'FL', 'AZ', 'SD', 'MA', 'CA', 'IL', 'CA', 'CA', 'CA', 'CA', 'TX', 'IL', 'NJ', 'KS', 'CA', 'NY', 'CT', 'CA', 'CO', 'CA', 'CO', 'IL', 'OH', 'FL', 'CA', 'VA', 'TX', 'VA', 'CA', 'CA', 'GA', 'NC', 'CA', 'MI', 'TN', 'TX', 'TX', 'CT', 'MI', 'UT', 'SC', 'TX', 'KS', 'CA', 'IA', 'KS', 'NJ', 'TX', 'CT'],
+		},
+		'100_us_cities': {
+			hints: ['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'CA', 'IN', 'OH', 'TX', 'NC', 'WA', 'CO', 'TX', 'MI', 'DC', 'MA', 'TN', 'TN', 'OR', 'OK', 'NV', 'MD', 'KY', 'WI', 'NM', 'AZ', 'CA', 'CA', 'MO', 'CA', 'AZ', 'GA', 'CO', 'VA', 'NC', 'NE', 'FL', 'CA', 'MN', 'OK', 'KS', 'LA', 'TX', 'OH', 'CA', 'FL', 'CO', 'HI', 'CA', 'CA', 'TX', 'CA', 'MO', 'KY', 'CA', 'PA', 'MN', 'AK', 'OH', 'NV', 'NC', 'TX', 'NJ', 'OH', 'NE', 'FL', 'CA', 'NJ', 'AZ', 'IN', 'NY', 'NC', 'FL', 'CA', 'TX', 'TX', 'WI', 'AZ', 'VA', 'NV', 'NC', 'AZ', 'FL', 'TX', 'AZ', 'TX', 'VA', 'NV', 'CA', 'LA', 'VA', 'ID', 'CA'],
+		},
+		'us_cities_by_peak_rank': {
+			hints: ['NY', 'CA', 'IL', 'PA', 'MD', 'MA', 'LA', 'NY', 'TX', 'MI', 'MO', 'SC', 'OH', 'AZ', 'CA', 'OH', 'PA', 'TX', 'TX', 'MA', 'PA', 'CA', 'PA', 'NY', 'RI', 'DC', 'RI', 'NY', 'PA', 'CA', 'VA', 'MA', 'FL', 'IN', 'WI', 'NJ', 'KY', 'VA', 'MA', 'MA', 'PA', 'TX', 'TN', 'NH', 'MA', 'OH', 'MN', 'ME', 'TX', 'MA', 'NC', 'VA', 'CT', 'NY', 'NY', 'GA', 'MA', 'TX', 'WA', 'MO', 'NY', 'DC', 'CT', 'NE', 'VA', 'CO', 'MN', 'CT', 'PA', 'NY', 'OR', 'GA', 'MA', 'NY'],
+		},
+		'1mil_europe': {
+			hints: ['Russia', 'Turkey', 'UK', 'France', 'Spain', 'Germany', 'Russia', 'Italy', 'Germany', 'Spain', 'Germany', 'Italy', 'Italy', 'Greece', 'Ukraine', 'Germany', 'Netherlands', 'UK', 'UK', 'Germany', 'Hungary', 'Portugal', 'Netherlands', 'Poland', 'Germany', 'Poland', 'Germany', 'Romania', 'Austria', 'Sweden', 'UK', 'Belgium', 'Belarus', 'France', 'UK', 'Russia', 'Spain', 'Italy', 'Ukraine', 'France', 'UK', 'Denmark', 'Germany', 'UK', 'Ukraine', 'UK', 'Russia', 'Russia', 'Serbia', 'Czechia', 'Ukraine', 'Switzerland', 'Ireland', 'UK', 'Bulgaria', 'Russia', 'Spain', 'France', 'Russia', 'Finland', 'Russia', 'Germany', 'Norway', 'Portugal', 'Germany', 'UK', 'Russia', 'Russia', 'Ukraine', 'Russia', 'Russia', 'Belgium', 'France', 'France', 'Spain'],
+		},
+		'european_cup__champions_league_semi_finalists': {
+			hints: ['ESP', 'FRA', 'SCO', 'ITA', 'ESP', 'ITA', 'ENG', 'SRB', 'ESP', 'ITA', 'ENG', 'HUN', 'ESP', 'FRA', 'ESP', 'SUI', 'ESP', 'GER', 'ESP', 'SCO', 'POR', 'ESP', 'GER', 'AUT', 'POR', 'ESP', 'BEL', 'ENG', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ESP', 'GER', 'SUI', 'ITA', 'POR', 'ENG', 'HUN', 'ESP', 'SRB', 'ITA', 'ENG', 'SCO', 'ITA', 'CZE', 'BUL', 'ENG', 'POR', 'ITA', 'ESP', 'ITA', 'NED', 'ENG', 'SVK', 'NED', 'SCO', 'ENG', 'POL', 'NED', 'GRE', 'ESP', 'SRB', 'NED', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ENG', 'ESP', 'GER', 'ESP', 'SCO', 'HUN', 'GER', 'ENG', 'ESP', 'FRA', 'GER', 'FRA', 'NED', 'ESP', 'ENG', 'GER', 'UKR', 'SUI', 'ENG', 'BEL', 'GER', 'ITA', 'ENG', 'SWE', 'AUT', 'GER', 'ENG', 'GER', 'NED', 'ESP', 'ENG', 'ESP', 'GER', 'ITA', 'ENG', 'GER', 'BEL', 'BUL', 'GER', 'ITA', 'ESP', 'POL', 'ENG', 'ITA', 'ROM', 'SCO', 'ITA', 'ENG', 'FRA', 'GRE', 'ROM', 'ESP', 'BEL', 'SWE', 'POR', 'GER', 'UKR', 'ESP', 'NED', 'POR', 'ESP', 'ROM', 'ITA', 'ROM', 'TUR', 'ESP', 'ITA', 'POR', 'GER', 'FRA', 'SRB', 'FRA', 'GER', 'RUS', 'ESP', 'ITA', 'SRB', 'CZE', 'FRA', 'ITA', 'SWE', 'SCO', 'ITA', 'ESP', 'FRA', 'POR', 'NED', 'ITA', 'GER', 'FRA', 'ITA', 'NED', 'FRA', 'GRE', 'GER', 'ITA', 'NED', 'ENG', 'ESP', 'ITA', 'GER', 'FRA', 'ENG', 'GER', 'UKR', 'ITA', 'ESP', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ENG', 'ESP', 'ESP', 'GER', 'ESP', 'ENG', 'ITA', 'ITA', 'ITA', 'ESP', 'POR', 'FRA', 'ENG', 'ESP', 'ENG', 'ITA', 'ENG', 'NED', 'ESP', 'ENG', 'ITA', 'ESP', 'ITA', 'ENG', 'ENG', 'ENG', 'ENG', 'ENG', 'ESP', 'ENG', 'ESP', 'ENG', 'ENG', 'ENG', 'ITA', 'GER', 'ESP', 'FRA', 'ESP', 'ENG', 'ESP', 'GER', 'ENG', 'GER', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ESP', 'ESP', 'ESP', 'GER', 'ENG', 'ESP', 'ITA', 'GER', 'ESP', 'ESP', 'ESP', 'ENG', 'GER', 'ESP', 'ITA', 'ESP', 'FRA', 'ESP', 'ENG', 'GER', 'ITA', 'ENG', 'ENG', 'NED', 'ESP',],
+		},
+
 	};
 	
 	$.each(games, (key, options) => {
@@ -71,6 +98,7 @@ jQuery(function() {
 			if (options.unshuffleAnswers) unshuffleAnswers();
 			if (options.autofillForcedOrder) autofillForcedOrder();
 			if (options.trimAnswers) trimAnswers(options.trimAnswers);
+			if (options.hints) addHints(options.hints);
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -170,32 +198,8 @@ jQuery(function() {
 		}
 	}
 	
-	$(`<style>
-		#bg-temp.shifted {margin-top: auto;}
-		#leaderboard-wrapper {display: none;}
-		.sjo-hint {color: #bbb;}
-	</style>`).appendTo('head');
-	
-	var hints = {
-		'ultimate_usmetro':
-			['NY-NJ-PA', 'CA', 'IL-IN-WI', 'TX', 'TX', 'PA-NJ-DE-MD', 'DC-VA-MD-WV', 'FL', 'GA', 'MA-NH', 'CA', 'CA', 'MI', 'AZ', 'WA', 'MN-WI', 'CA', 'FL', 'MO-IL', 'MD', 'CO', 'PA', 'OR-WA', 'TX', 'CA', 'FL', 'OH-KY-IN', 'OH', 'MO-KS', 'NV', 'CA', 'OH', 'NC-SC', 'TX', 'IN', 'VA-NC', 'TN', 'RI-MA', 'WI', 'FL', 'TN-MS-AR', 'KY-IN', 'OK', 'VA', 'CT', 'LA', 'NC', 'UT', 'NY', 'AL', 'NY', 'AZ', 'HI', 'OK', 'CA', 'CT', 'NM', 'NE-IA', 'NY', 'CT', 'CA', 'OH', 'CA', 'PA-NJ', 'TX', 'LA', 'MA', 'TX', 'MI', 'SC', 'NC', 'AR', 'FL', 'TN', 'OH', 'CA', 'MA', 'SC', 'NY', 'NY', 'CO', 'OH', 'SC', 'FL', 'ID', 'KS', 'FL', 'IA', 'WI', 'PA', 'OH-PA', 'GA-SC', 'UT', 'PA', 'MS', 'FL', 'UT', 'TN-GA', 'PA', 'CA', 'ME', 'NC', 'FL', 'CA', 'NC', 'KY', 'AR-MO', 'WA', 'MI', 'FL', 'CA', 'MO', 'PA', 'TX', 'NV', 'NC', 'FL', 'CA', 'AL', 'MI', 'CA', 'IN', 'CA', 'TX', 'PA', 'AL', 'TX', 'OH', 'LA', 'NH', 'OR', 'TX', 'AK', 'IA-IL', 'IL', 'AL', 'NC', 'FL', 'NC', 'NJ', 'NC', 'IN-KY', 'GA', 'OR', 'IL', 'MI', 'FL', 'MI', 'FL', 'IN-MI', 'TN-VA', 'WI', 'VA', 'NE', 'CO', 'WV', 'GA-AL', 'AR-OK', 'CO', 'NY', 'TX', 'WV-KY-OH', 'SC', 'PA', 'MN-WI', 'TN-KY', 'LA', 'SC', 'NJ', 'CT', 'CA', 'MD-WV', 'FL', 'MI', 'CA', 'WA', 'IA', 'CA', 'CO', 'WA', 'TX', 'WA', 'VA', 'TX', 'MS', 'NY', 'WA', 'TX', 'KS', 'GA', 'SD', 'IL', 'TX', 'WI', 'AL', 'CA', 'TX', 'MA', 'NM', 'TX'],
-		'us_cities_official_2010_population':
-			['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'FL', 'IN', 'CA', 'TX', 'OH', 'TX', 'NC', 'MI', 'TX', 'TN', 'MD', 'MA', 'WA', 'DC', 'TN', 'CO', 'KY', 'WI', 'OR', 'NV', 'OK', 'NM', 'AZ', 'CA', 'CA', 'CA', 'MO', 'AZ', 'VA', 'GA', 'CO', 'NE', 'NC', 'FL', 'OH', 'OK', 'CA', 'HI', 'MN', 'KS', 'TX', 'CA', 'LA', 'CA', 'FL', 'CO', 'CA', 'MO', 'PA', 'TX', 'CA', 'OH', 'KY', 'AK', 'CA', 'OH', 'MN', 'NJ', 'NC', 'NY', 'TX', 'NE', 'NV', 'IN', 'NJ', 'FL', 'CA', 'VA', 'FL', 'AZ', 'TX', 'WI', 'NC', 'TX', 'LA', 'NC', 'TX', 'AZ', 'NV', 'FL', 'VA', 'AZ', 'NV', 'TX', 'CA', 'CA', 'AL', 'NY', 'CA', 'WA', 'AZ', 'VA', 'AL', 'ID', 'VA', 'IA', 'CA', 'NC', 'LA', 'OH', 'WA', 'IL', 'CA', 'CA', 'NY', 'GA', 'AL', 'AR', 'CA', 'CA', 'TX', 'CA', 'GA', 'MI', 'UT', 'FL', 'MA', 'VA', 'AL', 'TN', 'RI', 'CA', 'TX', 'TX', 'MS', 'KS', 'CA', 'CA', 'TN', 'CA', 'FL', 'CA', 'FL', 'CA', 'WA', 'AZ', 'MO', 'CA', 'OR', 'FL', 'OR', 'FL', 'AZ', 'SD', 'MA', 'CA', 'IL', 'CA', 'CA', 'CA', 'CA', 'TX', 'IL', 'NJ', 'KS', 'CA', 'NY', 'CT', 'CA', 'CO', 'CA', 'CO', 'IL', 'OH', 'FL', 'CA', 'VA', 'TX', 'VA', 'CA', 'CA', 'GA', 'NC', 'CA', 'MI', 'TN', 'TX', 'TX', 'CT', 'MI', 'UT', 'SC', 'TX', 'KS', 'CA', 'IA', 'KS', 'NJ', 'TX', 'CT'],
-		'100_us_cities':
-			['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'CA', 'IN', 'OH', 'TX', 'NC', 'WA', 'CO', 'TX', 'MI', 'DC', 'MA', 'TN', 'TN', 'OR', 'OK', 'NV', 'MD', 'KY', 'WI', 'NM', 'AZ', 'CA', 'CA', 'MO', 'CA', 'AZ', 'GA', 'CO', 'VA', 'NC', 'NE', 'FL', 'CA', 'MN', 'OK', 'KS', 'LA', 'TX', 'OH', 'CA', 'FL', 'CO', 'HI', 'CA', 'CA', 'TX', 'CA', 'MO', 'KY', 'CA', 'PA', 'MN', 'AK', 'OH', 'NV', 'NC', 'TX', 'NJ', 'OH', 'NE', 'FL', 'CA', 'NJ', 'AZ', 'IN', 'NY', 'NC', 'FL', 'CA', 'TX', 'TX', 'WI', 'AZ', 'VA', 'NV', 'NC', 'AZ', 'FL', 'TX', 'AZ', 'TX', 'VA', 'NV', 'CA', 'LA', 'VA', 'ID', 'CA'],
-		'us_cities_by_peak_rank':
-			['NY', 'CA', 'IL', 'PA', 'MD', 'MA', 'LA', 'NY', 'TX', 'MI', 'MO', 'SC', 'OH', 'AZ', 'CA', 'OH', 'PA', 'TX', 'TX', 'MA', 'PA', 'CA', 'PA', 'NY', 'RI', 'DC', 'RI', 'NY', 'PA', 'CA', 'VA', 'MA', 'FL', 'IN', 'WI', 'NJ', 'KY', 'VA', 'MA', 'MA', 'PA', 'TX', 'TN', 'NH', 'MA', 'OH', 'MN', 'ME', 'TX', 'MA', 'NC', 'VA', 'CT', 'NY', 'NY', 'GA', 'MA', 'TX', 'WA', 'MO', 'NY', 'DC', 'CT', 'NE', 'VA', 'CO', 'MN', 'CT', 'PA', 'NY', 'OR', 'GA', 'MA', 'NY'],
-		'1mil_europe':
-			['Russia', 'Turkey', 'UK', 'France', 'Spain', 'Germany', 'Russia', 'Italy', 'Germany', 'Spain', 'Germany', 'Italy', 'Italy', 'Greece', 'Ukraine', 'Germany', 'Netherlands', 'UK', 'UK', 'Germany', 'Hungary', 'Portugal', 'Netherlands', 'Poland', 'Germany', 'Poland', 'Germany', 'Romania', 'Austria', 'Sweden', 'UK', 'Belgium', 'Belarus', 'France', 'UK', 'Russia', 'Spain', 'Italy', 'Ukraine', 'France', 'UK', 'Denmark', 'Germany', 'UK', 'Ukraine', 'UK', 'Russia', 'Russia', 'Serbia', 'Czechia', 'Ukraine', 'Switzerland', 'Ireland', 'UK', 'Bulgaria', 'Russia', 'Spain', 'France', 'Russia', 'Finland', 'Russia', 'Germany', 'Norway', 'Portugal', 'Germany', 'UK', 'Russia', 'Russia', 'Ukraine', 'Russia', 'Russia', 'Belgium', 'France', 'France', 'Spain'],
-		'european_cup__champions_league_semi_finalists':
-			['ESP', 'FRA', 'SCO', 'ITA', 'ESP', 'ITA', 'ENG', 'SRB', 'ESP', 'ITA', 'ENG', 'HUN', 'ESP', 'FRA', 'ESP', 'SUI', 'ESP', 'GER', 'ESP', 'SCO', 'POR', 'ESP', 'GER', 'AUT', 'POR', 'ESP', 'BEL', 'ENG', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ESP', 'GER', 'SUI', 'ITA', 'POR', 'ENG', 'HUN', 'ESP', 'SRB', 'ITA', 'ENG', 'SCO', 'ITA', 'CZE', 'BUL', 'ENG', 'POR', 'ITA', 'ESP', 'ITA', 'NED', 'ENG', 'SVK', 'NED', 'SCO', 'ENG', 'POL', 'NED', 'GRE', 'ESP', 'SRB', 'NED', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ENG', 'ESP', 'GER', 'ESP', 'SCO', 'HUN', 'GER', 'ENG', 'ESP', 'FRA', 'GER', 'FRA', 'NED', 'ESP', 'ENG', 'GER', 'UKR', 'SUI', 'ENG', 'BEL', 'GER', 'ITA', 'ENG', 'SWE', 'AUT', 'GER', 'ENG', 'GER', 'NED', 'ESP', 'ENG', 'ESP', 'GER', 'ITA', 'ENG', 'GER', 'BEL', 'BUL', 'GER', 'ITA', 'ESP', 'POL', 'ENG', 'ITA', 'ROM', 'SCO', 'ITA', 'ENG', 'FRA', 'GRE', 'ROM', 'ESP', 'BEL', 'SWE', 'POR', 'GER', 'UKR', 'ESP', 'NED', 'POR', 'ESP', 'ROM', 'ITA', 'ROM', 'TUR', 'ESP', 'ITA', 'POR', 'GER', 'FRA', 'SRB', 'FRA', 'GER', 'RUS', 'ESP', 'ITA', 'SRB', 'CZE', 'FRA', 'ITA', 'SWE', 'SCO', 'ITA', 'ESP', 'FRA', 'POR', 'NED', 'ITA', 'GER', 'FRA', 'ITA', 'NED', 'FRA', 'GRE', 'GER', 'ITA', 'NED', 'ENG', 'ESP', 'ITA', 'GER', 'FRA', 'ENG', 'GER', 'UKR', 'ITA', 'ESP', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ENG', 'ESP', 'ESP', 'GER', 'ESP', 'ENG', 'ITA', 'ITA', 'ITA', 'ESP', 'POR', 'FRA', 'ENG', 'ESP', 'ENG', 'ITA', 'ENG', 'NED', 'ESP', 'ENG', 'ITA', 'ESP', 'ITA', 'ENG', 'ENG', 'ENG', 'ENG', 'ENG', 'ESP', 'ENG', 'ESP', 'ENG', 'ENG', 'ENG', 'ITA', 'GER', 'ESP', 'FRA', 'ESP', 'ENG', 'ESP', 'GER', 'ENG', 'GER', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ESP', 'ESP', 'ESP', 'GER', 'ENG', 'ESP', 'ITA', 'GER', 'ESP', 'ESP', 'ESP', 'ENG', 'GER', 'ESP', 'ITA', 'ESP', 'FRA', 'ESP', 'ENG', 'GER', 'ITA', 'ENG', 'ENG', 'NED', 'ESP',],
-	};
-	
-	var gameKey = window.location.href.split('/').slice(-1)[0].replace(/-/g, '_');
-	console.log(gameKey);
-	if (hints[gameKey]) {
-		console.log(hints[gameKey]);
-		$('.d_value').each((index, element) => $(`<span class="sjo-hint">${hints[gameKey][index]}</span>`).appendTo(element));
+	function addHints(hints) {
+		$('.d_value').each((index, element) => $(`<span class="sjo-hint">${hints[index]}</span>`).appendTo(element));
 	}
 	
 	$('body').on('keypress', '#gameinput', event => {
