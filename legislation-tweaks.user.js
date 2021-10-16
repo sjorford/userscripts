@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.10.16.0
+// @version        2020.10.16.1
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -70,7 +70,7 @@ $(function() {
 		
 		// Direct SI links to whole instrument
 		var siLinks = $('a').filter((i,e) => e.href.match(/\/(uksi|ssi|wsi|ukdsi|sdsi)\//));
-        siLinks.attr('href', (i,href) => href.replace(/\/contents\//, '/'));
+        siLinks.attr('href', (i,href) => href.replace(/\/contents(\/|$)/, '$1'));
         
         // Hide traffic restrictions
         siLinks.filter((i,e) => e.innerText.match(/(Restriction|Prohibition) of Traffic|Speed Limit/)).closest('tr').addClass('sjo-traffic');
