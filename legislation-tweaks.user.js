@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.10.15.0
+// @version        2020.10.16.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -69,7 +69,7 @@ $(function() {
 		$('#content tr').filter((i,e) => e.innerText.match(/Elect|Structural Change/)).addClass('sjo-electoral');
 		
 		// Direct SI links to whole instrument
-		var siLinks = $('a').filter((i,e) => e.href.match(/\/(uksi|ssi|wsi)\//));
+		var siLinks = $('a').filter((i,e) => e.href.match(/\/(uksi|ssi|wsi|ukdsi|sdsi)\//));
         siLinks.attr('href', (i,href) => href.replace(/\/contents\//, '/'));
         
         // Hide traffic restrictions
