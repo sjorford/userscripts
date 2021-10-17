@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
 // @include     https://vote-2012.proboards.com/*
-// @version     2021.06.03.0
+// @version     2021.10.17.0
 // @grant       none
 // ==/UserScript==
 
@@ -31,7 +31,7 @@ $(function() {
 		
 	</style>`).appendTo('head');
 	
-	var blocklist = ['carlton43', 'boogieeck'];
+	var blocklist = ['carlton43', 'boogieeck', 'Merseymike', 'Foggy', 'markgoodair', "Daft H'a'porth A'peth A'pith", 'neilm'];
 	$('a.user-link, .message span.name').filter((i,e) => blocklist.indexOf(e.innerText.trim()) >= 0).closest('.post').hide();
 	
 	$('li.ui-pagination-page a').click(event => {
