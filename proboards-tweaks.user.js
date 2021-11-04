@@ -31,9 +31,6 @@ $(function() {
 		
 	</style>`).appendTo('head');
 	
-	var blocklist = ['carlton43', 'boogieeck', 'Merseymike', 'Foggy', 'markgoodair', "Daft H'a'porth A'peth A'pith", 'neilm'];
-	$('a.user-link, .message span.name').filter((i,e) => blocklist.indexOf(e.innerText.trim()) >= 0).closest('.post').hide();
-	
 	$('li.ui-pagination-page a').click(event => {
 		event.preventDefault();
 		window.location = event.target.href;
