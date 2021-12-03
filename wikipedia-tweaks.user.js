@@ -1,15 +1,18 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.08.18.0
+// @version        2021.12.03.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
 // @run-at         document-end
 // @grant          none
-// @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
+// xxx@require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
 
+window.setTimeout(onready, 500);
+
+function onready() {
 $(function() {
 	
 	console.log('Wikipedia tweaks');
@@ -63,8 +66,13 @@ $(function() {
 		wikidataLink.text('Wikidata ' + wikidataID);
 	}
 	
-	if (window.location.pathname.match(/^\/wiki\//)) {
-		history.replaceState(null, '', window.location.pathname.replace(/_/g, ' '));
+	/*
+	var path = window.location.pathname;
+	var hash = window.location.hash;
+	if (path.match(/^\/wiki\//)) {
+		history.replaceState(null, '', path.replace(/_/g, ' ') + hash);
 	}
+	*/
 	
 });
+};
