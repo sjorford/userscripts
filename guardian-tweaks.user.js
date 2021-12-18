@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     2021.12.18.2
+// @version     2021.12.18.3
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -27,19 +27,7 @@ $(function() {
 	
 	window.setTimeout(() => {
 		
-		// Christmas crossword 23x23
-		var cluesAcross  = $('.crossword__clues--across .crossword__clues-list');
-		var cluesDown    = $('.crossword__clues--down   .crossword__clues-list').hide();
-		var cluesHeaders = $('.crossword__clues .crossword__clues-header').insertBefore('.crossword__clues')
-								.wrapAll('<div class="sjo-xword-header-wrapper"></div>');
-		
-		cluesHeaders.first().addClass('sjo-xword-header-active');
-		cluesHeaders.click(event => {
-			if ($(event.target).is('.sjo-xword-header-active')) return;
-			cluesAcross .toggle();
-			cluesDown   .toggle();
-			cluesHeaders.toggleClass('sjo-xword-header-active');
-		});
+		// Christmas crossword
 		
 		$(`<style>
 			.crossword__container--prize .crossword__hidden-input-wrapper {width: 4%; height: 4%;}
@@ -49,9 +37,28 @@ $(function() {
 			.sjo-xword-header-active {background-color: #fff7b2;}
 		</style>`).appendTo('head');
 		
-		$('.crossword__container__grid-wrapper').click(() => window.setTimeout(() => {
-			$('.crossword__clue--selected').closest('.crossword__clues--across').length > 0 ? cluesHeaders.first().click() : cluesHeaders.last().click();
-		}));
+		var cluesAcross  = $('.crossword__clues--across .crossword__clues-list');
+		var cluesDown    = $('.crossword__clues--down   .crossword__clues-list').hide();
+		var cluesHeaders = $('.crossword__clues .crossword__clues-header').insertBefore('.crossword__clues')
+								.wrapAll('<div class="sjo-xword-header-wrapper"></div>');
+		
+		cluesHeaders.first().addClass('sjo-xword-header-active');
+		cluesHeaders.click(event => selectClues(event.target));
+		
+		showClues();
+		
+		$('.crossword__container__grid-wrapper').click(() => window.setTimeout(showClues, 0));
+		
+		function showClues() {
+			var across = ($('.crossword__clue--selected').closest('.crossword__clues--across').length > 0);
+			selectClues(across ? cluesHeaders.first() : cluesHeaders.last());
+		}
+		
+		function selectClues(target) {
+			if ($(target).is('.sjo-xword-header-active')) return;
+			cluesAcross.toggle() && cluesDown.toggle();
+			cluesHeaders.toggleClass('sjo-xword-header-active');
+		}
 		
 	}, 1000);
 	
