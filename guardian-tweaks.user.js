@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     2021.12.18.1
+// @version     2021.12.18.2
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -26,23 +26,33 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	window.setTimeout(() => {
-	
-	// Christmas crossword 23x23
-	var cluesAcross  = $('.crossword__clues--across .crossword__clues-list');
-	var cluesDown    = $('.crossword__clues--down   .crossword__clues-list').hide();
-	var cluesHeaders = $('.crossword__clues .crossword__clues-header').insertBefore('.crossword__clues')
-							.wrapAll('<div class="sjo-xword-header-wrapper"></div>');
-	cluesHeaders.click(() => cluesAcross.toggle() && cluesDown.toggle() && cluesHeaders.toggleClass('sjo-xword-header-active'))
-	cluesHeaders.first().addClass('sjo-xword-header-active');
 		
-	$(`<style>
-		.crossword__container--prize .crossword__hidden-input-wrapper {width: 4%; height: 4%;}
-		.crossword__hidden-input {position: relative; top: -2px;}
-		.sjo-xword-header-wrapper {padding-left: 1.25rem; column-count: 3;}
-		.sjo-xword-header-wrapper .crossword__clues-header {cursor: pointer;}
-		.sjo-xword-header-active {background-color: #fff7b2;}
-	</style>`).appendTo('head');
-	
+		// Christmas crossword 23x23
+		var cluesAcross  = $('.crossword__clues--across .crossword__clues-list');
+		var cluesDown    = $('.crossword__clues--down   .crossword__clues-list').hide();
+		var cluesHeaders = $('.crossword__clues .crossword__clues-header').insertBefore('.crossword__clues')
+								.wrapAll('<div class="sjo-xword-header-wrapper"></div>');
+		
+		cluesHeaders.first().addClass('sjo-xword-header-active');
+		cluesHeaders.click(event => {
+			if ($(event.target).is('.sjo-xword-header-active')) return;
+			cluesAcross .toggle();
+			cluesDown   .toggle();
+			cluesHeaders.toggleClass('sjo-xword-header-active');
+		});
+		
+		$(`<style>
+			.crossword__container--prize .crossword__hidden-input-wrapper {width: 4%; height: 4%;}
+			.crossword__hidden-input {position: relative; top: -2px;}
+			.sjo-xword-header-wrapper {padding-left: 1.25rem; column-count: 3;}
+			.sjo-xword-header-wrapper .crossword__clues-header {cursor: pointer;}
+			.sjo-xword-header-active {background-color: #fff7b2;}
+		</style>`).appendTo('head');
+		
+		$('.crossword__container__grid-wrapper').click(() => window.setTimeout(() => {
+			$('.crossword__clue--selected').closest('.crossword__clues--across').length > 0 ? cluesHeaders.first().click() : cluesHeaders.last().click();
+		}));
+		
 	}, 1000);
 	
 });
