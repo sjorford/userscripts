@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     2021.12.18.5
+// @version     2021.12.20.1
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -26,9 +26,11 @@ $(function() {
 		
 	</style>`).appendTo('head');
 	
-	window.setTimeout(() => {
+	window.setTimeout(formatChristmasCrossword, 1000);
+	
+	function formatChristmasCrossword() {
 		
-		// Christmas crossword
+		if ($('.crossword__cell').length < 200) return;
 		
 		$(`<style>
 			.crossword__container--prize .crossword__hidden-input-wrapper {width: 4%; height: 4%;}
@@ -61,6 +63,6 @@ $(function() {
 			cluesHeaders.toggleClass('sjo-xword-header-active');
 		}
 		
-	}, 1000);
+	}
 	
 });
