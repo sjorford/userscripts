@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://vote-2012.proboards.com/*
 // @include     https://vote-2012.proboards.com/*
-// @version     2022.03.30.0
+// @version     2022.03.30.1
 // @grant       none
 // ==/UserScript==
 
@@ -35,7 +35,7 @@ $(function() {
 		.mini-profile .info {display: inline-block; margin-left: 1em;}
 		.mini-profile br {display: none;}
 		.o-user-link {margin-right: 1em;}
-		.info > .italic {margin-left: 1em;}
+		.info > .italic, .info > .float-right {margin-left: 1em;}
 		
 	</style>`).appendTo('head');
 	
