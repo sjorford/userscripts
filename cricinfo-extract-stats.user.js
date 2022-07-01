@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2021.09.08.9
+// @version        2022.07.01.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -21,7 +21,8 @@ var debug = false;
 	
 	$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 	
-	var mainTable = $('tr.data1').closest('.engineTable');
+	var mainTable = $('tr.data1, tr.data2').has('td+td')
+			.not(':has(Paginationdisable, .PaginationLink)').closest('.engineTable').first();
 	if (mainTable.length == 0) return;
 	
 	findMatchIDs(document);
