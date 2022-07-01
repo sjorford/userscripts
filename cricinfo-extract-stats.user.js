@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2022.07.01.0
+// @version        2022.07.01.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -21,8 +21,11 @@ var debug = false;
 	
 	$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 	
-	var mainTable = $('tr.data1, tr.data2').has('td+td')
-			.not(':has(Paginationdisable, .PaginationLink)').closest('.engineTable').first();
+	function getMainTable(doc) {
+		return $('tr.data1, tr.data2', doc).has('td+td').not(':has(Paginationdisable, .PaginationLink)').closest('.engineTable').first();
+	}
+	
+	var mainTable = getMainTable(document);
 	if (mainTable.length == 0) return;
 	
 	findMatchIDs(document);
@@ -61,7 +64,7 @@ var debug = false;
 			$.get(pageURL, data => {
 				var doc = $(data);
 				findMatchIDs(doc);
-				var newHTML = doc.find('tr.data1').closest('tbody').html();
+				var newHTML = getMainTable(doc).find('tbody').html();
 				mainTable.find('tbody').append(newHTML);
 				nextPage++;
 				getNextPage();
