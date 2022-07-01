@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
 // @include     https://mobile.twitter.com/*
-// @version     2022.03.06.0
+// @version     2022.07.01.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -38,22 +38,36 @@ $(function() {
 		}
 	});
 	
-	var delay = 100;
+	var defaultDelay = 50;
+	var maxDelay = 1000;
+	var delay = defaultDelay;
 	var timer = window.setInterval(notInterested, delay);
 	
 	function notInterested() {
+		
+		var hot = false;
+		
 		var button = $('[id^="topic-not-interested-button"]').first();
 		if (button.length > 0) {
 			button.click();
-			delay = 100;
+			hot = true;
+		}
+		
+		var moreTweets = $('div[data-testid="cellInnerDiv"]').has('span:contains("More Tweets")');
+		console.log('notInterested', moreTweets);
+		if (moreTweets.length > 0) {
+			moreTweets.nextAll().addBack().remove();
+			hot = true;
+		}
+		
+		if (hot) {
+			delay = defaultDelay;
 			window.clearInterval(timer);
 			timer = window.setInterval(notInterested, delay);
-		} else {
-			if (delay < 3000) {
-				delay = delay * 2;
-				window.clearInterval(timer);
-				timer = window.setInterval(notInterested, delay);
-			}
+		} else if (delay < maxDelay) {
+			delay = delay * 2;
+			window.clearInterval(timer);
+			timer = window.setInterval(notInterested, delay);
 		}
 		
 	}
