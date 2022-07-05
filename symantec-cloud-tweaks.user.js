@@ -1,11 +1,10 @@
 ﻿// ==UserScript==
 // @name           Symantec.cloud tweaks
 // @namespace      sjorford@gmail.com
-// @version        2022.07.05.0
+// @version        2022.07.05.1
 // @author         Stuart Orford
 // @match          https://clients.messagelabs.com/Tools/*
 // @grant          none
-// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
 (function($) {
