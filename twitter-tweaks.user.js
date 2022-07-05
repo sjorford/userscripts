@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
 // @include     https://mobile.twitter.com/*
-// @version     2022.07.04.0
+// @version     2022.07.05.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -21,6 +21,8 @@ $(`<style>
 	
 	.wtf-module {display: none !important;}
 	.module.trends {display: none !important;}
+	
+	.sjo-hide {display: none !important;}
 	
 </style>`).appendTo('head');
 
@@ -53,10 +55,10 @@ $(function() {
 			hot = true;
 		}
 		
-		var moreTweets = $('div[data-testid="cellInnerDiv"]').has('span:contains("More Tweets")');
-		console.log('notInterested', moreTweets);
+		var moreTweets = $('div[data-testid="cellInnerDiv"]').has('span:contains("More Tweets")')
+				.nextAll().not('.sjo-hide');
 		if (moreTweets.length > 0) {
-			moreTweets.nextAll().remove();
+			moreTweets.addClass('sjo-hide');
 			hot = true;
 		}
 		
