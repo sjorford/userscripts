@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
 // @include     https://mobile.twitter.com/*
-// @version     2022.07.05.0
+// @version     2022.07.20.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -40,15 +40,16 @@ $(function() {
 		}
 	});
 	
-	var defaultDelay = 50;
-	var maxDelay = 1000;
-	var delay = defaultDelay;
+	var minDelay = 50;
+	var maxDelay = 500;
+	var delay = minDelay;
 	var timer = window.setInterval(notInterested, delay);
 	
 	function notInterested() {
 		
 		var hot = false;
 		
+		// no longer works
 		var button = $('[id^="topic-not-interested-button"]').first();
 		if (button.length > 0) {
 			button.click();
@@ -63,7 +64,7 @@ $(function() {
 		}
 		
 		if (hot) {
-			delay = defaultDelay;
+			delay = minDelay;
 			window.clearInterval(timer);
 			timer = window.setInterval(notInterested, delay);
 		} else if (delay < maxDelay) {
