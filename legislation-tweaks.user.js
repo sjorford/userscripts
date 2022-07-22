@@ -2,7 +2,8 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.10.16.1
+// @version        2022.07.22.0
+// @message        Happy Pi Approximation Day
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -94,5 +95,8 @@ $(function() {
 							.toArray().reduce((Σ,e) => Σ += (e.innerText - 0), 0);
 		table.before(`Total: <span class="sjo-highlight">${total}</span>`);
 	});
+	
+	var lastModified = $('meta[name="DC.Date.Modified"]').attr('content');
+	$('#viewLegSnippet').prepend('<p class="LegDraftText">Last modified: ' + lastModified + '</p>');
     
 });
