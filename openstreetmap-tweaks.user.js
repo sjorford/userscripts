@@ -2,20 +2,20 @@
 // @name           OpenStreetMap tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.08.0
+// @version        2022.08.10.0
 // @match          https://www.openstreetmap.org/id
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.3.1.min.js
 // ==/UserScript==
 
-//var $sjo = $.noConflict();
 $(function() {
-	//var $ = $sjo;
 	
 	console.log('OpenStreetMap tweaks');
 	
 	$(`<style>
 		div.combobox {max-height:368px;}
+		.ideditor .tag-row .key-wrap   {flex: 1 1 40%;}
+		.ideditor .tag-row .value-wrap {flex: 1 1 60%;}
 	</style>`).appendTo('head');
 	
 	function presetHouse() {
