@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     2021.12.20.1
+// @version     2022.08.11.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -23,6 +23,10 @@ $(function() {
 			.crossword__clues--across, .crossword__clues--down {display: block; padding-left: 0;}
 			.crossword__clues-list {margin-bottom: 0 !important;}
 		}
+		
+		.crossword__anagram-helper__cell {width: 1.5rem;}
+		.crossword__anagram-helper__cell--with-hyphen {position: relative;}
+		.crossword__anagram-helper__cell--with-hyphen::after {padding-left: 1.25rem; position: absolute; left: 0;}
 		
 	</style>`).appendTo('head');
 	
