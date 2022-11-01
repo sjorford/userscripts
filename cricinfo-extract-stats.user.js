@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2022.07.01.1
+// @version        2022.11.01.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -10,19 +10,18 @@
 // @include        https://stats.espncricinfo.com/*/engine/player/*
 // @include        https://stats.espnscrum.com/*
 // @run-at         document-end
-// @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @grant          none
 // ==/UserScript==
 
-var debug = false;
-
 (function($) {
+	
+	var debug = false;
 	
 	$('<style>.sjotable td {font-size: 9pt !important; margin: 0px; padding: 2px 5px;}</style>').appendTo('head');
 	
 	function getMainTable(doc) {
-		return $('tr.data1, tr.data2', doc).has('td+td').not(':has(Paginationdisable, .PaginationLink)').closest('.engineTable').first();
+		return $('tr.data1, tr.data2', doc).has('td+td').not(':has(.Paginationdisable, .PaginationLink)').closest('.engineTable').last();
 	}
 	
 	var mainTable = getMainTable(document);
@@ -278,8 +277,8 @@ var debug = false;
 							href.split('/player/')[1].split('.html')[0],
 							text.split(', ')[0],
 							href2.split('/player/')[1].split('.html')[0],
-							text.split(', ')[1].split(' (')[0],
-							parseTeams(text.split(' (')[1].replace(/[)]$/, ''))
+							text.split(', ')[1].replace(/ \(\D*\)/, ''),
+							parseTeams(text.match(/ \((\D*)\)/)[1])
 						];
 					} else {
 						return text;
@@ -326,7 +325,7 @@ var debug = false;
 		
 	}
 	
-})($.noConflict());
+})(jQuery);
 
 String.prototype.toProperCase = String.prototype.toProperCase || function () {
     return this.replace(/\w\S*/g, function(word) {return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();});
