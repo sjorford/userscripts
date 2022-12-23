@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
 // @include     https://mobile.twitter.com/*
-// @version     2022.08.31.0
+// @version     2022.12.23.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -23,6 +23,8 @@ $(`<style>
 	.module.trends {display: none !important;}
 	
 	.sjo-hide {display: none !important;}
+	
+	a[href$="analytics"] {display: none;}
 	
 </style>`).appendTo('head');
 
