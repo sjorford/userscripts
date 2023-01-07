@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.06.20.0
+// @version        2023.01.07.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @grant          none
@@ -130,6 +130,23 @@ $(function() {
 			});
 		}
 		
+		return false;
+	});
+	
+	// Extract list of games with playtimes
+	$('#gameslist_sort_options').before('<div><a href="#" class="sjo-extract-games">Extract list</a></div>');
+	$('.sjo-extract-games').click(event => {
+		event.preventDefault();
+		var table  = $('<table class="sjo-table"></table>')
+				.appendTo('body').wrap('<div class="sjo-wrapper"></div>')
+				.click(event => table.selectRange());
+		$('.gameListRow').each((i,e) => {
+			var gameName = $('.gameListRowItemName', e).text().trim();
+			var hours = $('.hours_played', e).text().trim().match(/^[\d\.]+|/)[0];
+			var row = $('<tr></tr>').appendTo(table);
+			$('<td></td>').text(gameName).appendTo(row);
+			$('<td></td>').text(hours).appendTo(row);
+		});
 		return false;
 	});
 	
