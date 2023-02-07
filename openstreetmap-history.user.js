@@ -2,7 +2,7 @@
 // @name           OpenStreetMap history
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.08.09.1
+// @version        2023.02.07.0
 // @match          https://www.openstreetmap.org/*
 // @grant          none
 // ==/UserScript==
@@ -58,8 +58,8 @@ $(function() {
 			
 		}
 		
-		var thisGeo = log.eq(i).find('.geo');
-		var prevGeo = log.eq(i+1).find('.geo');
+		var thisGeo = log.eq(i).find('.latitude').closest('li');
+		var prevGeo = log.eq(i+1).find('.latitude').closest('li');
 		if (thisGeo.length > 0 && prevGeo.length > 0) {
 			var thisCoords = {lat: thisGeo.find('.latitude').text().trim()-0, lon: thisGeo.find('.longitude').text().trim()-0};
 			var prevCoords = {lat: prevGeo.find('.latitude').text().trim()-0, lon: prevGeo.find('.longitude').text().trim()-0};
