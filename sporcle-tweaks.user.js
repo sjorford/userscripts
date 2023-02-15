@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.09.16.0
+// @version        2023.02.15.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -207,7 +207,9 @@ jQuery(function() {
 	});
 	
 	// Double-click headers to sort
+	// FIXME - broken when there are multiple answer groups
 	$('.data th').dblclick(event => {
+		return;
 		
 		var tables = $('.data');
 		var rows = tables.find('tr:has(td:visible)').not(':has(th)');
