@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2022.11.01.0
+// @version        2023.02.24.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -141,6 +141,25 @@
 			thisRow.find('td').each(function(index, element) {
 				results = results.concat(parseCell(index, element));
 			});
+			
+			// Get data from title row
+			var titleRow = thisRow.prev('.title');
+			if (titleRow.length > 0) {
+				
+				var titleLink = titleRow.find('.data-link');
+				if (titleLink.length > 0) {
+					var linkParts = titleLink.attr('href').split('/');
+					var linkID = linkParts[linkParts.length - 1].replace('.html', '');
+					results = results.concat(linkID);
+				}
+				
+				var titleText = titleRow.children().first().text();
+				if (titleText.indexOf('(') === 0) {
+					titleText = titleText.substr(1, titleText.length - 2);
+				}
+				results = results.concat(titleText);
+				
+			}
 			
 			// Get data from note row
 			var noteRow = thisRow.next('.note');
