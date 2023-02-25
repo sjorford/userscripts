@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2023.02.24.0
+// @version        2023.02.25.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -146,37 +146,39 @@
 			var titleRow = thisRow.prev('.title');
 			if (titleRow.length > 0) {
 				
+				var titleID;
 				var titleLink = titleRow.find('.data-link');
 				if (titleLink.length > 0) {
-					var linkParts = titleLink.attr('href').split('/');
-					var linkID = linkParts[linkParts.length - 1].replace('.html', '');
-					results = results.concat(linkID);
+					var titleLinkParts = titleLink.attr('href').split('/');
+					var titleID = titleLinkParts[titleLinkParts.length - 1].replace('.html', '');
 				}
 				
 				var titleText = titleRow.children().first().text();
 				if (titleText.indexOf('(') === 0) {
 					titleText = titleText.substr(1, titleText.length - 2);
 				}
-				results = results.concat(titleText);
+				
+				results = [titleID, titleText].concat(results);
 				
 			}
 			
 			// Get data from note row
 			var noteRow = thisRow.next('.note');
 			if (noteRow.length > 0) {
-		
+				
+				var noteID;
+				var noteLink = noteRow.find('.data-link');
+				if (noteLink.length > 0) {
+					var noteLinkParts = noteLink.attr('href').split('/');
+					noteID = noteLinkParts[noteLinkParts.length - 1].replace('.html', '');
+				}
+				
 				var noteText = noteRow.children().first().text();
 				if (noteText.indexOf('(') === 0) {
 					noteText = noteText.substr(1, noteText.length - 2);
 				}
-				results = results.concat(noteText);
 				
-				var noteLink = noteRow.find('.data-link');
-				if (noteLink.length > 0) {
-					var linkParts = noteLink.attr('href').split('/');
-					var linkID = linkParts[linkParts.length - 1].replace('.html', '');
-					results = results.concat(linkID);
-				}
+				results = results.concat([noteID, noteText]);
 				
 			}
 			
