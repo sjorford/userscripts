@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2023.02.25.0
+// @version        2023.02.25.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -158,7 +158,7 @@
 					titleText = titleText.substr(1, titleText.length - 2);
 				}
 				
-				results = [titleID, titleText].concat(results);
+				results = [titleID].concat(titleText.split(' - ')).concat(results);
 				
 			}
 			
