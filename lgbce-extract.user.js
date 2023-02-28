@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           LGBCE extract
 // @namespace      sjorford@gmail.com
-// @version        2022.07.07.0
+// @version        2023.02.28.0
 // @author         Stuart Orford
 // @match          https://www.lgbce.org.uk/all-reviews
 // @grant          none
@@ -42,7 +42,7 @@ $(function() {
 	}
 	
 	function parsePage(data) {
-		var council = $('h1', data).text().trim()
+		var council = $('h1', data).first().text().trim()
 						.replace(/ (County Council|Council|Unitary Authority \(UA\))$/, '')
 						.replace(/ & /, ' and ');
 		var date = $('.field--name-field-review-dates td', data)
