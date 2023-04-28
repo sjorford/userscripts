@@ -2,11 +2,10 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.01.07.0
+// @version        2023.04.28.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @grant          none
-// @require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
@@ -28,15 +27,34 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	var table;
-	var games = $('.gameListRow:contains("View Stats")');
-	games.find('.bottom_controls').append('<a class="pullup_item sjo-extract" href="#"><div class="menu_ico"><img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/ico_stats.png" width="16" height="16" border="0"></div>Extract stats</a>');
+	var games;
 	
-	$('.sjo-extract').click(event => {
+	var timer = window.setInterval(checkForGames, 1000);
+	
+	function checkForGames() {
+		games = $('[class*="gameslistitems_GamesListItemContainer_"]').filter(':contains("My Game Stats")');
+		console.log(games);
+		if (games.length > 0) {
+			window.clearInterval(timer)
+			addButtons();
+		}
+	}
+	
+	function addButtons() {
+		games.find('[class*="gameslistitems_Buttons_"]').append('<a class="sjo-extract" href="#">Extract stats</a>');
+		$('.sjo-extract').click(extractStats);
+	}
+	
+	function extractStats(event) {
 		event.preventDefault();
 		
-		var gameRow = $(event.target).closest('.gameListRow')
-		var gameID = gameRow.attr('id').replace(/^game_/, '');
-		var gameName = gameRow.find('.gameListRowItemName').text();
+		var gameRow = $(event.target).closest('[class*="gameslistitems_GamesListItemContainer_"]');
+		console.log(gameRow);
+		var gameLink = gameRow.find('[class*="gameslistitems_GameNameContainer_"] a');
+		console.log(gameLink);
+		var gameID = gameLink.attr('href').match(/\d+/)[0];
+		var gameName = gameLink.text();
+		console.log(gameID, gameName);
 		
 		var myAchievements = null, globalAchievements = null;
 		
@@ -131,8 +149,9 @@ $(function() {
 		}
 		
 		return false;
-	});
+	}
 	
+	/*
 	// Extract list of games with playtimes
 	$('#gameslist_sort_options').before('<div><a href="#" class="sjo-extract-games">Extract list</a></div>');
 	$('.sjo-extract-games').click(event => {
@@ -149,6 +168,7 @@ $(function() {
 		});
 		return false;
 	});
+	*/
 	
 });
 })(jQuery.noConflict());
