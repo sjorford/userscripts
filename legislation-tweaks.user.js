@@ -2,8 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.07.22.0
-// @message        Happy Pi Approximation Day
+// @version        2023.05.09.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -78,6 +77,7 @@ $(function() {
         
 	}
 	
+	/*
 	$('#viewLegSnippet *').contents().filter((i,e) => e.nodeType == 3).each((i,e) => {
 		var match;
 		while (match = e.nodeValue.match(/^(.*?)(?<!\d)(\d{4}|(\d+|(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(-(nine|eight|seven|six|five|four|three|two|one))?|nine|eight|seven|six|five|\w+teen\b|ten|eleven|twelve|oodles) ((county|district) )?(electoral )?(wards|divisions)|(is|shall be) (\d|one|two|three|four|five|six))(?!\d)(.*)$/s)) {
@@ -95,6 +95,7 @@ $(function() {
 							.toArray().reduce((Σ,e) => Σ += (e.innerText - 0), 0);
 		table.before(`Total: <span class="sjo-highlight">${total}</span>`);
 	});
+	*/
 	
 	var lastModified = $('meta[name="DC.Date.Modified"]').attr('content');
 	$('#viewLegSnippet').prepend('<p class="LegDraftText">Last modified: ' + lastModified + '</p>');
