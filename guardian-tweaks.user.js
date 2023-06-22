@@ -4,7 +4,7 @@
 // @namespace   sjorford@gmail.com
 // @include     http://www.theguardian.com/*
 // @include     https://www.theguardian.com/*
-// @version     2022.10.18.0
+// @version     2023.06.22.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
@@ -43,7 +43,7 @@ $(function() {
 			.crossword__hidden-input {position: relative; top: -2px;}
 			.sjo-xword-header-wrapper {padding-left: 1.25rem; column-count: 3;}
 			.sjo-xword-header-wrapper .crossword__clues-header {cursor: pointer;}
-			.sjo-xword-header-active {background-color: #fff7b2;}
+			.sjo-xword-header-active {background-color: #fff7b2; border-bottom: 4px black solid;}
 		</style>`).appendTo('head');
 		
 		var cluesAcross  = $('.crossword__clues--across .crossword__clues-list');
@@ -59,8 +59,8 @@ $(function() {
 		$('.crossword__container__grid-wrapper').on('click keydown input blur', () => window.setTimeout(showClues, 0));
 		
 		function showClues() {
-			var across = ($('.crossword__clue--selected').closest('.crossword__clues--across').length > 0);
-			selectClues(across ? cluesHeaders.first() : cluesHeaders.last());
+			var down = ($('.crossword__clue--selected').closest('.crossword__clues--down').length > 0);
+			selectClues(down ? cluesHeaders.last() : cluesHeaders.first());
 		}
 		
 		function selectClues(target) {
