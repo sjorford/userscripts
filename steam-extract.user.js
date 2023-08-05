@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.08.05.0
+// @version        2023.08.05.1
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @grant          none
@@ -42,7 +42,7 @@ $(function() {
 	
 	function addButtons() {
 		var wrapper = games.find('[class*="gameslistitems_Buttons_"]');
-		var template = wrapper.find('[class*="gameslistitems_NavButton_3aNUl"]');
+		var template = wrapper.find('[class*="gameslistitems_NavButton_"]');
 		var classes = template.attr('class').split(' ').map(c => c.match(/gameslistitems_/) ? c : '').join(' ').replace(/\s+/, ' ').trim();
 		$('<a class="sjo-extract" href="#">Extract stats</a>').addClass(classes).appendTo(wrapper).click(extractStats);
 	}
