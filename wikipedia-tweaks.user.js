@@ -1,13 +1,12 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2021.12.03.0
+// @version        2023.08.17.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
 // @run-at         document-end
 // @grant          none
-// xxx@require        https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // ==/UserScript==
 
 window.setTimeout(onready, 500);
@@ -39,7 +38,7 @@ $(function() {
 	
 	// Hide long references lists
 	$('.reflist').each((index, reflist) => {
-		if ($('li', reflist).length > 50) {
+		if ($('li', reflist).length > 20) {
 			$(reflist).hide();
 			var wrapper = $('<span class="sjo-reflist-wrapper"></span>').insertBefore(reflist);
 			$(`<a class="sjo-reflist-button sjo-reflist-button-expand sjo-reflist-button-${index}">[Expand]</a>`).appendTo(wrapper);
@@ -65,14 +64,6 @@ $(function() {
 		wikidataID = wikidataLink.attr('href').match(/Q\d+/)[0];
 		wikidataLink.text('Wikidata ' + wikidataID);
 	}
-	
-	/*
-	var path = window.location.pathname;
-	var hash = window.location.hash;
-	if (path.match(/^\/wiki\//)) {
-		history.replaceState(null, '', path.replace(/_/g, ' ') + hash);
-	}
-	*/
 	
 });
 };
