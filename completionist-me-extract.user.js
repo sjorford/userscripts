@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name           completionist.me extract
 // @namespace      sjorford@gmail.com
-// @version        2023.09.27.0
+// @version        2023.09.27.1
 // @author         Stuart Orford
 // @match          https://completionist.me/steam/profile/76561198057191932/apps?*
 // @grant          none
-//// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
@@ -35,46 +34,49 @@ $(function() {
 		var doc = $(data);
 		
 		var gamesTable = $('.games-list-flat table', doc);
-		console.log(gamesTable);
 		
 		var headings = {};
-		console.log($('thead tr', 'gamesTable'));
 		$('thead tr', gamesTable).first().find('th').each((i,e) => {
 			headings[e.innerText.trim()] = i;
 		});
-		console.log(headings);
 		
 		$('tbody tr', gamesTable).each((i,e) => {
+			
 			var cells = $('td', e);
 			var stats = {};
 			
 			stats.name     = cells.eq(headings['Game'])          .text().trim();
-			stats.playtime = cells.eq(headings['Total Playtime']).text().trim();
 			stats.type     = cells.eq(headings['Type'])          .text().trim();
-			stats.last     = cells.eq(headings['Last Unlock'])   .text().trim();
+			stats.last     = cells.eq(headings['Last Unlock'])   .text().trim().substr(0, 10);
 			stats.playtime = cells.eq(headings['Total Playtime']).text().trim();
-			
-			[stats.achDone, stats.achTotal] = cells.eq(headings['Achievements'])
-				.text().split('/');
-			
-			var row = $('<tr></tr>').appendTo(outputTable);
-			
-			$('<td></td>').appendTo(row).text(stats.name);
-			$('<td></td>').appendTo(row).text(stats.type);
-			$('<td></td>').appendTo(row).text(stats.last);
-			$('<td></td>').appendTo(row).text(stats.achDone);
-			$('<td></td>').appendTo(row).text(stats.achTotal);
 			
 			if (stats.playtime) {
-				console.log(stats.playtime);
 				var hrs  = (stats.playtime.match(/(?:(\d+)h)/) || [,'0'])[1];
 				var mins = (stats.playtime.match(/(?:(\d+)m)/) || [,'00'])[1];
 				mins = ('00' + mins).substr(-2);
-				$('<td></td>').appendTo(row).text(hrs + ':' + mins + ':00');
-			} else {
-				$('<td></td>').appendTo(row).text('');
+				stats.playtime = hrs + ':' + mins + ':00';
 			}
 			
+			var achText = cells.eq(headings['Achievements']).text().replace(/\s+/g, ' ').trim();
+			if (achText) {
+				console.log(achText);
+				if ($(e).is('.status-completed')) {
+					stats.achDone = stats.achTotal = achText.match(/^\d+$/)[0];
+				} else {
+					[, stats.achDone, stats.achTotal] = achText.match(/^(?:(\d+) \/ )?(\d+)$/);
+					if (!stats.achDone) stats.achDone = 0;
+				}
+			}
+
+			var row = $('<tr></tr>').appendTo(outputTable);
+			
+			$('<td></td>').appendTo(row).text(stats.name);
+			//$('<td></td>').appendTo(row).text(stats.type);
+			$('<td></td>').appendTo(row).text(stats.last);
+			$('<td></td>').appendTo(row).text(stats.achDone);
+			$('<td></td>').appendTo(row).text(stats.achTotal);
+			$('<td></td>').appendTo(row).text(stats.playtime);
+
 		});
 		
 		page++;
