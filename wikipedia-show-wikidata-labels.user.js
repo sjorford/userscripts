@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Wikipedia show Wikidata labels
 // @namespace      sjorford@gmail.com
-// @version        2023.10.08.4
+// @version        2023.10.08.5
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/*
 // @grant          GM_xmlhttpRequest
@@ -26,7 +26,7 @@ $(function() {
 			
 			var queue = [];
 			
-			$('td a', table).each((i,e) => {
+			$('> tbody > tr > td > a', table).each((i,e) => {
 				var pageTitle = e.href.match(/([^\/]+)(?:$|#)/)[1];
 				queue.push({a: e, title: pageTitle});
 			});
