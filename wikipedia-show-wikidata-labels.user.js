@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Wikipedia show Wikidata labels
 // @namespace      sjorford@gmail.com
-// @version        2023.10.08.2
+// @version        2023.10.08.3
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/*
 // @grant          GM_xmlhttpRequest
@@ -44,6 +44,7 @@ $(function() {
 					console.log(response);
 					var data = response.response;
 					var pageKey = Object.keys(data.entities)[0];
+					if (pageKey == -1) return;
 					var newCells = $(next.a).closest('th, td').splitCell(2, 1);
 					console.log(next.a, pageKey, next.title, newCells);
 					newCells.last().append(`<span class="sjo-wikidata-label">${pageKey}</span>`);
