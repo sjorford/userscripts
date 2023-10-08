@@ -1,9 +1,9 @@
 ﻿// ==UserScript==
 // @name           Wikipedia show Wikidata labels
 // @namespace      sjorford@gmail.com
-// @version        2023.10.08.0
+// @version        2023.10.08.1
 // @author         Stuart Orford
-// @match          https://en.wikipedia.org/wiki/List_of_FIFA_World_Cup_stadiums
+// @match          https://en.wikipedia.org/wiki/*
 // @grant          GM_xmlhttpRequest
 // @connect        wikidata.org
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -16,7 +16,7 @@ $(function() {
 		.sjo-wikidata-label {font-size: smaller;}
 	</style>`).appendTo('head');
 	
-	$('table.wikitable').each((i,e) => {
+	$('table.wikitable:contains("Capacity")').each((i,e) => {
 		var table = $(e);
 		
 		// TODO: prettify button
