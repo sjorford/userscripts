@@ -1,54 +1,60 @@
 ﻿// ==UserScript==
 // @name           Wikipedia show Wikidata labels
 // @namespace      sjorford@gmail.com
-// @version        2023.10.05.0
+// @version        2023.10.08.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/List_of_FIFA_World_Cup_stadiums
-// @grant          none
-// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // @grant          GM_xmlhttpRequest
-// @grant          GM.xmlhttpRequest
 // @connect        wikidata.org
+// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
 (function($) {
 $(function() {
 	
 	$(`<style>
-		.sjo-wikidata-label {display: none;}
-		.sjo-wikidata-show .sjo-wikidata-label {display: inline-block;}
+		.sjo-wikidata-label {font-size: smaller;}
 	</style>`).appendTo('head');
 	
-	var queue = [];
-	
-	var xxx = $('table.wikitable td > a').each((i,e) => {
-		var pageTitle = e.href.match(/([^\/]+)(?:$|#)/)[1];
-		queue.push({a: e, title: pageTitle});
-	});
-	
-	console.log(xxx);
-	
-	console.log(queue);
-	
-	getNext();
-	
-	function getNext() {
-		if (queue.length == 0) return;
+	$('table.wikitable').each((i,e) => {
+		var table = $(e);
 		
-		var next = queue.unshift();
-		var url = `https://www.wikidata.org/w/api.php?action=wbgetentities&sites=enwiki&normalize=1&titles=${next.title}`
-		GM_xmlhttpRequest({url: url, responseType: 'json', onload: parse});
-		//$.getJSON(url, parse);
+		// TODO: prettify button
+		$('<button>Retrieve Wikidata IDs</button>').insertBefore(e).click(getWikidata);
 		
-		function parse(response) {
-			var data = response.response;
-			//var data = response;
-			var pageKey = Object.keys(data.entities)[0];
-			console.log(next.a, pageKey, next.title);
-			//getNext();
+		function getWikidata(event) {
+			
+			var queue = [];
+			
+			$('> tbody > tr > td > a', table).each((i,e) => {
+				var pageTitle = e.href.match(/([^\/]+)(?:$|#)/)[1];
+				queue.push({a: e, title: pageTitle});
+			});
+			
+			getNext();
+			
+			function getNext() {
+				if (queue.length == 0) return;
+				
+				var next = queue.shift();
+				var url = `https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&sites=enwiki&normalize=1&titles=${next.title}`
+				GM_xmlhttpRequest({url: url, responseType: 'json', onload: parse});
+				
+				function parse(response) {
+					console.log(response);
+					var data = response.response;
+					var pageKey = Object.keys(data.entities)[0];
+					var newCells = $(next.a).closest('th, td').splitCell(2, 1);
+					console.log(next.a, pageKey, next.title, newCells);
+					newCells.last().append(`<span class="sjo-wikidata-label">${pageKey}</span>`);
+					getNext();
+				}
+
+			}
+
 		}
-		
-	}
+
+	});
 	
 });
 })(jQuery);
