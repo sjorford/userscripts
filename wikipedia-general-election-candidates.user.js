@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Wikipedia general election candidates
 // @namespace      sjorford@gmail.com
-// @version        2023.12.22.0
+// @version        2023.12.23.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election#*
@@ -14,7 +14,7 @@ var timer = window.setInterval(jQueryCheck, 100);
 function jQueryCheck() {
 	if (!$) return;
 	window.clearInterval(timer);
-	$('<script src="https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js"></script>').appendTo('head');
+	$('<script src="https://sjorford.github.io/js/sjo-jq.js"></script>').appendTo('head');
 	
 	$(`<style>
 		.wikitable.sortable {table-layout: fixed; width: 100%; font-size: 75%;}
