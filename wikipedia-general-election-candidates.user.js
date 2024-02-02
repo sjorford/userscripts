@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Wikipedia general election candidates
 // @namespace      sjorford@gmail.com
-// @version        2023.12.23.0
+// @version        2024.02.02.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election#*
@@ -34,6 +34,7 @@ function jQueryCheck() {
 		// Shorten incumbent party names
 		table.find('tbody tr').each((i,e) => {
 			var cell = $(e).find('td').filter((i,e) => $(e).data('sjo-col-min') == numCols - 2);
+			if (cell.attr('colspan')) return;
 			var text = cell.text().trim();
 			switch (true) {
 				case text == 'Conservative':      cell.text('Con'); break;
