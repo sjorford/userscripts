@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name           Wikipedia general election candidates
 // @namespace      sjorford@gmail.com
-// @version        2024.02.02.0
+// @version        2024.03.05.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election#*
 // @grant          none
+// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require        https://cdn.jsdelivr.net/npm/luxon@3.4.3/build/global/luxon.min.js
 // ==/UserScript==
 
