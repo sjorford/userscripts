@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.08.05.1
+// @version        2024.03.20.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @grant          none
@@ -11,6 +11,8 @@
 
 (function($) {
 $(function() {
+	
+	var debug = false;
 	
 	$(`<style>
 	.sjo-wrapper {
@@ -32,8 +34,8 @@ $(function() {
 	var timer = window.setInterval(checkForGames, 1000);
 	
 	function checkForGames() {
-		games = $('[class*="gameslistitems_GamesListItemContainer_"]').filter(':contains("My Game Stats")');
-		console.log(games);
+		games = $('span:contains("My Game Stats")');
+		if (debug) console.log(games);
 		if (games.length > 0) {
 			window.clearInterval(timer)
 			addButtons();
@@ -41,22 +43,25 @@ $(function() {
 	}
 	
 	function addButtons() {
-		var wrapper = games.find('[class*="gameslistitems_Buttons_"]');
-		var template = wrapper.find('[class*="gameslistitems_NavButton_"]');
-		var classes = template.attr('class').split(' ').map(c => c.match(/gameslistitems_/) ? c : '').join(' ').replace(/\s+/, ' ').trim();
+		if (debug) console.log('addButtons');
+		var wrapper = games.parent('div').parent('div');
+		if (debug) console.log(wrapper);
+		var template = wrapper.children('div').first();
+		var classes = template.attr('class');
 		$('<a class="sjo-extract" href="#">Extract stats</a>').addClass(classes).appendTo(wrapper).click(extractStats);
 	}
 	
 	function extractStats(event) {
 		event.preventDefault();
 		
-		var gameRow = $(event.target).closest('[class*="gameslistitems_GamesListItemContainer_"]');
-		console.log(gameRow);
-		var gameLink = gameRow.find('[class*="gameslistitems_GameNameContainer_"] a');
-		console.log(gameLink);
+		var button = $(event.target);
+		var gameRow = button.parent('div').parent('div');
+		if (debug) console.log(gameRow);
+		var gameLink = gameRow.children('span').children('a');
+		if (debug) console.log(gameLink);
 		var gameID = gameLink.attr('href').match(/\d+/)[0];
 		var gameName = gameLink.text();
-		console.log(gameID, gameName);
+		if (debug) console.log(gameID, gameName);
 		
 		var myAchievements = null, globalAchievements = null;
 		
@@ -73,7 +78,7 @@ $(function() {
 		
 		function processMyAchievements(data) {
 			var doc = $(data);
-			console.log('processMyAchievements', doc);
+			if (debug) console.log('processMyAchievements', doc);
 			myAchievements = [];
 			$('.achieveRow', doc).each((i,e) => {
 				var row = $(e);
@@ -91,7 +96,7 @@ $(function() {
 		
 		function processGlobalAchievements(data) {
 			var doc = $(data);
-			console.log('processGlobalAchievements', doc);
+			if (debug) console.log('processGlobalAchievements', doc);
 			globalAchievements = [];
 			$('.achieveRow', doc).each((i,e) => {
 				var row = $(e);
@@ -105,8 +110,8 @@ $(function() {
 		}
 		
 		function outputTable() {
-			console.log('myAchievements', myAchievements);
-			console.log('globalAchievements', globalAchievements);
+			if (debug) console.log('myAchievements', myAchievements);
+			if (debug) console.log('globalAchievements', globalAchievements);
 			
 			$.each(myAchievements, (index, mine) => {
 				$.each(globalAchievements, (index, global) => {
@@ -137,7 +142,7 @@ $(function() {
 				}
 			});
 			
-			console.log('globalAchievements', globalAchievements);
+			if (debug) console.log('globalAchievements', globalAchievements);
 			$.each(globalAchievements, (i,data) => {
 				var name = data.name + (data.dupe ? ' [' + data.dupe + ']' : '');
 				var row = $('<tr></tr>').appendTo(table);
