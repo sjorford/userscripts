@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Wikipedia general election candidates
 // @namespace      sjorford@gmail.com
-// @version        2024.03.05.2
+// @version        2024.03.26.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election
 // @match          https://en.wikipedia.org/wiki/Candidates_in_the_next_United_Kingdom_general_election#*
@@ -31,6 +31,7 @@ function sjoQueryCheck() {
 		
 		var table = $(e).indexCells();
 		var numCols = table.numCols();
+		if (numCols < 5) return;
 		
 		// Column widths
 		var colgroup = $('<colgroup></colgroup>').prependTo(table).append('<col>'.repeat(numCols));
