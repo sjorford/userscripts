@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://twitter.com/*
 // @include     https://mobile.twitter.com/*
-// @version     2024.02.04.0
+// @version     2024.02.15.0
 // @grant       none
 // @require     https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js
@@ -47,7 +47,7 @@ $(function() {
 	
 	function notInterested() {
 		
-		$('[data-testid="trend"]').closest('div:has(h2[role="heading"])').hide();
+		//$('[data-testid="trend"]').closest('div:has(h2[role="heading"])').hide();
 		
 		var hot = false;
 		
