@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           LEAP extract
 // @namespace      sjorford@gmail.com
-// @version        2024.06.27.1
+// @version        2024.06.27.2
 // @author         Stuart Orford
 // @match          http://www.andrewteale.me.uk/leap/results/*
 // @match          https://www.andrewteale.me.uk/leap/results/*
@@ -60,8 +60,8 @@ $(function() {
 		
 		// Re-sort wards
 		var sortedRows = outputTable.find('tr').toArray().sort((a,b) => {
-			var wardA = a.cells[2].textContent.trim();
-			var wardB = b.cells[2].textContent.trim();
+			var wardA = a.cells[2].textContent.trim().toLowerCase();
+			var wardB = b.cells[2].textContent.trim().toLowerCase();
 			return wardA < wardB ? -1 : wardA > wardB ? 1 : 0;
 		});
 		
