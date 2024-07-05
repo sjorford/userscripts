@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Wikidata tweaks
 // @namespace      sjorford@gmail.com
-// @version        2023.09.23.0
+// @version        2024.07.05.0
 // @author         Stuart Orford
 // @match          https://www.wikidata.org/wiki/Q*
 // @grant          none
@@ -23,7 +23,7 @@
 				}
 			</style>`).appendTo('head');
 			
-			$('div.wikibase-sitelinkgroupview:contains("(0 entries)")').hide();
+			$('div.wikibase-sitelinkgroupview:contains("(0 entries)")').not(':contains("Wikipedia")').hide();
 			
 			var enwiki = $('.wikibase-sitelinkview-enwiki a');
 			if (enwiki.length > 0) {
