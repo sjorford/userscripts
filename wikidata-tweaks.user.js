@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Wikidata tweaks
 // @namespace      sjorford@gmail.com
-// @version        2024.07.05.0
+// @version        2024.07.06.0
 // @author         Stuart Orford
 // @match          https://www.wikidata.org/wiki/Q*
 // @grant          none
@@ -15,11 +15,13 @@
 			var $ = jQuery;
 			
 			$(`<style>
-				#P6465 div, #P6465 span {background-color: #ffe65e !important;}
 				#sjo-wikipedia a {
 					background-image: url(//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Wikipedia-logo.png/35px-Wikipedia-logo.png);
 					background-size: 20px;
 					padding-left: 23px;
+				}
+				.sjo-dc-logo {
+					position: absolute; bottom: 10px; left: 10px; height: 50px;
 				}
 			</style>`).appendTo('head');
 			
@@ -27,9 +29,12 @@
 			
 			var enwiki = $('.wikibase-sitelinkview-enwiki a');
 			if (enwiki.length > 0) {
-				$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${enwiki.attr('href')}" title="${enwiki.text()}"><span>${enwiki.text()}</span></a></li>`)
+				$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${enwiki.attr('href')}" title="${enwiki.text()}"><span>Wikipedia</span></a></li>`)
 					.insertAfter('#ca-talk');
 			}
+			
+			$('<img class="sjo-dc-logo" src="https://dc-shared-frontend-assets.s3.eu-west-2.amazonaws.com/images/logo_icon.svg">')
+				.appendTo('#P6465 .wikibase-statementgroupview-property');
 			
 		}
 	}, 100);
