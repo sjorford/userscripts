@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2024.07.08.0
+// @version        2024.07.08.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -65,12 +65,14 @@ $(function() {
 	});
 	
 	var wikidataLink = $('#t-wikibase a');
-	var wikidataID;
 	if (wikidataLink.length > 0) {
-		wikidataID = wikidataLink.attr('href').match(/Q\d+/)[0];
-		wikidataLink.text('Wikidata ' + wikidataID);
 		
-		$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${wikidataLink.attr('href')}" title="${wikidataID}"><span>Wikidata</span></a></li>`)
+		var wikidataURL = wikidataLink.attr('href')
+							.replace(/\/wiki\/Special:EntityPage\/Q/, '/wiki/Q');
+		var wikidataID = wikidataURL.match(/Q\d+/)[0];
+		wikidataLink.attr('href', wikidataURL).text('Wikidata: ' + wikidataID);
+		
+		$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${wikidataURL}" title="${wikidataID}"><span>Wikidata</span></a></li>`)
 			.insertBefore('#ca-watch');
 		
 	}
