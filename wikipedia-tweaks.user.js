@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2024.07.08.1
+// @version        2024.07.12.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -18,7 +18,7 @@ $(function() {
 		
 	$(`<style>
 		
-		th > div.plainlinks.hlist.navbar-mini {display: none;}
+		/* th > div.plainlinks.hlist.navbar-mini {display: none;} */
 		#pt-userpage, #pt-mytalk, #pt-sandbox, #pt-mycontris, #pt-watchlist {display: none;}
 		/* #mw-page-header-links, .mw-editsection {display: none;} */
 		
@@ -35,9 +35,10 @@ $(function() {
 		.read-more-container {display: none;}
 		
 		#sjo-wikipedia a {
-			background-image: url(//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Wikipedia-logo.png/35px-Wikipedia-logo.png);
-			background-size: 20px;
-			padding-left: 23px;
+			background-image: url(https://www.wikidata.org/static/favicon/wikidata.ico);
+			background-size: 15px;
+			padding-left: 20px;
+			background-position-y: center;
 		}
 		
 	</style>`).appendTo('head');
