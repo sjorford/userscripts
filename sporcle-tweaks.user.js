@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.02.15.0
+// @version        2024.07.26.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -12,7 +12,8 @@ jQuery(function() {
 	
 	$(`<style>
 		#bg-temp.shifted {margin-top: auto;}
-		#leaderboard-wrapper {display: none;}
+		#leaderboard-wrapper, #right-rail {display: none !important;}
+		#gameTable .gametable-col td {text-align: left;}
 		.sjo-hint {color: #bbb;}
 	</style>`).appendTo('head');
 	
@@ -86,6 +87,16 @@ jQuery(function() {
 		'european_cup__champions_league_semi_finalists': {
 			hints: ['ESP', 'FRA', 'SCO', 'ITA', 'ESP', 'ITA', 'ENG', 'SRB', 'ESP', 'ITA', 'ENG', 'HUN', 'ESP', 'FRA', 'ESP', 'SUI', 'ESP', 'GER', 'ESP', 'SCO', 'POR', 'ESP', 'GER', 'AUT', 'POR', 'ESP', 'BEL', 'ENG', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ESP', 'GER', 'SUI', 'ITA', 'POR', 'ENG', 'HUN', 'ESP', 'SRB', 'ITA', 'ENG', 'SCO', 'ITA', 'CZE', 'BUL', 'ENG', 'POR', 'ITA', 'ESP', 'ITA', 'NED', 'ENG', 'SVK', 'NED', 'SCO', 'ENG', 'POL', 'NED', 'GRE', 'ESP', 'SRB', 'NED', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ENG', 'ESP', 'GER', 'ESP', 'SCO', 'HUN', 'GER', 'ENG', 'ESP', 'FRA', 'GER', 'FRA', 'NED', 'ESP', 'ENG', 'GER', 'UKR', 'SUI', 'ENG', 'BEL', 'GER', 'ITA', 'ENG', 'SWE', 'AUT', 'GER', 'ENG', 'GER', 'NED', 'ESP', 'ENG', 'ESP', 'GER', 'ITA', 'ENG', 'GER', 'BEL', 'BUL', 'GER', 'ITA', 'ESP', 'POL', 'ENG', 'ITA', 'ROM', 'SCO', 'ITA', 'ENG', 'FRA', 'GRE', 'ROM', 'ESP', 'BEL', 'SWE', 'POR', 'GER', 'UKR', 'ESP', 'NED', 'POR', 'ESP', 'ROM', 'ITA', 'ROM', 'TUR', 'ESP', 'ITA', 'POR', 'GER', 'FRA', 'SRB', 'FRA', 'GER', 'RUS', 'ESP', 'ITA', 'SRB', 'CZE', 'FRA', 'ITA', 'SWE', 'SCO', 'ITA', 'ESP', 'FRA', 'POR', 'NED', 'ITA', 'GER', 'FRA', 'ITA', 'NED', 'FRA', 'GRE', 'GER', 'ITA', 'NED', 'ENG', 'ESP', 'ITA', 'GER', 'FRA', 'ENG', 'GER', 'UKR', 'ITA', 'ESP', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ENG', 'ESP', 'ESP', 'GER', 'ESP', 'ENG', 'ITA', 'ITA', 'ITA', 'ESP', 'POR', 'FRA', 'ENG', 'ESP', 'ENG', 'ITA', 'ENG', 'NED', 'ESP', 'ENG', 'ITA', 'ESP', 'ITA', 'ENG', 'ENG', 'ENG', 'ENG', 'ENG', 'ESP', 'ENG', 'ESP', 'ENG', 'ENG', 'ENG', 'ITA', 'GER', 'ESP', 'FRA', 'ESP', 'ENG', 'ESP', 'GER', 'ENG', 'GER', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ESP', 'ESP', 'ESP', 'GER', 'ENG', 'ESP', 'ITA', 'GER', 'ESP', 'ESP', 'ESP', 'ENG', 'GER', 'ESP', 'ITA', 'ESP', 'FRA', 'ESP', 'ENG', 'GER', 'ITA', 'ENG', 'ENG', 'NED', 'ESP',],
 		},
+		'/Mellowfet/winning-and-losing-major-party-presidential-tickets': {
+			fn: () => {
+				$(`<style>#quiz-container #quiz-area, #xxxpage-wrapper {width: auto;}</style>`).appendTo('head');
+				$('.d_extra').each((i,e) => {
+					var cell = $(e);
+					cell.text(cell.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
+							  + (cell.text().match(/Vice President/) ? ' (VP)' : ''));
+				});
+			}
+		}
 
 	};
 	
