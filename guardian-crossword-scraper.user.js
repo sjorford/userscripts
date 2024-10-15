@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Guardian crossword scraper
 // @namespace      sjorford@gmail.com
-// @version        2024.10.15.0
+// @version        2024.10.15.1
 // @author         Stuart Orford
 // @match          https://www.theguardian.com/profile/*
 // @match          https://www.theguardian.com/crosswords/series/*
@@ -47,11 +47,13 @@ $(function() {
 	}
 	
 	function parseIndexPage(content) {
+		console.log('sjo', 'parseIndexPage', content);
 		
 		// Get list of URLs
 		//var items = $('.fc-item[data-id^="crosswords/"] .fc-item__title a[data-link-name="article"]', content);
 		var items = $('[id^="container-"] [href*="/crosswords/"]', content).not('[href*="#comment"]');
 		var urls = items.toArray().map(e => e.href);
+		console.log('sjo', 'urls', urls);
 		
 		getCrossword();
 		
@@ -66,7 +68,7 @@ $(function() {
 		}
 		
 		function parseCrossword(content) {
-			console.log(content);
+			console.log('sjo', 'parseCrossword', content);
 			
 			var setter = $('.crossword__links .byline span[itemprop="name"]', content).text().trim();
 			var match = $('h1', content).text().trim().match(/^(.+) crossword No ([\d,]+)$/);
@@ -96,18 +98,30 @@ $(function() {
 			$('<td></td>').text(date)    .appendTo(row);
 			//$('<td></td>').text(gridFlat).appendTo(row);
 			
-			getCrossword();
+			window.setTimeout(getCrossword, 1000);
 			
 		}
 		
 		function getNextIndexPage() {
-			var next = $('.pagination__action.is-active', content).next('.pagination__action');
+			//var next = $('.pagination__action.is-active', content).next('.pagination__action');
+			var next = $('a[href*="/crosswords/series/"][href*="?page="]:last-of-type', content);
+			console.log('sjo', 'next', next);
 			if (next.length == 0) return;
 			var url = next.attr('href');
+			console.log('sjo', 'url', url);
 			if (!url) return;
-			console.log(url);
+			console.log('sjo', 'Getting ' + url);
 			$('.sjo-status').text('Getting ' + url);
-			window.setTimeout(() => $.get(url, data => parseIndexPage($('.index-page', data))), 3000);
+			window.setTimeout(() => $.get(url, data => {
+				console.log('sjo', 'data', data);
+				var bodyData = data.match(/<body[\s\S]*<\/body>/)[0];
+				console.log('sjo', 'bodyData', bodyData);
+				var bodyElements = $(bodyData);
+				console.log('sjo', 'bodyElements', bodyElements);
+				var maincontent = bodyElements.filter('[id="maincontent"]');
+				console.log('sjo', 'maincontent', maincontent);
+				parseIndexPage(maincontent);
+			}), 3000);
 		}
 		
 	}
