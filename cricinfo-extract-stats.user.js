@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2024.09.27.0
+// @version        2024.09.28.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -209,7 +209,8 @@
 			switch (tableHeaders[index]) {
 				
 				// Split out player ID and team, and remove combined teams
-				case 'player', 'official':
+				case 'player':
+				case 'official':
 					if (a.length > 0) {
 						if (text.indexOf(' (') >= 0) {
 							return [
