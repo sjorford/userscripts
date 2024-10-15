@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Guardian crossword scraper
 // @namespace      sjorford@gmail.com
-// @version        2022.06.11.0
+// @version        2024.10.15.0
 // @author         Stuart Orford
 // @match          https://www.theguardian.com/profile/*
 // @match          https://www.theguardian.com/crosswords/series/*
@@ -31,7 +31,7 @@ $(function() {
 		.sjo-status {margin-left: 1em;}
 	</style>`).appendTo('head');
 	
-	$('<input type="button" value="Extract all">').appendTo('.index-page-header')
+	$('<input type="button" value="Extract all">').prependTo('#maincontent')
 		.click(extractAll).after('<span class="sjo-status"></span>');
 	
 	function extractAll() {
@@ -42,14 +42,15 @@ $(function() {
 			.click(event => table.selectRange());
 
 		// Parse this page
-		parseIndexPage($('.index-page'));
+		parseIndexPage($('#maincontent'));
 		
 	}
 	
 	function parseIndexPage(content) {
 		
 		// Get list of URLs
-		var items = $('.fc-item[data-id^="crosswords/"] .fc-item__title a[data-link-name="article"]', content);
+		//var items = $('.fc-item[data-id^="crosswords/"] .fc-item__title a[data-link-name="article"]', content);
+		var items = $('[id^="container-"] [href*="/crosswords/"]', content).not('[href*="#comment"]');
 		var urls = items.toArray().map(e => e.href);
 		
 		getCrossword();
@@ -65,13 +66,15 @@ $(function() {
 		}
 		
 		function parseCrossword(content) {
+			console.log(content);
 			
 			var setter = $('.crossword__links .byline span[itemprop="name"]', content).text().trim();
 			var match = $('h1', content).text().trim().match(/^(.+) crossword No ([\d,]+)$/);
 			var type = match ? match[1] : '';
 			var num  = match ? match[2] : '';
-			var date = $('.crossword__links time[itemprop="datePublished"]', content).attr('datetime').replace(/T.*/, '');
+			var date = ($('.crossword__links time[itemprop="datePublished"]', content).attr('datetime') || '').replace(/T.*/, '');
 			
+			/*
 			var grid = Array(15).fill(0).map(a => Array(15).fill('■'));
 			
 			var gridHTML = $('.crossword__container__grid-wrapper > noscript', content).text();
@@ -84,13 +87,14 @@ $(function() {
 				grid[row][col] = '□';
 			});
 			var gridFlat = grid.map(a => a.join('')).join(' ');
+			*/
 			
 			var row = $('<tr></tr>').appendTo('.sjo-extract-table');
 			$('<td></td>').text(setter)  .appendTo(row);
 			$('<td></td>').text(type)    .appendTo(row);
 			$('<td></td>').text(num)     .appendTo(row);
 			$('<td></td>').text(date)    .appendTo(row);
-			$('<td></td>').text(gridFlat).appendTo(row);
+			//$('<td></td>').text(gridFlat).appendTo(row);
 			
 			getCrossword();
 			
@@ -103,7 +107,7 @@ $(function() {
 			if (!url) return;
 			console.log(url);
 			$('.sjo-status').text('Getting ' + url);
-			$.get(url, data => parseIndexPage($('.index-page', data)));
+			window.setTimeout(() => $.get(url, data => parseIndexPage($('.index-page', data))), 3000);
 		}
 		
 	}
