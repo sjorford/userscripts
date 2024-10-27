@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.07.26.0
+// @version        2024.10.27.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -43,17 +43,8 @@ jQuery(function() {
 		'/g/originalunmembers': {
 			unshuffleAnswers: true,
 		},
-		'/darinh/us-100k-cities-within-100miles-5-min-blitz': {
-			enabled: false,
-			fn: autofill,
-			args: [[
-				"Abilene", "Albuquerque", "Amarillo", "Anchorage", "Billings", "Boise", "Cedar Rapids", "Corpus Christi", "Des Moines", "El Paso", "Fargo", "Green Bay", "Honolulu", 
-				"Jackson", "Laredo", "Little Rock", "Lubbock", "Memphis", "Midland", "Mobile", "Shreveport", "Sioux Falls", "Spokane", "Tallahassee", "Tulsa", "Wichita",
-				"Columbia", "Springfield", "Rochester", "Aurora", "Madison", "Akron", "Cleveland", "South Bend", "Flint", "Richmond", "Philadelphia", 
-				"Reno", "Visalia", "Los Angeles", "San Diego", "Jacksonville", "Baton Rouge", "Houston", "Oklahoma City", "Kansas City", "Omaha", "Salt Lake City", 
-				"Chandler", "Las Vegas", "Salem", "Seattle", "Brownsville", "Austin", "Denton", "Tampa", "Port St. Lucie", "Miami", "Savannah", "Fayetteville", "Winston-Salem", 
-				"Cincinnati", "Clarksville", "Chattanooga", "Atlanta", "Birmingham", 
-			]],
+		'darinh/us-100k-cities-within-100miles-5-min-blitz': {
+			hints: ['TX*', 'OH', 'NM*', 'VA', 'PA', 'TX*', 'AK*', 'MI', 'CA', 'TX', 'CO', 'GA', 'GA', 'GA', 'CO', 'IL', 'TX', 'CA', 'MD', 'LA', 'TX', 'WA', 'CA', 'MT*', 'AL', 'ID*', 'MA', 'CT', 'TX', 'NY', 'MA', 'FL', 'CA', 'TX', 'NC', 'IA*', 'CO', 'AZ', 'SC', 'NC', 'TN', 'VA', 'IL', 'CA', 'OH', 'TN', 'FL', 'OH', 'CO', 'MO*', 'SC', 'GA', 'OH', 'CA', 'FL', 'CA', 'TX*', 'TX', 'CA', 'OH', 'TX', 'CO', 'IA*', 'MI', 'NC', 'TX*', 'IL', 'NJ', 'CA', 'PA', 'CA', 'OR', 'IN', 'WA', 'CA', 'ND*', 'NC', 'MI', 'CA', 'CO', 'FL', 'IN', 'TX', 'CA', 'CA', 'TX', 'FL', 'TX', 'AZ', 'AZ', 'TX', 'MI', 'WI*', 'NC', 'OR', 'VA', 'CT', 'CA', 'NV', 'FL', 'NC', 'FL', 'HI*', 'TX', 'AL', 'MO', 'IN', 'TX', 'MS*', 'FL', 'NJ', 'IL', 'KS', 'MO', 'TX', 'TN', 'LA', 'CO', 'MI', 'TX*', 'NV', 'KY', 'NE', 'AR*', 'CA', 'KY', 'MA', 'TX*', 'WI', 'NH', 'TX', 'TX', 'TN*', 'AZ', 'TX', 'FL', 'FL', 'TX*', 'WI', 'MN', 'FL', 'AL*', 'CA', 'AL', 'CA', 'TN', 'CA', 'IL', 'TN', 'CT', 'LA', 'NY', 'NJ', 'VA', 'VA', 'OK', 'NV', 'CA', 'CA', 'OK', 'KS', 'NE', 'FL', 'KS', 'FL', 'TX', 'NJ', 'FL', 'AZ', 'IL', 'PA', 'AZ', 'PA', 'TX', 'FL', 'OR', 'RI', 'UT', 'CO', 'NC', 'NV', 'CA', 'VA', 'CA', 'MN', 'NY', 'IL', 'CA', 'CA', 'OR', 'CA', 'UT', 'TX', 'CA', 'CA', 'CA', 'CA', 'CA', 'CA', 'GA', 'AZ', 'WA', 'LA*', 'SD*', 'IN', 'WA*', 'IL', 'MA', 'MO*', 'MO', 'MN', 'FL', 'CT', 'MI', 'CA', 'CA', 'AZ', 'NY', 'WA', 'FL*', 'FL', 'CA', 'AZ', 'CO', 'OH', 'KS', 'AZ', 'OK*', 'CA', 'WA', 'CA', 'CA', 'VA', 'CA', 'TX', 'MI', 'DC', 'CT', 'UT', 'UT', 'CO', 'TX', 'KS*', 'NC', 'NC', 'MA', 'NY',],
 		},
 		'/puckett86/state-by-city': {
 			unshuffleAnswers: true,
@@ -89,11 +80,14 @@ jQuery(function() {
 		},
 		'/Mellowfet/winning-and-losing-major-party-presidential-tickets': {
 			fn: () => {
-				$(`<style>#quiz-container #quiz-area, #xxxpage-wrapper {width: auto;}</style>`).appendTo('head');
+				$(`<style>#quiz-container #quiz-area {width: auto;}</style>`).appendTo('head');
+				$('#slot3,#slot7,#slot35,#slot36,#slot40,#slot53,#slot54,#slot70,#slot210,#slot211,#slot280,#slot281,#slot282,#slot283,#slot284,#slot285, #slot2,#slot6,#slot10').closest('tr').hide();
 				$('.d_extra').each((i,e) => {
-					var cell = $(e);
-					cell.text(cell.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
-							  + (cell.text().match(/Vice President/) ? ' (VP)' : ''));
+					var d_extra = $(e);
+					d_extra.text(d_extra.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
+							  + (d_extra.text().match(/Vice President/) ? ' (VP)' : ''));
+					var party = d_extra.text().match(/^(.*?)(\(|$)/)[1].trim();
+					d_extra.next('.d_value').css({backgroundColor: (party == 'Democratic' ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
 				});
 			}
 		}
@@ -240,10 +234,29 @@ jQuery(function() {
 	
 	// Click to retry value
 	$('.d_value').click(event => {
+		
+		var values = [];
+		$('.d_value').each((i,e) => {
+			if ($('.sjo-hint', e).length > 0) return;
+			var value = e.innerText.trim();
+			if (value != '') values.push(value);
+		});
+		
+		window.setTimeout(enterValue, 0);
+		
+		function enterValue() {
+			if (values.length == 0) return;
+			var value = values.pop();
+			$('#gameinput').focus().val(value).trigger($.Event("input"));
+			window.setTimeout(enterValue, 0);
+		}
+		
+		/*
 		var value = event.target.innerText.trim();
 		if (value != '') {
 			var gameinput = $('#gameinput').focus().val(value).trigger($.Event("input"));
 		}
+		*/
 	});
 	
 	function autofill(answers) {
