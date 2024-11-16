@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.10.27.0
+// @version        2024.11.16.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -61,7 +61,7 @@ jQuery(function() {
 			hints: ['NY', 'NC', 'NV', 'NM', 'NE', 'NC', 'NV', 'NJ', 'NC', 'NJ', 'NE', 'NC', 'NY', 'NV', 'NV', 'NC', 'NY', 'NY', 'NC', 'NC', 'NJ', 'NY', 'NJ', 'ND', 'NH', 'NC', 'NC', 'NM', 'NV', 'NJ', 'NC', 'NM'],
 		},
 		'/Unidentifiedkiwi/ultimate_usmetro': {
-			hints: ['NY-NJ-PA', 'CA', 'IL-IN-WI', 'TX', 'TX', 'PA-NJ-DE-MD', 'DC-VA-MD-WV', 'FL', 'GA', 'MA-NH', 'CA', 'CA', 'MI', 'AZ', 'WA', 'MN-WI', 'CA', 'FL', 'MO-IL', 'MD', 'CO', 'PA', 'OR-WA', 'TX', 'CA', 'FL', 'OH-KY-IN', 'OH', 'MO-KS', 'NV', 'CA', 'OH', 'NC-SC', 'TX', 'IN', 'VA-NC', 'TN', 'RI-MA', 'WI', 'FL', 'TN-MS-AR', 'KY-IN', 'OK', 'VA', 'CT', 'LA', 'NC', 'UT', 'NY', 'AL', 'NY', 'AZ', 'HI', 'OK', 'CA', 'CT', 'NM', 'NE-IA', 'NY', 'CT', 'CA', 'OH', 'CA', 'PA-NJ', 'TX', 'LA', 'MA', 'TX', 'MI', 'SC', 'NC', 'AR', 'FL', 'TN', 'OH', 'CA', 'MA', 'SC', 'NY', 'NY', 'CO', 'OH', 'SC', 'FL', 'ID', 'KS', 'FL', 'IA', 'WI', 'PA', 'OH-PA', 'GA-SC', 'UT', 'PA', 'MS', 'FL', 'UT', 'TN-GA', 'PA', 'CA', 'ME', 'NC', 'FL', 'CA', 'NC', 'KY', 'AR-MO', 'WA', 'MI', 'FL', 'CA', 'MO', 'PA', 'TX', 'NV', 'NC', 'FL', 'CA', 'AL', 'MI', 'CA', 'IN', 'CA', 'TX', 'PA', 'AL', 'TX', 'OH', 'LA', 'NH', 'OR', 'TX', 'AK', 'IA-IL', 'IL', 'AL', 'NC', 'FL', 'NC', 'NJ', 'NC', 'IN-KY', 'GA', 'OR', 'IL', 'MI', 'FL', 'MI', 'FL', 'IN-MI', 'TN-VA', 'WI', 'VA', 'NE', 'CO', 'WV', 'GA-AL', 'AR-OK', 'CO', 'NY', 'TX', 'WV-KY-OH', 'SC', 'PA', 'MN-WI', 'TN-KY', 'LA', 'SC', 'NJ', 'CT', 'CA', 'MD-WV', 'FL', 'MI', 'CA', 'WA', 'IA', 'CA', 'CO', 'WA', 'TX', 'WA', 'VA', 'TX', 'MS', 'NY', 'WA', 'TX', 'KS', 'GA', 'SD', 'IL', 'TX', 'WI', 'AL', 'CA', 'TX', 'MA', 'NM', 'TX'],
+			hints: ['NY-NJ-PA', 'CA', 'IL-IN-WI', 'TX', 'TX', 'DC-VA-MD-WV', 'PA-NJ-DE-MD', 'FL', 'GA', 'MA-NH', 'AZ', 'CA', 'CA', 'MI', 'WA', 'MN-WI', 'CA', 'FL', 'CO', 'MD', 'MO-IL', 'FL', 'NC-SC', 'TX', 'OR-WA', 'CA', 'PA', 'TX', 'NV', 'OH-KY-IN', 'MO-KS', 'OH', 'IN', 'OH', 'CA', 'TN', 'VA-NC', 'RI-MA', 'FL', 'WI', 'OK', 'NC', 'TN-MS-AR', 'VA', 'KY-IN', 'LA', 'UT', 'CT', 'NY', 'AL', 'NY', 'MI', 'AZ', 'HI', 'OK', 'CA', 'MA', 'NE-IA', 'CT', 'SC', 'NM', 'CA', 'NY', 'TN', 'TX', 'LA', 'TX', 'CT', 'PA-NJ', 'CA', 'FL', 'SC', 'OH', 'SC', 'CA', 'NC', 'ID', 'FL', 'CO', 'AR', 'FL', 'IA', 'OH', 'MA', 'NY', 'UT', 'WI', 'NC', 'UT', 'FL', 'NY', 'NC', 'KS', 'OH', 'GA-SC', 'FL', 'MS', 'PA', 'WA', 'PA', 'TN-GA', 'PA', 'CA', 'ME', 'AR-MO', 'MI', 'OH-PA', 'NC', 'KY', 'FL', 'AL', 'NV', 'CA', 'SC', 'FL', 'LA', 'MO', 'TX', 'CA', 'NC', 'PA', 'CA', 'CA', 'CA', 'OR', 'AL', 'PA', 'NH', 'TX', 'TX', 'IN', 'MD', 'MS', 'MI', 'GA', 'IL', 'OH', 'AK', 'TX', 'LA', 'NJ', 'AL', 'IA-IL', 'FL', 'OR', 'FL', 'FL', 'MI', 'NC', 'WV-KY-OH', 'CO', 'NE', 'FL', 'IL', 'CO', 'CO', 'GA-AL', 'WI', 'SC', 'IN-MI', 'TX', 'TN-KY', 'VA', 'IN-KY', 'TN-VA', 'WA', 'WA', 'MD-WV', 'NY', 'MN-WI', 'FL', 'TX', 'NC', 'CA', 'CA', 'TX', 'SD', 'IA', 'WA', 'NJ', 'PA', 'CA', 'TX', 'AL', 'CT', 'TX', 'TX', 'MI', 'VA', 'WV', 'WA', 'ND', 'NY', 'AR-OK', 'WI', 'AZ', 'GA', 'TX', 'KS', 'AL', ],
 		},
 		'us_cities_official_2010_population': {
 			hints: ['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'FL', 'IN', 'CA', 'TX', 'OH', 'TX', 'NC', 'MI', 'TX', 'TN', 'MD', 'MA', 'WA', 'DC', 'TN', 'CO', 'KY', 'WI', 'OR', 'NV', 'OK', 'NM', 'AZ', 'CA', 'CA', 'CA', 'MO', 'AZ', 'VA', 'GA', 'CO', 'NE', 'NC', 'FL', 'OH', 'OK', 'CA', 'HI', 'MN', 'KS', 'TX', 'CA', 'LA', 'CA', 'FL', 'CO', 'CA', 'MO', 'PA', 'TX', 'CA', 'OH', 'KY', 'AK', 'CA', 'OH', 'MN', 'NJ', 'NC', 'NY', 'TX', 'NE', 'NV', 'IN', 'NJ', 'FL', 'CA', 'VA', 'FL', 'AZ', 'TX', 'WI', 'NC', 'TX', 'LA', 'NC', 'TX', 'AZ', 'NV', 'FL', 'VA', 'AZ', 'NV', 'TX', 'CA', 'CA', 'AL', 'NY', 'CA', 'WA', 'AZ', 'VA', 'AL', 'ID', 'VA', 'IA', 'CA', 'NC', 'LA', 'OH', 'WA', 'IL', 'CA', 'CA', 'NY', 'GA', 'AL', 'AR', 'CA', 'CA', 'TX', 'CA', 'GA', 'MI', 'UT', 'FL', 'MA', 'VA', 'AL', 'TN', 'RI', 'CA', 'TX', 'TX', 'MS', 'KS', 'CA', 'CA', 'TN', 'CA', 'FL', 'CA', 'FL', 'CA', 'WA', 'AZ', 'MO', 'CA', 'OR', 'FL', 'OR', 'FL', 'AZ', 'SD', 'MA', 'CA', 'IL', 'CA', 'CA', 'CA', 'CA', 'TX', 'IL', 'NJ', 'KS', 'CA', 'NY', 'CT', 'CA', 'CO', 'CA', 'CO', 'IL', 'OH', 'FL', 'CA', 'VA', 'TX', 'VA', 'CA', 'CA', 'GA', 'NC', 'CA', 'MI', 'TN', 'TX', 'TX', 'CT', 'MI', 'UT', 'SC', 'TX', 'KS', 'CA', 'IA', 'KS', 'NJ', 'TX', 'CT'],
@@ -79,6 +79,7 @@ jQuery(function() {
 			hints: ['ESP', 'FRA', 'SCO', 'ITA', 'ESP', 'ITA', 'ENG', 'SRB', 'ESP', 'ITA', 'ENG', 'HUN', 'ESP', 'FRA', 'ESP', 'SUI', 'ESP', 'GER', 'ESP', 'SCO', 'POR', 'ESP', 'GER', 'AUT', 'POR', 'ESP', 'BEL', 'ENG', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ESP', 'GER', 'SUI', 'ITA', 'POR', 'ENG', 'HUN', 'ESP', 'SRB', 'ITA', 'ENG', 'SCO', 'ITA', 'CZE', 'BUL', 'ENG', 'POR', 'ITA', 'ESP', 'ITA', 'NED', 'ENG', 'SVK', 'NED', 'SCO', 'ENG', 'POL', 'NED', 'GRE', 'ESP', 'SRB', 'NED', 'ITA', 'POR', 'SCO', 'NED', 'ITA', 'ENG', 'ESP', 'GER', 'ESP', 'SCO', 'HUN', 'GER', 'ENG', 'ESP', 'FRA', 'GER', 'FRA', 'NED', 'ESP', 'ENG', 'GER', 'UKR', 'SUI', 'ENG', 'BEL', 'GER', 'ITA', 'ENG', 'SWE', 'AUT', 'GER', 'ENG', 'GER', 'NED', 'ESP', 'ENG', 'ESP', 'GER', 'ITA', 'ENG', 'GER', 'BEL', 'BUL', 'GER', 'ITA', 'ESP', 'POL', 'ENG', 'ITA', 'ROM', 'SCO', 'ITA', 'ENG', 'FRA', 'GRE', 'ROM', 'ESP', 'BEL', 'SWE', 'POR', 'GER', 'UKR', 'ESP', 'NED', 'POR', 'ESP', 'ROM', 'ITA', 'ROM', 'TUR', 'ESP', 'ITA', 'POR', 'GER', 'FRA', 'SRB', 'FRA', 'GER', 'RUS', 'ESP', 'ITA', 'SRB', 'CZE', 'FRA', 'ITA', 'SWE', 'SCO', 'ITA', 'ESP', 'FRA', 'POR', 'NED', 'ITA', 'GER', 'FRA', 'ITA', 'NED', 'FRA', 'GRE', 'GER', 'ITA', 'NED', 'ENG', 'ESP', 'ITA', 'GER', 'FRA', 'ENG', 'GER', 'UKR', 'ITA', 'ESP', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ENG', 'ESP', 'ESP', 'GER', 'ESP', 'ENG', 'ITA', 'ITA', 'ITA', 'ESP', 'POR', 'FRA', 'ENG', 'ESP', 'ENG', 'ITA', 'ENG', 'NED', 'ESP', 'ENG', 'ITA', 'ESP', 'ITA', 'ENG', 'ENG', 'ENG', 'ENG', 'ENG', 'ESP', 'ENG', 'ESP', 'ENG', 'ENG', 'ENG', 'ITA', 'GER', 'ESP', 'FRA', 'ESP', 'ENG', 'ESP', 'GER', 'ENG', 'GER', 'ESP', 'ESP', 'GER', 'GER', 'ESP', 'ESP', 'ESP', 'ESP', 'GER', 'ENG', 'ESP', 'ITA', 'GER', 'ESP', 'ESP', 'ESP', 'ENG', 'GER', 'ESP', 'ITA', 'ESP', 'FRA', 'ESP', 'ENG', 'GER', 'ITA', 'ENG', 'ENG', 'NED', 'ESP',],
 		},
 		'/Mellowfet/winning-and-losing-major-party-presidential-tickets': {
+			autofill: ['Washington', 'Adams', 'Jefferson', 'Madison', 'Monroe', 'Jackson', 'Van Buren', 'Harrison', 'Tyler', 'Polk', 'Taylor', 'Fillmore', 'Pierce', 'Buchanan', 'Lincoln', 'Johnson', 'Grant', 'Hayes', 'Garfield', 'Arthur', 'Cleveland', 'McKinley', 'Roosevelt', 'Taft', 'Wilson', 'Harding', 'Coolidge', 'Hoover', 'Truman', 'Eisenhower', 'Kennedy', 'Nixon', 'Ford', 'Carter', 'Reagan', 'Bush', 'Clinton', 'Obama', 'Trump', 'Biden',],
 			fn: () => {
 				$(`<style>#quiz-container #quiz-area {width: auto;}</style>`).appendTo('head');
 				$('#slot3,#slot7,#slot35,#slot36,#slot40,#slot53,#slot54,#slot70,#slot210,#slot211,#slot280,#slot281,#slot282,#slot283,#slot284,#slot285, #slot2,#slot6,#slot10').closest('tr').hide();
@@ -87,7 +88,7 @@ jQuery(function() {
 					d_extra.text(d_extra.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
 							  + (d_extra.text().match(/Vice President/) ? ' (VP)' : ''));
 					var party = d_extra.text().match(/^(.*?)(\(|$)/)[1].trim();
-					d_extra.next('.d_value').css({backgroundColor: (party == 'Democratic' ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
+					d_extra.next('.d_value').css({backgroundColor: ((party == 'Democratic' || party == 'Democratic & Populist') ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
 				});
 			}
 		}
@@ -101,6 +102,7 @@ jQuery(function() {
 			
 			if (options.moreColumns) moreColumns();
 			if (options.unshuffleAnswers) unshuffleAnswers();
+			if (options.autofill) autofill(options.autofill);
 			if (options.autofillForcedOrder) autofillForcedOrder();
 			if (options.trimAnswers) trimAnswers(options.trimAnswers);
 			if (options.hints) addHints(options.hints);
@@ -238,14 +240,17 @@ jQuery(function() {
 		var values = [];
 		$('.d_value').each((i,e) => {
 			if ($('.sjo-hint', e).length > 0) return;
-			var value = e.innerText.trim();
+			var value = e.innerText.trim(); //.replace(/ \(.*?\)$/, '');
 			if (value != '') values.push(value);
 		});
 		
 		window.setTimeout(enterValue, 0);
 		
 		function enterValue() {
-			if (values.length == 0) return;
+			if (values.length == 0) {
+				$('#gameinput').focus().val('');
+				return;
+			}
 			var value = values.pop();
 			$('#gameinput').focus().val(value).trigger($.Event("input"));
 			window.setTimeout(enterValue, 0);
