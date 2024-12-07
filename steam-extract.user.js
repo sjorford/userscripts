@@ -2,9 +2,11 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.03.20.0
+// @version        2024.12.07.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
+// @match          https://steamcommunity.com/id/sjorford/games/*
+// @match          https://steamcommunity.com/id/sjorford/games?*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -12,7 +14,7 @@
 (function($) {
 $(function() {
 	
-	var debug = false;
+	var debug = true;
 	
 	$(`<style>
 	.sjo-wrapper {
@@ -35,7 +37,7 @@ $(function() {
 	
 	function checkForGames() {
 		games = $('span:contains("My Game Stats")');
-		if (debug) console.log(games);
+		if (debug) console.log('games', games);
 		if (games.length > 0) {
 			window.clearInterval(timer)
 			addButtons();
@@ -45,7 +47,7 @@ $(function() {
 	function addButtons() {
 		if (debug) console.log('addButtons');
 		var wrapper = games.parent('div').parent('div');
-		if (debug) console.log(wrapper);
+		if (debug) console.log('wrapper', wrapper);
 		var template = wrapper.children('div').first();
 		var classes = template.attr('class');
 		$('<a class="sjo-extract" href="#">Extract stats</a>').addClass(classes).appendTo(wrapper).click(extractStats);
