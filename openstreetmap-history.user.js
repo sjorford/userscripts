@@ -2,19 +2,21 @@
 // @name           OpenStreetMap history
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.02.07.0
+// @version        2024.11.11.0
 // @match          https://www.openstreetmap.org/*
 // @grant          none
 // ==/UserScript==
 
 $(function() {
 	
-	$(`<style>
-		.sjo-history-added   .browse-tag-k, .sjo-history-added   .browse-tag-v {background-color: #73ca73 !important;}
-		.sjo-history-removed .browse-tag-k, .sjo-history-removed .browse-tag-v {background-color: #cca0a0 !important;}
-		.sjo-history-changed .browse-tag-v {background-color: #addd44 !important;}
+	/*
+	$(`<style class="sjo-styles">
+		.sjo-history-added   th, .sjo-history-added   td {background-color: #73ca73 !important;}
+		.sjo-history-removed th, .sjo-history-removed td {background-color: #cca0a0 !important;}
+		.sjo-history-changed th {background-color: #addd44 !important;}
 		.sjo-history-bearing {display: inline-block;}
 	</style>`).appendTo('head');
+	*/
 	
 	$('.secondary-actions a[href$="/history"]').click(event => {
 		var timer = window.setInterval(markupHistory, 100);
@@ -28,10 +30,11 @@ $(function() {
 	var log = $('.browse-node, .browse-way, .browse-relation').not('.sjo-processed');
 	log.addClass('sjo-processed').each((i,e) => {
 		
-		var thisTable = log.eq(i).find('.browse-tag-list');
-		if (thisTable.length == 0) {
-			thisTable = $('<table class="browse-tag-list"></table>').appendTo(e);
-		}
+		//var thisTable = log.eq(i).find('.browse-tag-list');
+		//if (thisTable.length == 0) {
+		//	thisTable = $('<table class="browse-tag-list"></table>').appendTo(e);
+		//}
+		var removedTable;
 		
 		var thisLogRows = log.eq(i).find('.browse-tag-list tr');
 		var prevLogRows = log.eq(i+1).find('.browse-tag-list tr');
@@ -43,14 +46,21 @@ $(function() {
 		while (θ < thisLog.length || π < prevLog.length) {
 			
 			if (π >= prevLog.length || (θ < thisLog.length && thisLog[θ].key < prevLog[π].key)) {
-				thisLogRows.eq(θ).addClass('sjo-history-added');
+				thisLogRows.eq(θ).addClass('sjo-history-added')
+					.find('*').css({backgroundColor: '#73ca73'});
 				θ++;
 			} else if (θ >= thisLog.length || (π < prevLog.length && prevLog[π].key < thisLog[θ].key)) {
-				$('<tr></tr>').html(prevLogRows.eq(π).html()).addClass('sjo-history-removed').appendTo(thisTable);
+				if (!removedTable) {
+					removedTable = $('<table class="mb-0 browse-tag-list table align-middle"></table>').appendTo(e).before('<h5>Removed:</h5>')
+						.wrap('<div class="mb-3 border border-secondary-subtle rounded overflow-hidden"></div>').append('<tbody></tbody>').find('tbody');
+				}
+				$('<tr></tr>').html(prevLogRows.eq(π).html()).addClass('sjo-history-removed').appendTo(removedTable)
+					.find('*').css({backgroundColor: '#cca0a0'});
 				π++;
 			} else {
 				if (thisLog[θ].key === prevLog[π].key && thisLog[θ].value !== prevLog[π].value) {
-					thisLogRows.eq(θ).addClass('sjo-history-changed');
+					thisLogRows.eq(θ).addClass('sjo-history-changed')
+						.find('*').css({backgroundColor: '#addd44'});
 				}
 				θ++;
 				π++;
