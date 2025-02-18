@@ -11,15 +11,13 @@
 (function($) {
 $(function() {
 	
-	$(`<style>
-		
-	</style>`).appendTo('head');
+	var debug = false;
 	
 	var numCols, numRows;
 	var horzLinesGrid = [];
 	var vertLinesGrid = [];
 	var nextColor = 1;
-	var threshold = 2;
+	var threshold = 25;
 	
 	var allLinesFlat = $('.loop-line');
 	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
@@ -29,8 +27,8 @@ $(function() {
 	countLines();
 	colorLines();
 
-	console.log('numCols', numCols, 'horzLinesGrid', horzLinesGrid);
-	console.log('numRows', numRows, 'vertLinesGrid', vertLinesGrid);
+	if (debug) console.log('numCols', numCols, 'horzLinesGrid', horzLinesGrid);
+	if (debug) console.log('numRows', numRows, 'vertLinesGrid', vertLinesGrid);
 
 	function indexLines() {
 		
@@ -69,7 +67,7 @@ $(function() {
 		
 		var gridChanged;
 		
-		var numLoops = 0;
+		var numLoops = 0; // failsafe
 		
 		do {
 			numLoops++;
@@ -112,7 +110,7 @@ $(function() {
 				}
 			}
 			
-		} while (gridChanged && numLoops < 10);
+		} while (gridChanged && numLoops < 100);
 		
 	}
 
@@ -148,16 +146,12 @@ $(function() {
 			});
 			line.addClass('sjo-color-' + curColor);
 		}
-
-		if (row == 2 && col == 0) {
-			console.log(row, col, curColor, lineChanged, line);
-		}
-
+		
 		return lineChanged;
 	}
 
 	function colorLines() {
-		console.log('colorLines', nextColor);
+		if (debug) console.log('colorLines', nextColor);
 		
 		var colors = [
 			'blue',
