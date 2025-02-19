@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.02.18.4
+// @version        2025.02.18.5
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -22,14 +22,14 @@ $(function() {
 	var allLinesFlat = $('.loop-line');
 	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
 	var vertLinesFlat = allLinesFlat.filter('.loop-vertical');
-
+	
 	indexLines();
 	countLines();
 	colorLines();
-
+	
 	if (debug) console.log('numCols', numCols, 'horzLinesGrid', horzLinesGrid);
 	if (debug) console.log('numRows', numRows, 'vertLinesGrid', vertLinesGrid);
-
+	
 	function indexLines() {
 		
 		numCols = horzLinesFlat.filter('[style*="top: 0px"]') .length;
@@ -113,13 +113,13 @@ $(function() {
 		} while (gridChanged && numLoops < 1000);
 		
 	}
-
+	
 	function updateLine(line, adjColors, row, col) {
 		if (!line.hasClass('cell-on')) return;
-
+		
 		var curColor = line.data('sjo-color');
 		var lineChanged = false;
-
+		
 		// Find better color
 		for (var c in adjColors) {
 			if (curColor == null || (adjColors[c] != null && adjColors[c] < curColor)) {
@@ -127,14 +127,14 @@ $(function() {
 				lineChanged = true;
 			}
 		}
-
+		
 		// If still no color set, assign a new one
 		if (curColor == null) {
 			curColor = nextColor;
 			nextColor++;
 			lineChanged = true;
 		}
-
+		
 		if (lineChanged) {
 			line.data('sjo-color', curColor);
 			line.removeClass(function(index, className) {
@@ -155,14 +155,14 @@ $(function() {
 		
 		var colors = [
 			'blue',
-			'lightblue',
-			'hotpink',
 			'orange',
-			'yellow',
-			'olive',
+			'hotpink',
 			'cornflowerblue',
+			'olive',
 			'rebeccapurple',
 			'teal',
+			'yellow',
+			'lightblue',
 		];
 		
 		for (var c = 1; c < nextColor; c++) {
