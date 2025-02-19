@@ -149,19 +149,20 @@ $(function() {
 		
 		return lineChanged;
 	}
-
+	
 	function colorLines() {
 		if (debug) console.log('colorLines', nextColor);
 		
 		var colors = [
 			'blue',
 			'lightblue',
-			'deeppink',
+			'hotpink',
 			'orange',
 			'yellow',
 			'olive',
 			'cornflowerblue',
 			'rebeccapurple',
+			'teal',
 		];
 		
 		for (var c = 1; c < nextColor; c++) {
