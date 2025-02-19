@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.02.18.3
+// @version        2025.02.18.4
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
