@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.02.18.5
+// @version        2025.02.20.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -10,6 +10,12 @@
 
 (function($) {
 $(function() {
+	
+	$(`<style>
+		#MainContainer {overflow: scroll !important;}
+		#puzzleContainer {margin-right: 10px !important;}
+		#puzzleContainerOverflowDiv {overflow: initial !important;}
+	</style>`).appendTo('head');
 	
 	var debug = false;
 	
