@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.02.26.0
+// @version        2025.02.27.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -307,15 +307,19 @@ $(function() {
 		if (grid.getType(i, j) !== 'cell') return;
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i + 2, j) === 3) {
-			grid.setEdgeStateOn(i - 1, j);
-			grid.setEdgeStateOn(i + 1, j);
-			grid.setEdgeStateOn(i + 3, j);
+			grid.setEdgeStateOn (i - 1, j);
+			grid.setEdgeStateOn (i + 1, j);
+			grid.setEdgeStateOn (i + 3, j);
+			grid.setEdgeStateOff(i + 1, j + 2);
+			grid.setEdgeStateOff(i + 1, j - 2);
 		}
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i, j + 2) === 3) {
-			grid.setEdgeStateOn(i, j - 1);
-			grid.setEdgeStateOn(i, j + 1);
-			grid.setEdgeStateOn(i, j + 3);
+			grid.setEdgeStateOn (i,     j - 1);
+			grid.setEdgeStateOn (i,     j + 1);
+			grid.setEdgeStateOn (i,     j + 3);
+			grid.setEdgeStateOff(i + 2, j + 1);
+			grid.setEdgeStateOff(i - 2, j + 1);
 		}
 		
 		// TODO: check for neighbouring 2s
