@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.02.27.1
+// @version        2025.02.27.2
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -167,10 +167,10 @@ $(function() {
 			'olive',
 			'rebeccapurple',
 			'teal',
-			'lime',
+			'greenyellow',
 			'lightblue',
 			'mediumaquamarine',
-			'yellow',
+			'indigo',
 		];
 		
 		for (var c = 1; c < nextColor; c++) {
