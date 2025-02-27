@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.02.27.0
+// @version        2025.02.27.2
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -11,11 +11,15 @@
 (function($) {
 $(function() {
 	
-	// TODO: undo broken?
+	// TODO: set bot flag
+	// TODO: 0/1 rule
+	// TODO: colours/loops
 	
 	$(`<style>
-		
+		#sjo-button {position: fixed; top: 0px; right: 0px;}
 	</style>`).appendTo('head');
+	
+	$('<input type="button" value="Solve" id="sjo-button">').insertAfter('#topControls').click(solve);
 	
 	var nodes = $('.loop-dot');
 	var cells = $('.loop-task-cell');
@@ -238,9 +242,6 @@ $(function() {
 	rules.push({name: 'RowOf3s',      target: 'cell', once: false, function: RowOf3sRule});
 	rules.push({name: 'Diagonal3s',   target: 'cell', once: false, function: Diagonal3sRule});
 	
-	// Loop through rules
-	$('<input type="button" value="Solve">').insertAfter('#topControls').click(solve);
-	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	function ColoursRule(i, j) {
@@ -307,19 +308,19 @@ $(function() {
 		if (grid.getType(i, j) !== 'cell') return;
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i + 2, j) === 3) {
-			grid.setEdgeStateOn (i - 1, j);
-			grid.setEdgeStateOn (i + 1, j);
-			grid.setEdgeStateOn (i + 3, j);
-			grid.setEdgeStateOff(i + 1, j + 2);
-			grid.setEdgeStateOff(i + 1, j - 2);
+			grid.setEdgeStateOn(i - 1, j);
+			grid.setEdgeStateOn(i + 1, j);
+			grid.setEdgeStateOn(i + 3, j);
+			grid.setEdgeStateX (i + 1, j + 2);
+			grid.setEdgeStateX (i + 1, j - 2);
 		}
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i, j + 2) === 3) {
-			grid.setEdgeStateOn (i,     j - 1);
-			grid.setEdgeStateOn (i,     j + 1);
-			grid.setEdgeStateOn (i,     j + 3);
-			grid.setEdgeStateOff(i + 2, j + 1);
-			grid.setEdgeStateOff(i - 2, j + 1);
+			grid.setEdgeStateOn(i,     j - 1);
+			grid.setEdgeStateOn(i,     j + 1);
+			grid.setEdgeStateOn(i,     j + 3);
+			grid.setEdgeStateX (i + 2, j + 1);
+			grid.setEdgeStateX (i - 2, j + 1);
 		}
 		
 		// TODO: check for neighbouring 2s
