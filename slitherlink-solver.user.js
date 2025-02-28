@@ -1,22 +1,23 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.02.27.2
+// @version        2025.02.28.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
-// @require        https://code.jquery.com/jquery-3.4.1.min.js
+// //@require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
 (function($) {
 $(function() {
 	
 	// TODO: set bot flag
-	// TODO: 0/1 rule
+	// TODO: 1/3 corner rules
+	// TODO: 1/3 tail rules
 	// TODO: colours/loops
 	
 	$(`<style>
-		#sjo-button {position: fixed; top: 0px; right: 0px;}
+		#sjo-button {position: fixed; top: 0px; right: 0px; width: 10em; height: 4em; z-index: 999999; font-size: larger; background-color: palegoldenrod;}
 	</style>`).appendTo('head');
 	
 	$('<input type="button" value="Solve" id="sjo-button">').insertAfter('#topControls').click(solve);
@@ -35,11 +36,21 @@ $(function() {
 		grid[i] = [];
 		for (var j = 0; j <= numCols * 2; j++) {
 			
-			if        (i % 2 == 0 && j % 2 == 0) {grid[i][j] = nodes    .eq( i      / 2 * (numCols + 1) +  j      / 2);
-			} else if (i % 2 == 1 && j % 2 == 1) {grid[i][j] = cells    .eq((i - 1) / 2 *  numCols      + (j - 1) / 2);
-			} else if (i % 2 == 0 && j % 2 == 1) {grid[i][j] = horzLines.eq( i      / 2 *  numCols      + (j - 1) / 2);
-			} else if (i % 2 == 1 && j % 2 == 0) {grid[i][j] = vertLines.eq((i - 1) / 2 * (numCols + 1) +  j      / 2);
+			if (i % 2 == 0 && j % 2 == 0) {
+				grid[i][j] = nodes.eq(i / 2 * (numCols + 1) +  j / 2).data('sjo-type', 'node');
+				
+			} else if (i % 2 == 1 && j % 2 == 1) {
+				grid[i][j] = cells.eq((i - 1) / 2 * numCols + (j - 1) / 2).data('sjo-type', 'cell');
+				
+			} else if (i % 2 == 0 && j % 2 == 1) {
+				grid[i][j] = horzLines.eq(i / 2 * numCols + (j - 1) / 2).data('sjo-type', 'edge');
+				
+			} else if (i % 2 == 1 && j % 2 == 0) {
+				grid[i][j] = vertLines.eq((i - 1) / 2 * (numCols + 1) +  j / 2).data('sjo-type', 'edge');
+				
 			}
+			
+			grid[i][j].data('sjo-i', i).data('sjo-j', j);
 			
 		}
 	}
@@ -47,9 +58,32 @@ $(function() {
 	console.log(grid);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
+	// jQuery extensions
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	$.fn.getType = function() {
+		return this.data('sjo-type');
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
 	// Grid helper functions
 	//////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	grid.get = function(i, j) {
 		if (i < 0 || i > numRows * 2 || j < 0 || j > numCols  * 2) return null;
 		return grid[i][j];
@@ -57,9 +91,7 @@ $(function() {
 	
 	grid.getType = function(i, j) {
 		if (i < 0 || i > numRows * 2 || j < 0 || j > numCols  * 2) return null;
-		if (i % 2 == 0 && j % 2 == 0) return 'node';
-		if (i % 2 == 1 && j % 2 == 1) return 'cell';
-		return 'edge';
+		return grid[i][j].getType();
 	}
 	
 	grid.getEdgeState = function(i, j) {
@@ -103,7 +135,6 @@ $(function() {
 			'clientX': X,
 			'clientY': Y,
 		});
-		console.log(X, Y, mousedown);
 		element.dispatchEvent(mousedown);
 		
 		var mouseup = new MouseEvent('mouseup', {
@@ -113,7 +144,6 @@ $(function() {
 			'clientX': X,
 			'clientY': Y,
 		});
-		console.log(X, Y, mouseup);
 		element.dispatchEvent(mouseup);
 		
 		changed = true;
@@ -273,13 +303,13 @@ $(function() {
 
 		// N neighbours have been set On, all unset edges can be set X
 		if (grid.countNeighboursOn(i, j) === cellValue) {
-			console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursX');
+			//console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursX');
 			grid.setNeighboursX(i, j);
 		}
 		
 		// 4 - N neighbours are set X, all unset edges can be set On
 		if (grid.countNeighboursX(i, j, 1) === 4 - cellValue) {
-			console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursOn');
+			//console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursOn');
 			grid.setNeighboursOn(i, j);
 		}
 		
@@ -350,11 +380,6 @@ $(function() {
 		// TODO: check for inbetween 2s
 		
 	}
-	
-	
-	
-	
-	
 	
 	
 	
