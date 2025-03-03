@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.03.03.0
+// @version        2025.03.03.2
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -11,14 +11,14 @@
 (function($) {
 $(function() {
 	
-	// TODO: set bot flag
-	// TODO: 1/3 corner rules
 	// TODO: 1/3 tail rules
 	// TODO: colours/loops
 	
 	$(`<style>
-		#sjo-button {position: fixed; top: 0px; right: 0px; width: 10em; height: 4em; z-index: 999999; font-size: larger; background-color: palegoldenrod;}
+		xxx#sjo-button {position: fixed; top: 0px; right: 0px; width: 10em; height: 4em; z-index: 999999; font-size: larger; background-color: palegoldenrod;}
 	</style>`).appendTo('head');
+	
+	$('#robot').val('1');
 	
 	$('<input type="button" value="Solve" id="sjo-button">').insertAfter('#topControls').click(solve);
 	
@@ -56,6 +56,20 @@ $(function() {
 	}
 	
 	console.log(grid);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Rules index
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	var rules = [];
+	rules.push({name: 'ColoursRule',      target: 'edge', once: false, function: ColoursRule});
+	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
+	rules.push({name: 'NodeCompleteRule', target: 'node', once: false, function: NodeCompleteRule});
+	rules.push({name: 'RowOf3sRule',      target: 'cell', once: false, function: RowOf3sRule});
+	rules.push({name: 'Diagonal3sRule',   target: 'cell', once: false, function: Diagonal3sRule});
+	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
+	rules.push({name: 'Corner1Rule',      target: 'cell', once: false, function: Corner1Rule});
+	rules.push({name: 'Tail3Rule',        target: 'cell', once: false, function: Tail3Rule});
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// jQuery extensions
@@ -262,18 +276,6 @@ $(function() {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
-	// Rules
-	//////////////////////////////////////////////////////////////////////////////////////////
-	
-	var rules = [];
-	rules.push({name: 'ColoursRule',      target: 'edge', once: false, function: ColoursRule});
-	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
-	rules.push({name: 'NodeCompleteRule', target: 'node', once: false, function: NodeCompleteRule});
-	rules.push({name: 'RowOf3sRule',      target: 'cell', once: false, function: RowOf3sRule});
-	rules.push({name: 'Diagonal3sRule',   target: 'cell', once: false, function: Diagonal3sRule});
-	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
-	
-	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	function ColoursRule(i, j) {
 		
@@ -410,7 +412,73 @@ $(function() {
 		}
 		
 	}
-
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function Corner1Rule(i, j) {
+		
+		if (grid.getType(i, j) !== 'cell') return;
+		if (grid.getCellValue(i, j) !== 1) return;
+		
+		if (grid.getEdgeState(i - 2, j - 1) === -1 && grid.getEdgeState(i - 1, j - 2) === -1) {
+			grid.setEdgeStateX(i - 1, j);
+			grid.setEdgeStateX(i, j - 1);
+		}
+		
+		if (grid.getEdgeState(i - 2, j + 1) === -1 && grid.getEdgeState(i - 1, j + 2) === -1) {
+			grid.setEdgeStateX(i - 1, j);
+			grid.setEdgeStateX(i, j + 1);
+		}
+		
+		if (grid.getEdgeState(i + 2, j - 1) === -1 && grid.getEdgeState(i + 1, j - 2) === -1) {
+			grid.setEdgeStateX(i + 1, j);
+			grid.setEdgeStateX(i, j - 1);
+		}
+		
+		if (grid.getEdgeState(i + 2, j + 1) === -1 && grid.getEdgeState(i + 1, j + 2) === -1) {
+			grid.setEdgeStateX(i + 1, j);
+			grid.setEdgeStateX(i, j + 1);
+		}
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function Tail3Rule(i, j) {
+		
+		if (grid.getType(i, j) !== 'cell') return;
+		if (grid.getCellValue(i, j) !== 3) return;
+		
+		if (grid.getEdgeState(i - 2, j - 1) === 1 || grid.getEdgeState(i - 1, j - 2) === 1) {
+			grid.setEdgeStateOn(i + 1, j);
+			grid.setEdgeStateOn(i, j + 1);
+			grid.setEdgeStateX(i - 2, j - 1);
+			grid.setEdgeStateX(i - 1, j - 2);
+		}
+		
+		if (grid.getEdgeState(i - 2, j + 1) === 1 || grid.getEdgeState(i - 1, j + 2) === 1) {
+			grid.setEdgeStateOn(i + 1, j);
+			grid.setEdgeStateOn(i, j - 1);
+			grid.setEdgeStateX(i - 2, j + 1);
+			grid.setEdgeStateX(i - 1, j + 2);
+		}
+		
+		if (grid.getEdgeState(i + 2, j - 1) === 1 || grid.getEdgeState(i + 1, j - 2) === 1) {
+			grid.setEdgeStateOn(i - 1, j);
+			grid.setEdgeStateOn(i, j + 1);
+			grid.setEdgeStateX(i + 2, j - 1);
+			grid.setEdgeStateX(i + 1, j - 2);
+		}
+		
+		if (grid.getEdgeState(i + 2, j + 1) === 1 || grid.getEdgeState(i + 1, j + 2) === 1) {
+			grid.setEdgeStateOn(i - 1, j);
+			grid.setEdgeStateOn(i, j - 1);
+			grid.setEdgeStateX(i + 2, j + 1);
+			grid.setEdgeStateX(i + 1, j + 2);
+		}
+		
+	}
+	
 	
 	
 	
