@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.02.28.0
+// @version        2025.03.03.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -266,11 +266,12 @@ $(function() {
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	var rules = [];
-	rules.push({name: 'Colours',      target: 'edge', once: false, function: ColoursRule});
-	rules.push({name: 'CellComplete', target: 'cell', once: false, function: CellCompleteRule});
-	rules.push({name: 'NodeComplete', target: 'node', once: false, function: NodeCompleteRule});
-	rules.push({name: 'RowOf3s',      target: 'cell', once: false, function: RowOf3sRule});
-	rules.push({name: 'Diagonal3s',   target: 'cell', once: false, function: Diagonal3sRule});
+	rules.push({name: 'ColoursRule',      target: 'edge', once: false, function: ColoursRule});
+	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
+	rules.push({name: 'NodeCompleteRule', target: 'node', once: false, function: NodeCompleteRule});
+	rules.push({name: 'RowOf3sRule',      target: 'cell', once: false, function: RowOf3sRule});
+	rules.push({name: 'Diagonal3sRule',   target: 'cell', once: false, function: Diagonal3sRule});
+	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -358,7 +359,7 @@ $(function() {
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	function Diagonal3sRule(i, j) {
 		
 		if (grid.getType(i, j) !== 'cell') return;
@@ -381,7 +382,35 @@ $(function() {
 		
 	}
 	
+	//////////////////////////////////////////////////////////////////////////////////////////
 	
+	function Corner3Rule(i, j) {
+		
+		if (grid.getType(i, j) !== 'cell') return;
+		if (grid.getCellValue(i, j) !== 3) return;
+		
+		if (grid.getEdgeState(i - 2, j - 1) === -1 && grid.getEdgeState(i - 1, j - 2) === -1) {
+			grid.setEdgeStateOn(i - 1, j);
+			grid.setEdgeStateOn(i, j - 1);
+		}
+		
+		if (grid.getEdgeState(i - 2, j + 1) === -1 && grid.getEdgeState(i - 1, j + 2) === -1) {
+			grid.setEdgeStateOn(i - 1, j);
+			grid.setEdgeStateOn(i, j + 1);
+		}
+		
+		if (grid.getEdgeState(i + 2, j - 1) === -1 && grid.getEdgeState(i + 1, j - 2) === -1) {
+			grid.setEdgeStateOn(i + 1, j);
+			grid.setEdgeStateOn(i, j - 1);
+		}
+		
+		if (grid.getEdgeState(i + 2, j + 1) === -1 && grid.getEdgeState(i + 1, j + 2) === -1) {
+			grid.setEdgeStateOn(i + 1, j);
+			grid.setEdgeStateOn(i, j + 1);
+		}
+		
+	}
+
 	
 	
 	
