@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.03.04.0
+// @version        2025.03.04.1
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -12,7 +12,6 @@
 $(function() {
 	
 	// TODO: 1/3 tail rules
-	// TODO: colours/loops
 	
 	$(`<style>
 		xxx#sjo-button {position: fixed; top: 0px; right: 0px; width: 10em; height: 4em; z-index: 999999; font-size: larger; background-color: palegoldenrod;}
@@ -736,7 +735,7 @@ $(function() {
 	
 	
 	
-	
+	solve();
 	
 	
 		
