@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.03.04.1
+// @version        2025.03.05.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -16,12 +16,12 @@ $(function() {
 	$(`<style>
 		xxx#sjo-button {position: fixed; top: 0px; right: 0px; width: 10em; height: 4em; z-index: 999999; font-size: larger; background-color: palegoldenrod;}
 		.tiny-dots .loop-line.loop-horizontal {
-		height: 4px !important;
-		margin-top: 0px;
+			height: 4px !important;
+			margin-top: 0px;
 		}
 		.tiny-dots .loop-line.loop-vertical {
-		width: 4px !important;
-		margin-left: 0px;
+			width: 4px !important;
+			margin-left: 0px;
 		}
 
 
@@ -47,6 +47,12 @@ $(function() {
 		return this.data('type');
 	};
 	
+	$.fn.getCellValue = function() {
+		var text = this.text().trim();
+		if (text === '') return null;
+		return parseInt(text, 10);
+	};
+	
 	$.fn.isHorz = function() {
 		return this.hasClass('loop-horizontal');
 	};
@@ -54,6 +60,11 @@ $(function() {
 	$.fn.isVert = function() {
 		return this.hasClass('loop-vertical');
 	};
+	
+	
+	
+	
+	
 	
 	$.fn.isOn = function() {
 		return this.hasClass('cell-on');
@@ -64,15 +75,89 @@ $(function() {
 	};
 	
 	$.fn.isX = function() {
+		if (this.length === 0) return true;
 		return this.hasClass('cell-x');
+	};
+	
+	$.fn.getState = function() {
+		if (this.length === 0)         return -1;
+		if (this.hasClass('cell-on'))  return  1;
+		if (this.hasClass('cell-x'))   return -1;
+		if (this.hasClass('cell-off')) return  0;
+	};
+	
+	$.fn.setOn = function() {
+		this.each((i,e) => {
+			var edge = $(e);
+			if (edge.getType() !== 'edge') return;
+			if (!edge.isOff()) return;
+			edge.clickEdge();
+		});
+	};
+	
+	$.fn.setX = function() {
+		this.each((i,e) => {
+			var edge = $(e);
+			if (edge.getType() !== 'edge') return;
+			if (!edge.isOff()) return;
+			edge.clickEdge();
+			edge.clickEdge();
+		});
+	};
+	
+	$.fn.clickEdge = function() {
+		this.each((i,e) => {
+			
+			var edge = $(e);
+			if (edge.getType() !== 'edge') return;
+			
+			var hitbox = edge[0].getBoundingClientRect();
+			var X = hitbox.left + hitbox.width  / 2;
+			var Y = hitbox.top  + hitbox.height / 2;
+			
+			var element = $('#game')[0];
+			
+			var mousedown = new MouseEvent('mousedown', {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true,
+				'clientX': X,
+				'clientY': Y,
+			});
+			element.dispatchEvent(mousedown);
+			
+			var mouseup = new MouseEvent('mouseup', {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true,
+				'clientX': X,
+				'clientY': Y,
+			});
+			element.dispatchEvent(mouseup);
+			
+			changed = true;
+			
+		});
 	};
 	
 	
 	
 	
 	
+	
+	
 	$.fn.getColour = function() {
-		return this.data('colour');
+		if (this.getType() === 'edge') {
+			return this.data('colour');
+		} else if (this.getType() === 'node') {
+			var colour = 
+				this.getEdgeN().getColour() || 
+				this.getEdgeS().getColour() || 
+				this.getEdgeW().getColour() || 
+				this.getEdgeE().getColour() || 
+				null;
+			return colour;
+		}
 	};
 	
 	$.fn.getColourName = function() {
@@ -93,7 +178,6 @@ $(function() {
 	
 	$.fn.removeColour = function(colour) {
 		var obj = this.filter((i,e) => $(e).data('colour') === colour);
-		//console.log('removing colour', colour, obj.length);
 		obj.data('colour', null);
 		changed = true;
 		return this;
@@ -101,7 +185,6 @@ $(function() {
 	
 	$.fn.removeColourName = function(colourName) {
 		var obj = this.filter((i,e) => $(e).data('colourName') === colourName);
-		//console.log('removing colour name', colourName, obj.length);
 		obj.data('colourName', null).removeClass('colour-' + colourName);
 		changed = true;
 		return this;
@@ -152,6 +235,138 @@ $(function() {
 	
 	
 	
+	$.fn.getNodeNW = function() {
+		var returnNodes = $();
+		this.each((i,e) => {
+			var cell = $(e);
+			if (cell.getType() !== 'cell') return;
+			returnNodes = returnNodes.add(nodes.getByRowCol(cell.getRow() - 1, cell.getCol() - 1));
+		});
+		return returnNodes;
+	};
+	
+	$.fn.getNodeNE = function() {
+		var returnNodes = $();
+		this.each((i,e) => {
+			var cell = $(e);
+			if (cell.getType() !== 'cell') return;
+			returnNodes = returnNodes.add(nodes.getByRowCol(cell.getRow() - 1, cell.getCol() + 1));
+		});
+		return returnNodes;
+	};
+	
+	$.fn.getNodeSW = function() {
+		var returnNodes = $();
+		this.each((i,e) => {
+			var cell = $(e);
+			if (cell.getType() !== 'cell') return;
+			returnNodes = returnNodes.add(nodes.getByRowCol(cell.getRow() + 1, cell.getCol() - 1));
+		});
+		return returnNodes;
+	};
+	
+	$.fn.getNodeSE = function() {
+		var returnNodes = $();
+		this.each((i,e) => {
+			var cell = $(e);
+			if (cell.getType() !== 'cell') return;
+			returnNodes = returnNodes.add(nodes.getByRowCol(cell.getRow() + 1, cell.getCol() + 1));
+		});
+		return returnNodes;
+	};
+	
+	
+	
+	
+	
+	
+	
+	$.fn.getEdgeN = function() {
+		var returnEdges = $();
+		this.each((i,e) => {
+			var obj = $(e);
+			if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+			returnEdges = returnEdges.add(edges.getByRowCol(obj.getRow() - 1, obj.getCol()));
+		});
+		return returnEdges;
+	};
+	
+	$.fn.getEdgeS = function() {
+		var returnEdges = $();
+		this.each((i,e) => {
+			var obj = $(e);
+			if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+			returnEdges = returnEdges.add(edges.getByRowCol(obj.getRow() + 1, obj.getCol()));
+		});
+		return returnEdges;
+	};
+	
+	$.fn.getEdgeW = function() {
+		var returnEdges = $();
+		this.each((i,e) => {
+			var obj = $(e);
+			if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+			returnEdges = returnEdges.add(edges.getByRowCol(obj.getRow(), obj.getCol() - 1));
+		});
+		return returnEdges;
+	};
+	
+	$.fn.getEdgeE = function() {
+		var returnEdges = $();
+		this.each((i,e) => {
+			var obj = $(e);
+			if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+			returnEdges = returnEdges.add(edges.getByRowCol(obj.getRow(), obj.getCol() + 1));
+		});
+		return returnEdges;
+	};
+	
+	
+	
+	
+	
+	
+	$.fn.countEdgesOff = function() {
+		var obj = this.first();
+		if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+		var count = 0;
+		if (obj.getEdgeN().isOff()) count++;
+		if (obj.getEdgeS().isOff()) count++;
+		if (obj.getEdgeW().isOff()) count++;
+		if (obj.getEdgeE().isOff()) count++;
+		return count;
+	};
+	
+	$.fn.countEdgesOn = function() {
+		var obj = this.first();
+		if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+		var count = 0;
+		if (obj.getEdgeN().isOn()) count++;
+		if (obj.getEdgeS().isOn()) count++;
+		if (obj.getEdgeW().isOn()) count++;
+		if (obj.getEdgeE().isOn()) count++;
+		return count;
+	};
+	
+	$.fn.countEdgesX = function() {
+		var obj = this.first();
+		if (obj.getType() !== 'cell' && obj.getType() !== 'node') return;
+		var count = 0;
+		if (obj.getEdgeN().isX()) count++;
+		if (obj.getEdgeS().isX()) count++;
+		if (obj.getEdgeW().isX()) count++;
+		if (obj.getEdgeE().isX()) count++;
+		return count;
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Initialize grid
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -189,26 +404,6 @@ $(function() {
 
 		}
 	}
-	
-	console.log(grid);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	// Rules index
-	//////////////////////////////////////////////////////////////////////////////////////////
-	
-	var rules = [];
-	//*
-	rules.push({name: 'NodeCompleteRule', target: 'node', once: false, function: NodeCompleteRule});
-	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
-	rules.push({name: 'RowOf3sRule',      target: 'cell', once: false, function: RowOf3sRule});
-	rules.push({name: 'Diagonal3sRule',   target: 'cell', once: false, function: Diagonal3sRule});
-	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
-	rules.push({name: 'Corner1Rule',      target: 'cell', once: false, function: Corner1Rule});
-	rules.push({name: 'Tail3Rule',        target: 'cell', once: false, function: Tail3Rule});
-	rules.push({name: 'ColourJoinRule',   target: 'edge', once: false, function: ColourJoinRule});
-	//*/
-	
-	
 	
 	
 	
@@ -340,8 +535,8 @@ $(function() {
 		if (grid.getType(i, j) !== 'edge') return null;
 		if (i < 0 || i > numRows * 2 || j < 0 || j > numCols  * 2) return null;
 		var classes = grid.get(i, j).attr('class').split(' ');
-		for (var c in classes) {
-			var match = classes[c].match(/^sjo-colour-(\d+)$/);
+		for (var clazz of classes) {
+			var match = clazz.match(/^sjo-colour-(\d+)$/);
 			if (match) return match[1] - 0;
 		}
 		return null;
@@ -350,6 +545,9 @@ $(function() {
 	
 	
 		
+	
+	
+	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Solve
@@ -361,15 +559,16 @@ $(function() {
 	
 	function solve() {
 		
+		console.log(grid);
+		
 		//$('.sjo-button').attr('disabled', 'disabled')
+		
+		// Clean up old colour tags
+		edges.not('.cell-on').removeData('colour colourName');
 		
 		numLoops = 0; // failsafe?
 		
 		solvePass();
-		
-		//do {
-			
-		//} while (changed && numLoops < 100);
 		
 	}
 	
@@ -379,10 +578,10 @@ $(function() {
 		numLoops++;
 		
 		// Loop through rules
-		for (r in rules) {
+		for (var rule of rules) {
 			for (var i = 0; i <= numRows * 2; i++) {
 				for (var j = 0; j <= numCols * 2; j++) {
-					if (grid.getType(i, j) == rules[r].target) {
+					if (grid.getType(i, j) == rule.target) {
 
 						// Check if this element has already been solved
 						if (grid.getType(i, j) == 'edge') {
@@ -391,7 +590,7 @@ $(function() {
 							if (grid.countNeighboursOff(i, j) === 0) continue;
 						}
 
-						rules[r].function.call(this, i, j);
+						rule.function.call(this, i, j);
 
 					}
 				}
@@ -464,11 +663,7 @@ $(function() {
 				// If this element has a colour name...
 				if (edgeToCheck.getColourName()) {
 					
-					//console.log('found colour', edgeToCheck.getRow(), edgeToCheck.getCol(), edgeToCheck.getColourName());
-					
 					if (colourName && edgeToCheck.getColourName() !== colourName) {
-						
-						console.log('discarding colour', edgeToCheck.getRow(), edgeToCheck.getCol(), edgeToCheck.getColourName(), colourName);
 						
 						// If we already have a colour name, discard this one
 						if (colourNames.indexOf(edgeToCheck.getColourName()) < 0) {
@@ -514,12 +709,11 @@ $(function() {
 			// TODO: reuse discarded colour names to colour long uncoloured sequences
 			if (!colourName && colourNames.length > 0 && edgesFound.length >= 20) {
 				colourName = colourNames.shift();
-				console.log(colourName, colourNames);
 			}
 			
 			// Apply colour to whole group
 			edgesFound.setColour(colour).setColourName(colourName);
-			edgesFound.getNodesFromEdge().setColour(colour).setColourName(colourName);
+			//edgesFound.getNodesFromEdge().setColour(colour).setColourName(colourName);
 			
 		});
 		
@@ -529,32 +723,49 @@ $(function() {
 	
 	
 	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	// Rules
+	
+	
+	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
-	function CellCompleteRule(i, j) {
+	function ColourJoinRule(row, col) {
 		
-		if (grid.getType(i, j) !== 'cell') return;
-		var cellValue = grid.getCellValue(i, j);
-		if (cellValue === null) return;
+		// TODO: don't mark as invalid if this is the final edge of the solution
 		
-		//console.log('CellCompleteRule', i, j, cellValue, 'countNeighboursOn', grid.countNeighboursOn(i, j));
-
-		// N neighbours have been set On, all unset edges can be set X
-		if (grid.countNeighboursOn(i, j) === cellValue) {
-			//console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursX');
-			grid.setNeighboursX(i, j);
-		}
+		var thisEdge = edges.getByRowCol(row, col);
+		if (!thisEdge.isOff()) return;
 		
-		// 4 - N neighbours are set X, all unset edges can be set On
-		if (grid.countNeighboursX(i, j, 1) === 4 - cellValue) {
-			//console.log('CellCompleteRule', i, j, cellValue, 'setNeighboursOn');
-			grid.setNeighboursOn(i, j);
+		var myNodes = thisEdge.getNodesFromEdge();
+		
+		if (myNodes.first().getColour() && myNodes.first().getColour() === myNodes.last().getColour()) {
+			grid.setEdgeStateX(row, col);
 		}
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Rules
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	function NodeCompleteRule(i, j) {
@@ -572,10 +783,31 @@ $(function() {
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function CellCompleteRule(i, j) {
+		
+		if (grid.getType(i, j) !== 'cell') return;
+		var cellValue = grid.getCellValue(i, j);
+		if (cellValue === null) return;
+		
+		// N neighbours have been set On, all unset edges can be set X
+		if (grid.countNeighboursOn(i, j) === cellValue) {
+			grid.setNeighboursX(i, j);
+		}
+		
+		// 4 - N neighbours are set X, all unset edges can be set On
+		if (grid.countNeighboursX(i, j, 1) === 4 - cellValue) {
+			grid.setNeighboursOn(i, j);
+		}
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
 
 	function RowOf3sRule(i, j) {
 		
 		if (grid.getType(i, j) !== 'cell') return;
+		if (grid.countNeighboursOff(i, j) === 0) return;
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i + 2, j) === 3) {
 			grid.setEdgeStateOn(i - 1, j);
@@ -602,6 +834,7 @@ $(function() {
 	function Diagonal3sRule(i, j) {
 		
 		if (grid.getType(i, j) !== 'cell') return;
+		if (grid.countNeighboursOff(i, j) === 0) return;
 		
 		if (grid.getCellValue(i, j) === 3 && grid.getCellValue(i + 2, j + 2) === 3) {
 			grid.setEdgeStateOn(i - 1, j);
@@ -627,6 +860,7 @@ $(function() {
 		
 		if (grid.getType(i, j) !== 'cell') return;
 		if (grid.getCellValue(i, j) !== 3) return;
+		if (grid.countNeighboursOff(i, j) === 0) return;
 		
 		if (grid.getEdgeState(i - 2, j - 1) === -1 && grid.getEdgeState(i - 1, j - 2) === -1) {
 			grid.setEdgeStateOn(i - 1, j);
@@ -656,6 +890,7 @@ $(function() {
 		
 		if (grid.getType(i, j) !== 'cell') return;
 		if (grid.getCellValue(i, j) !== 1) return;
+		if (grid.countNeighboursOff(i, j) === 0) return;
 		
 		if (grid.getEdgeState(i - 2, j - 1) === -1 && grid.getEdgeState(i - 1, j - 2) === -1) {
 			grid.setEdgeStateX(i - 1, j);
@@ -685,6 +920,7 @@ $(function() {
 		
 		if (grid.getType(i, j) !== 'cell') return;
 		if (grid.getCellValue(i, j) !== 3) return;
+		if (grid.countNeighboursOff(i, j) === 0) return;
 		
 		if (grid.getEdgeState(i - 2, j - 1) === 1 || grid.getEdgeState(i - 1, j - 2) === 1) {
 			grid.setEdgeStateOn(i + 1, j);
@@ -716,23 +952,133 @@ $(function() {
 		
 	}
 	
-	function ColourJoinRule(row, col) {
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function Tail1Rule(row, col) {
 		
-		// TODO: don't mark as invalid if this is the final edge of the solution
+		var cell = cells.getByRowCol(row, col);
 		
-		var thisEdge = edges.getByRowCol(row, col);
-		if (!thisEdge.isOff()) return;
+		if (cell.getCellValue() !== 1) return;
+		if (cell.countEdgesOff() === 0) return;
 		
-		var myNodes = thisEdge.getNodesFromEdge();
+		if (cell.getNodeNW().getEdgeN().getState() * cell.getNodeNW().getEdgeW().getState() === -1) {
+			cell.getEdgeS().setX();
+			cell.getEdgeE().setX();
+		}
 		
-		if (myNodes.first().getColour() && myNodes.first().getColour() === myNodes.last().getColour()) {
-			grid.setEdgeStateX(row, col);
+		if (cell.getNodeNE().getEdgeN().getState() * cell.getNodeNE().getEdgeE().getState() === -1) {
+			cell.getEdgeS().setX();
+			cell.getEdgeW().setX();
+		}
+		
+		if (cell.getNodeSW().getEdgeS().getState() * cell.getNodeSW().getEdgeW().getState() === -1) {
+			cell.getEdgeN().setX();
+			cell.getEdgeE().setX();
+		}
+		
+		if (cell.getNodeSE().getEdgeS().getState() * cell.getNodeSE().getEdgeE().getState() === -1) {
+			cell.getEdgeN().setX();
+			cell.getEdgeW().setX();
+		}
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function EitherOr1Rule(row, col) {
+		
+		var cell = cells.getByRowCol(row, col);
+		
+		if (cell.getCellValue() !== 1) return;
+		if (cell.countEdgesOff() === 0) return; // TODO: isComplete()
+		
+		//console.log('EitherOr1Rule', cell);
+		
+		if (cell.getEdgeN().getState() === -1 && cell.getEdgeW().getState() === -1) {
+			//console.log('EitherOr1Rule', 'NW');
+			if (cell.getNodeSE().getEdgeS().getState() + cell.getNodeSE().getEdgeE().getState() === -1) {
+				cell.getNodeSE().getEdgeS().setOn();
+				cell.getNodeSE().getEdgeE().setOn();
+			}
+			if (cell.getNodeSE().getEdgeS().getState() + cell.getNodeSE().getEdgeE().getState() ===  1) {
+				cell.getNodeSE().getEdgeS().setX();
+				cell.getNodeSE().getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getEdgeN().getState() === -1 && cell.getEdgeE().getState() === -1) {
+			//console.log('EitherOr1Rule', 'NE');
+			if (cell.getNodeSW().getEdgeS().getState() + cell.getNodeSW().getEdgeW().getState() === -1) {
+				cell.getNodeSW().getEdgeS().setOn();
+				cell.getNodeSW().getEdgeW().setOn();
+			}
+			if (cell.getNodeSW().getEdgeS().getState() + cell.getNodeSW().getEdgeW().getState() ===  1) {
+				cell.getNodeSW().getEdgeS().setX();
+				cell.getNodeSW().getEdgeW().setX();
+			}
+		}
+		
+		if (cell.getEdgeS().getState() === -1 && cell.getEdgeW().getState() === -1) {
+			//console.log('EitherOr1Rule', 'SW');
+			if (cell.getNodeNE().getEdgeN().getState() + cell.getNodeNE().getEdgeE().getState() === -1) {
+				cell.getNodeNE().getEdgeN().setOn();
+				cell.getNodeNE().getEdgeE().setOn();
+			}
+			if (cell.getNodeNE().getEdgeN().getState() + cell.getNodeNE().getEdgeE().getState() ===  1) {
+				cell.getNodeNE().getEdgeN().setX();
+				cell.getNodeNE().getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getEdgeS().getState() === -1 && cell.getEdgeE().getState() === -1) {
+			//console.log('EitherOr1Rule', 'SE');
+			if (cell.getNodeNW().getEdgeN().getState() + cell.getNodeNW().getEdgeW().getState() === -1) {
+				cell.getNodeNW().getEdgeN().setOn();
+				cell.getNodeNW().getEdgeW().setOn();
+			}
+			if (cell.getNodeNW().getEdgeN().getState() + cell.getNodeNW().getEdgeW().getState() ===  1) {
+				cell.getNodeNW().getEdgeN().setX();
+				cell.getNodeNW().getEdgeW().setX();
+			}
 		}
 		
 	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Rules index
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	var rules = [];
+	///*
+	rules.push({name: 'NodeCompleteRule', target: 'node', once: false, function: NodeCompleteRule});
+	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
+	rules.push({name: 'RowOf3sRule',      target: 'cell', once: false, function: RowOf3sRule});
+	rules.push({name: 'Diagonal3sRule',   target: 'cell', once: false, function: Diagonal3sRule});
+	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
+	rules.push({name: 'Corner1Rule',      target: 'cell', once: false, function: Corner1Rule});
+	rules.push({name: 'Tail3Rule',        target: 'cell', once: false, function: Tail3Rule});
+	rules.push({name: 'Tail1Rule',        target: 'cell', once: false, function: Tail1Rule});
+	rules.push({name: 'ColourJoinRule',   target: 'edge', once: false, function: ColourJoinRule});
+	//*/
+	
+	rules.push({name: 'EitherOr1Rule',    target: 'cell', once: false, function: EitherOr1Rule});
 	
 	
 	solve();
