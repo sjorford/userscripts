@@ -1167,9 +1167,118 @@ $(function() {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
-	function EitherOr1Rule(row, col) {
+	function EitherOr2RuleA(row, col, cell) {
 		
-		var cell = cells.getByRowCol(row, col);
+		if (cell.getCellValue() !== 2) return true;
+		if (cell.countEdgesOff() === 0) return true;
+		
+		if (cell.getEdgeN().getState() * cell.getEdgeW().getState() === -1) {
+			if (cell.getNodeSE().getEdgeS().getState() + cell.getNodeSE().getEdgeE().getState() === -1) {
+				cell.getNodeSE().getEdgeS().setOn();
+				cell.getNodeSE().getEdgeE().setOn();
+			}
+			if (cell.getNodeSE().getEdgeS().getState() + cell.getNodeSE().getEdgeE().getState() ===  1) {
+				cell.getNodeSE().getEdgeS().setX();
+				cell.getNodeSE().getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getEdgeN().getState() * cell.getEdgeE().getState() === -1) {
+			if (cell.getNodeSW().getEdgeS().getState() + cell.getNodeSW().getEdgeW().getState() === -1) {
+				cell.getNodeSW().getEdgeS().setOn();
+				cell.getNodeSW().getEdgeW().setOn();
+			}
+			if (cell.getNodeSW().getEdgeS().getState() + cell.getNodeSW().getEdgeW().getState() ===  1) {
+				cell.getNodeSW().getEdgeS().setX();
+				cell.getNodeSW().getEdgeW().setX();
+			}
+		}
+		
+		if (cell.getEdgeS().getState() * cell.getEdgeW().getState() === -1) {
+			if (cell.getNodeNE().getEdgeN().getState() + cell.getNodeNE().getEdgeE().getState() === -1) {
+				cell.getNodeNE().getEdgeN().setOn();
+				cell.getNodeNE().getEdgeE().setOn();
+			}
+			if (cell.getNodeNE().getEdgeN().getState() + cell.getNodeNE().getEdgeE().getState() ===  1) {
+				cell.getNodeNE().getEdgeN().setX();
+				cell.getNodeNE().getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getEdgeS().getState() * cell.getEdgeE().getState() === -1) {
+			if (cell.getNodeNW().getEdgeN().getState() + cell.getNodeNW().getEdgeW().getState() === -1) {
+				cell.getNodeNW().getEdgeN().setOn();
+				cell.getNodeNW().getEdgeW().setOn();
+			}
+			if (cell.getNodeNW().getEdgeN().getState() + cell.getNodeNW().getEdgeW().getState() ===  1) {
+				cell.getNodeNW().getEdgeN().setX();
+				cell.getNodeNW().getEdgeW().setX();
+			}
+		}
+		
+		
+		
+	}
+		
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function EitherOr2RuleB(row, col, cell) {
+		
+		if (cell.getCellValue() !== 2) return true;
+		if (cell.countEdgesOff() === 0) return true;
+		
+		if (cell.getNodeNW().getEdgeN().getState() * cell.getNodeNW().getEdgeW().getState() === -1) {
+			if (cell.getEdgeS().getState() + cell.getEdgeE().getState() === -1) {
+				cell.getEdgeS().setOn();
+				cell.getEdgeE().setOn();
+			}
+			if (cell.getEdgeS().getState() + cell.getEdgeE().getState() ===  1) {
+				cell.getEdgeS().setX();
+				cell.getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getNodeNE().getEdgeN().getState() * cell.getNodeNE().getEdgeE().getState() === -1) {
+			if (cell.getEdgeS().getState() + cell.getEdgeW().getState() === -1) {
+				cell.getEdgeS().setOn();
+				cell.getEdgeW().setOn();
+			}
+			if (cell.getEdgeS().getState() + cell.getEdgeW().getState() ===  1) {
+				cell.getEdgeS().setX();
+				cell.getEdgeW().setX();
+			}
+		}
+		
+		if (cell.getNodeSW().getEdgeS().getState() * cell.getNodeSW().getEdgeW().getState() === -1) {
+			if (cell.getEdgeN().getState() + cell.getEdgeE().getState() === -1) {
+				cell.getEdgeN().setOn();
+				cell.getEdgeE().setOn();
+			}
+			if (cell.getEdgeN().getState() + cell.getEdgeE().getState() ===  1) {
+				cell.getEdgeN().setX();
+				cell.getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getNodeSE().getEdgeS().getState() * cell.getNodeSE().getEdgeE().getState() === -1) {
+			if (cell.getEdgeN().getState() + cell.getEdgeW().getState() === -1) {
+				cell.getEdgeN().setOn();
+				cell.getEdgeW().setOn();
+			}
+			if (cell.getEdgeN().getState() + cell.getEdgeW().getState() ===  1) {
+				cell.getEdgeN().setX();
+				cell.getEdgeW().setX();
+			}
+		}
+		
+		
+		
+		
+	}
+		
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function EitherOr1Rule(row, col, cell) {
 		
 		if (cell.getCellValue() !== 1) return true;
 		if (cell.countEdgesOff() === 0) return true;
@@ -1197,7 +1306,6 @@ $(function() {
 		}
 		
 		if (cell.getEdgeS().getState() === -1 && cell.getEdgeW().getState() === -1) {
-			//console.log('EitherOr1Rule', 'SW');
 			if (cell.getNodeNE().getEdgeN().getState() + cell.getNodeNE().getEdgeE().getState() === -1) {
 				cell.getNodeNE().getEdgeN().setOn();
 				cell.getNodeNE().getEdgeE().setOn();
@@ -1255,8 +1363,11 @@ $(function() {
 	rules.push({name: 'Tail3Rule',        target: 'cell', once: false, function: Tail3Rule});
 	rules.push({name: 'Tail2Rule',        target: 'cell', once: false, function: Tail2Rule});
 	rules.push({name: 'Tail1Rule',        target: 'cell', once: false, function: Tail1Rule});
-	rules.push({name: 'EitherOr1Rule',    target: 'cell', once: false, function: EitherOr1Rule});
 	
+	rules.push({name: 'EitherOr2RuleA',   target: 'cell', once: false, function: EitherOr2RuleA});
+	rules.push({name: 'EitherOr2RuleB',   target: 'cell', once: false, function: EitherOr2RuleB});
+	rules.push({name: 'EitherOr1Rule',    target: 'cell', once: false, function: EitherOr1Rule});
+
 	rules.push({name: 'ColourJoinRule',   target: 'edge', once: false, function: ColourJoinRule});
 	//*/
 
