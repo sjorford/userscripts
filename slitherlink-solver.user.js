@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.03.06.0
+// @version        2025.03.10.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
@@ -649,6 +649,8 @@ $(function() {
 	
 	function solve() {
 		
+		$('#sjo-button').attr('disabled', 'disabled');
+		
 		console.log(grid);
 		
 		// Clean up old colour tags
@@ -684,7 +686,7 @@ $(function() {
 			if (target.length === 0) continue;
 			
 			//console.log(rule.target, target.length, rule.name);
-			console.log(rule.target, rule.name);
+			//console.log(rule.target, rule.name);
 			
 			target.each((i,e) => {
 				var obj = $(e);
@@ -707,6 +709,8 @@ $(function() {
 		
 		if (changed) {
 			window.setTimeout(solvePass, 0);
+		} else {
+			$('#sjo-button').removeAttr('disabled');
 		}
 		
 	}
@@ -1021,6 +1025,75 @@ $(function() {
 		if (grid.getEdgeState(i + 2, j + 1) === -1 && grid.getEdgeState(i + 1, j + 2) === -1) {
 			grid.setEdgeStateOn(i + 1, j);
 			grid.setEdgeStateOn(i, j + 1);
+		}
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	function Corner2Rule(i, j, cell) {
+		
+		if (grid.getCellValue(i, j) !== 2) return true;
+		if (grid.countNeighboursOff(i, j) === 0) return true;
+		
+		if (cell.getNodeNW().getEdgeN().getState() === -1 && cell.getNodeNW().getEdgeW().getState() === -1) {
+			if (cell.getNodeSE().getEdgeS().getState() ===  1 || cell.getNodeSE().getEdgeE().getState() ===  1) {
+				cell.getEdgeN().setOn()
+				cell.getEdgeW().setOn()
+			}
+			if (cell.getEdgeS().getState() ===  1 || cell.getEdgeE().getState() ===  1) {
+				cell.getEdgeS().setOn();
+				cell.getEdgeE().setOn();
+			}
+			if (cell.getEdgeS().getState() === -1 || cell.getEdgeE().getState() === -1) {
+				cell.getEdgeS().setX();
+				cell.getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getNodeNE().getEdgeN().getState() === -1 && cell.getNodeNE().getEdgeE().getState() === -1) {
+			if (cell.getNodeSW().getEdgeS().getState() ===  1 || cell.getNodeSW().getEdgeW().getState() ===  1) {
+				cell.getEdgeN().setOn()
+				cell.getEdgeE().setOn()
+			}
+			if (cell.getEdgeS().getState() ===  1 || cell.getEdgeW().getState() ===  1) {
+				cell.getEdgeS().setOn();
+				cell.getEdgeW().setOn();
+			}
+			if (cell.getEdgeS().getState() === -1 || cell.getEdgeW().getState() === -1) {
+				cell.getEdgeS().setX();
+				cell.getEdgeW().setX();
+			}
+		}
+		
+		if (cell.getNodeSW().getEdgeS().getState() === -1 && cell.getNodeSW().getEdgeW().getState() === -1) {
+			if (cell.getNodeNE().getEdgeN().getState() ===  1 || cell.getNodeNE().getEdgeE().getState() ===  1) {
+				cell.getEdgeS().setOn()
+				cell.getEdgeW().setOn()
+			}
+			if (cell.getEdgeN().getState() ===  1 || cell.getEdgeE().getState() ===  1) {
+				cell.getEdgeN().setOn();
+				cell.getEdgeE().setOn();
+			}
+			if (cell.getEdgeN().getState() === -1 || cell.getEdgeE().getState() === -1) {
+				cell.getEdgeN().setX();
+				cell.getEdgeE().setX();
+			}
+		}
+		
+		if (cell.getNodeSE().getEdgeS().getState() === -1 && cell.getNodeSE().getEdgeE().getState() === -1) {
+			if (cell.getNodeNW().getEdgeN().getState() ===  1 || cell.getNodeNW().getEdgeW().getState() ===  1) {
+				cell.getEdgeS().setOn()
+				cell.getEdgeE().setOn()
+			}
+			if (cell.getEdgeN().getState() ===  1 || cell.getEdgeW().getState() ===  1) {
+				cell.getEdgeN().setOn();
+				cell.getEdgeW().setOn();
+			}
+			if (cell.getEdgeN().getState() === -1 || cell.getEdgeW().getState() === -1) {
+				cell.getEdgeN().setX();
+				cell.getEdgeW().setX();
+			}
 		}
 		
 	}
@@ -1359,7 +1432,9 @@ $(function() {
 	rules.push({name: 'CellCompleteRule', target: 'cell', once: false, function: CellCompleteRule});
 	
 	rules.push({name: 'Corner3Rule',      target: 'cell', once: false, function: Corner3Rule});
+	rules.push({name: 'Corner2Rule',      target: 'cell', once: false, function: Corner2Rule});
 	rules.push({name: 'Corner1Rule',      target: 'cell', once: false, function: Corner1Rule});
+	
 	rules.push({name: 'Tail3Rule',        target: 'cell', once: false, function: Tail3Rule});
 	rules.push({name: 'Tail2Rule',        target: 'cell', once: false, function: Tail2Rule});
 	rules.push({name: 'Tail1Rule',        target: 'cell', once: false, function: Tail1Rule});
@@ -1371,6 +1446,10 @@ $(function() {
 	rules.push({name: 'ColourJoinRule',   target: 'edge', once: false, function: ColourJoinRule});
 	//*/
 
+	
+	
+	
+	
 	
 	
 	
