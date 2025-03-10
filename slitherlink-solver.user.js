@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name           Slitherlink solver
 // @namespace      sjorford@gmail.com
-// @version        2025.03.10.0
+// @version        2025.03.10.1
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @grant          none
 // //@require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
+
+// TODO: telemetry
 
 (function($) {
 $(function() {
@@ -31,6 +33,24 @@ $(function() {
 	
 	// Start button
 	$('<input type="button" value="Solve" id="sjo-button">').insertAfter('#topControls').click(solve);
+	
+	var maxColour = 0;
+	var colourThreshold = 20;
+	var colourNames = [
+		'blue',
+		'orange',
+		'hotpink',
+		'cornflowerblue',
+		'olive',
+		'rebeccapurple',
+		'teal',
+		'limegreen',
+		//'yellow',
+		//'lightblue',
+	];
+	
+	var colourRules = colourNames.map(colour => `.cell-on.colour-${colour} {background-color: ${colour};}`);
+	$('<style>\n' + colourRules.join('\n') + '</style>').appendTo('head');
 	
 	
 	
@@ -103,30 +123,66 @@ $(function() {
 			if (edge.getType() !== 'edge') return;
 			if (!edge.isOff()) return;
 			
-			/*
-			// Check neighbouring colours
-			var colour, colourName;
-			edge.getNodesFromEdge().each((i,e) => {
-				var node = $(e);
-				node.getEdgesFromNode().each((i,e) => {
-					var edge = $(e);
-					if (edge.getColour()) {
-						if (!colour) {
-							colour = edge.getColour();
-							colourName = edge.getColourName();
-						} else {
-							colour = -1;
-						}
-					}
-				});
-			});
+			// TODO: split to separate function
 			
-			// If colour is unique, copy it
-			if (colour && colour !== -1) {
-				edge.setColour(colour);
-				edge.setColourName(colourName);
+			var neighbours = edge.getNodesFromEdge().getEdgesFromNode()
+					.filter((i,e) => $(e).getColour());
+			
+			// No neighbours, assign a new colour
+			if (neighbours.length === 0) {
+				maxColour++;
+				edge.setColour(maxColour);
+				console.log('setOn', this.getRow(), this.getCol(), neighbours.length, 
+							maxColour, null);
+				
+			// One neighbour, use colour
+			} else if (neighbours.length === 1) {
+				edge.setColour(neighbours.getColour());
+				edge.setColourName(neighbours.getColourName());
+				console.log('setOn', this.getRow(), this.getCol(), neighbours.length, 
+						   neighbours.getColour(), neighbours.getColourName());
+			
+			// Two neighbours of same colour - assume we must be closing the final loop
+			} else if (neighbours.first().getColour() === neighbours.last().getColour()) {
+				edge.setColour(neighbours.getColour());
+				edge.setColourName(neighbours.getColourName());
+				
+			// Two neighbours of different colours - pick one and discard the other
+			} else {
+				
+				var colourA, colourNameA, colourB, colourNameB;
+				if (neighbours.first().getColourName()) {
+					colourA     = neighbours.first().getColour();
+					colourNameA = neighbours.first().getColourName();
+					colourB     = neighbours.last() .getColour();
+					colourNameB = neighbours.last() .getColourName();
+				} else {
+					colourA     = neighbours.last() .getColour();
+					colourNameA = neighbours.last() .getColourName();
+					colourB     = neighbours.first().getColour();
+					colourNameB = neighbours.first().getColourName();
+				}
+				
+				console.log('setOn', this.getRow(), this.getCol(), neighbours.length, 
+							colourA, colourNameA, colourB, colourNameB);
+				
+				var edgesA = edges.filter((i,e) => $(e).getColour() === colourA);
+				var edgesB = edges.filter((i,e) => $(e).getColour() === colourB);
+				
+				// Assign a new colour name
+				var numEdges = edgesA.length + edgesB.length + 1;
+				if (!colourNameA && colourNames.length > 0 && numEdges >= colourThreshold) {
+					colourNameA = colourNames.shift();
+					edgesA.setColourName(colourNameA);
+					console.log('setOn', this.getRow(), this.getCol(), neighbours.length, 
+								'new colour name', numEdges, colourNameA);
+				}
+				
+				edgesB.removeColour(colourB).removeColourName(colourNameB);
+				edgesB.setColour(colourA).setColourName(colourNameA);
+				edge.setColour(colourA).setColourName(colourNameA);
+				
 			}
-			*/
 			
 			edge.clickEdge();
 			
@@ -469,22 +525,30 @@ $(function() {
 		for (var j = 0; j <= numCols * 2; j++) {
 			
 			if (i % 2 == 0 && j % 2 == 0) {
-				grid[i][j] = nodes.eq(i / 2 * (numCols + 1) +  j / 2)
-					.data({type: 'node', row: i, col: j, done: {}});
+				var node = nodes.eq(i / 2 * (numCols + 1) +  j / 2);
+				grid[i][j] = node.data({type: 'node'});
 				
 			} else if (i % 2 == 1 && j % 2 == 1) {
-				grid[i][j] = cells.eq((i - 1) / 2 * numCols + (j - 1) / 2)
-					.data({type: 'cell', row: i, col: j, done: {}});
+				var cell = cells.eq((i - 1) / 2 * numCols + (j - 1) / 2);
+				var value = cell.text().trim();
+				if (value === '') {
+					value = null;
+				} else {
+					value = value - 0;
+				}
+				grid[i][j] = cell.data({type: 'cell', value: value});
 				
 			} else if (i % 2 == 0 && j % 2 == 1) {
-				grid[i][j] = horzEdges.eq(i / 2 * numCols + (j - 1) / 2)
-					.data({type: 'edge', edgeType: 'horz', row: i, col: j, done: {}});
+				var edge = horzEdges.eq(i / 2 * numCols + (j - 1) / 2);
+				grid[i][j] = edge.data({type: 'edge', edgeType: 'horz'});
 				
 			} else if (i % 2 == 1 && j % 2 == 0) {
-				grid[i][j] = vertEdges.eq((i - 1) / 2 * (numCols + 1) +  j / 2)
-					.data({type: 'edge', edgeType: 'vert', row: i, col: j, done: {}});
+				var edge = vertEdges.eq((i - 1) / 2 * (numCols + 1) +  j / 2);
+				grid[i][j] = edge.data({type: 'edge', edgeType: 'vert'});
 				
 			}
+			
+			grid[i][j].data({row: i, col: j, done: {}});
 			
 		}
 	}
@@ -616,9 +680,7 @@ $(function() {
 	grid.getCellValue = function(i, j) {
 		if (grid.getType(i, j) !== 'cell') return null;
 		if (i < 0 || i > numRows * 2 || j < 0 || j > numCols  * 2) return null;
-		var text = grid.get(i, j).text().trim();
-		if (text === '') return null;
-		return text - 0;
+		return grid.get(i, j).data('value');
 	};
 	
 	grid.getEdgeColour = function(i, j) {
@@ -639,88 +701,6 @@ $(function() {
 	
 	
 	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	// Solve
-	//////////////////////////////////////////////////////////////////////////////////////////
-	
-	// Global variable
-	var changed;
-	var numLoops;
-	
-	function solve() {
-		
-		$('#sjo-button').attr('disabled', 'disabled');
-		
-		console.log(grid);
-		
-		// Clean up old colour tags
-		edges.not('.cell-on').removeData('colour colourName');
-		
-		numLoops = 0; // TODO: failsafe
-		
-		solvePass();
-		
-	}
-	
-	function solvePass() {
-		
-		changed = false;
-		numLoops++; // TODO: failsafe
-		
-		// Loop through rules
-		for (var rule of rules) {
-			
-			if (rule.done) continue;
-			
-			var target = 
-				(rule.target === 'node') ? nodes :
-				(rule.target === 'cell') ? cells :
-				(rule.target === 'edge') ? edges :
-				null;
-			
-			target = target.filter((i,e) => {
-				if ($(e).data('done')[rule.name] === true) return false;
-				return true;
-			});
-			
-			if (target.length === 0) continue;
-			
-			//console.log(rule.target, target.length, rule.name);
-			//console.log(rule.target, rule.name);
-			
-			target.each((i,e) => {
-				var obj = $(e);
-				var done = rule.function.call(this, obj.getRow(), obj.getCol(), obj);
-				if (done === true) {
-					obj.data('done')[rule.name] = true;
-				}
-			});
-			
-			if (rule.once) rule.done = true;
-			
-			if (changed) break;
-			
-		}
-		
-		// TODO: incorporate into ruleset?
-		if (!changed) {
-			ColourEdges();
-		} //else
-		
-		if (changed) {
-			window.setTimeout(solvePass, 0);
-		} else {
-			$('#sjo-button').removeAttr('disabled');
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -731,25 +711,9 @@ $(function() {
 	// Colours
 	//////////////////////////////////////////////////////////////////////////////////////////
 	
-	var maxColour = 0;
-	
-	var colourNames = [
-		'blue',
-		'orange',
-		'hotpink',
-		'cornflowerblue',
-		'olive',
-		'rebeccapurple',
-		'teal',
-		//'yellow',
-		//'lightblue',
-	];
-	
-	$('<style>\n' 
-	  + colourNames.map(colour => `.cell-on.colour-${colour} {background-color: ${colour};}`).join('\n')
-	  + '</style>').appendTo('head');
-	
 	function ColourEdges() {
+		
+		// Only now used at start of solve
 		
 		// Loop through uncoloured edges
 		edges.each((i,e) => {
@@ -821,7 +785,7 @@ $(function() {
 			// If we don't have a colour name, create a new one
 			// TODO: only colour longest sequences
 			// TODO: reuse discarded colour names to colour long uncoloured sequences
-			if (!colourName && colourNames.length > 0 && edgesFound.length >= 20) {
+			if (!colourName && colourNames.length > 0 && edgesFound.length >= colourThreshold) {
 				colourName = colourNames.shift();
 			}
 			
@@ -982,20 +946,21 @@ $(function() {
 		
 		var cell = cells.getByRowCol(row, col);
 		
-		if (cell.getCellValue() !== null) return;
-		if (cell.countEdgesOff() === 0) return;
+		if (cell.getCellValue() !== 3) return;
+		if (cell.getCellN().getCellE().getCellValue() !== 3) return;
+		//if (cell.countEdgesOff() === 0) return;
 		
-		if (cell.getCellW().getCellValue() === 3 && cell.getCellN().getCellValue() === 3 && cell.getCellE().getCellValue() === 3) {
-			cell.getEdgeS().setX()
+		if (cell.getCellE().getCellE().getCellValue() === 3) {
+			cell.getCellE().getEdgeS().setX();
 		}
-		if (cell.getCellN().getCellValue() === 3 && cell.getCellE().getCellValue() === 3 && cell.getCellS().getCellValue() === 3) {
-			cell.getEdgeW().setX()
+		if (cell.getCellS().getCellE().getCellValue() === 3) {
+			cell.getCellE().getEdgeE().setX();
 		}
-		if (cell.getCellE().getCellValue() === 3 && cell.getCellS().getCellValue() === 3 && cell.getCellW().getCellValue() === 3) {
-			cell.getEdgeN().setX()
+		if (cell.getCellN().getCellW().getCellValue() === 3) {
+			cell.getCellN().getEdgeN().setX();
 		}
-		if (cell.getCellS().getCellValue() === 3 && cell.getCellW().getCellValue() === 3 && cell.getCellN().getCellValue() === 3) {
-			cell.getEdgeE().setX()
+		if (cell.getCellN().getCellN().getCellValue() === 3) {
+			cell.getCellN().getEdgeW().setX();
 		}
 		
 	}
@@ -1038,8 +1003,8 @@ $(function() {
 		
 		if (cell.getNodeNW().getEdgeN().getState() === -1 && cell.getNodeNW().getEdgeW().getState() === -1) {
 			if (cell.getNodeSE().getEdgeS().getState() ===  1 || cell.getNodeSE().getEdgeE().getState() ===  1) {
-				cell.getEdgeN().setOn()
-				cell.getEdgeW().setOn()
+				cell.getEdgeN().setOn();
+				cell.getEdgeW().setOn();
 			}
 			if (cell.getEdgeS().getState() ===  1 || cell.getEdgeE().getState() ===  1) {
 				cell.getEdgeS().setOn();
@@ -1053,8 +1018,8 @@ $(function() {
 		
 		if (cell.getNodeNE().getEdgeN().getState() === -1 && cell.getNodeNE().getEdgeE().getState() === -1) {
 			if (cell.getNodeSW().getEdgeS().getState() ===  1 || cell.getNodeSW().getEdgeW().getState() ===  1) {
-				cell.getEdgeN().setOn()
-				cell.getEdgeE().setOn()
+				cell.getEdgeN().setOn();
+				cell.getEdgeE().setOn();
 			}
 			if (cell.getEdgeS().getState() ===  1 || cell.getEdgeW().getState() ===  1) {
 				cell.getEdgeS().setOn();
@@ -1068,8 +1033,8 @@ $(function() {
 		
 		if (cell.getNodeSW().getEdgeS().getState() === -1 && cell.getNodeSW().getEdgeW().getState() === -1) {
 			if (cell.getNodeNE().getEdgeN().getState() ===  1 || cell.getNodeNE().getEdgeE().getState() ===  1) {
-				cell.getEdgeS().setOn()
-				cell.getEdgeW().setOn()
+				cell.getEdgeS().setOn();
+				cell.getEdgeW().setOn();
 			}
 			if (cell.getEdgeN().getState() ===  1 || cell.getEdgeE().getState() ===  1) {
 				cell.getEdgeN().setOn();
@@ -1083,8 +1048,8 @@ $(function() {
 		
 		if (cell.getNodeSE().getEdgeS().getState() === -1 && cell.getNodeSE().getEdgeE().getState() === -1) {
 			if (cell.getNodeNW().getEdgeN().getState() ===  1 || cell.getNodeNW().getEdgeW().getState() ===  1) {
-				cell.getEdgeS().setOn()
-				cell.getEdgeE().setOn()
+				cell.getEdgeS().setOn();
+				cell.getEdgeE().setOn();
 			}
 			if (cell.getEdgeN().getState() ===  1 || cell.getEdgeW().getState() ===  1) {
 				cell.getEdgeN().setOn();
@@ -1446,6 +1411,90 @@ $(function() {
 	rules.push({name: 'ColourJoinRule',   target: 'edge', once: false, function: ColourJoinRule});
 	//*/
 
+	
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Solve
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	// Global variable
+	var changed;
+	var numLoops;
+	
+	function solve() {
+		
+		$('#sjo-button').attr('disabled', 'disabled');
+		
+		console.log(grid);
+		
+		// Clean up old colour tags
+		edges.not('.cell-on').removeData('colour colourName');
+		
+		numLoops = 0; // TODO: failsafe
+		
+		solvePass();
+		
+	}
+	
+	function solvePass() {
+		
+		// Initial colouring
+		ColourEdges();
+		
+		changed = false;
+		numLoops++; // TODO: failsafe
+		
+		// Loop through rules
+		for (var rule of rules) {
+			
+			if (rule.done) continue;
+			
+			var target = 
+				(rule.target === 'node') ? nodes :
+				(rule.target === 'cell') ? cells :
+				(rule.target === 'edge') ? edges :
+				null;
+			
+			target = target.filter((i,e) => {
+				if ($(e).data('done')[rule.name] === true) return false;
+				return true;
+			});
+			
+			if (target.length === 0) continue;
+			
+			console.log(rule.target, target.length, rule.name);
+			//console.log(rule.target, rule.name);
+			
+			target.each((i,e) => {
+				var obj = $(e);
+				var done = rule.function.call(this, obj.getRow(), obj.getCol(), obj);
+				if (done === true) {
+					obj.data('done')[rule.name] = true;
+				}
+			});
+			
+			if (rule.once) rule.done = true;
+			
+			if (changed) break;
+			
+		}
+		
+		if (changed) {
+			window.setTimeout(solvePass, 0);
+			return;
+		}
+		
+		$('#sjo-button').removeAttr('disabled');
+		
+	}
+	
+	
 	
 	
 	
