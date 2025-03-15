@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.02.27.3
+// @version        2025.03.15.0
 // @author         Stuart Orford
-// @match          https://www.puzzle-loop.com/*
+//// @match          https://www.puzzle-loop.com/*
+// @match          https://www.puzzle-masyu.com/*
 // @grant          none
-// @require        https://code.jquery.com/jquery-3.4.1.min.js
+//// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
 (function($) {
@@ -23,7 +24,7 @@ $(function() {
 	var horzLinesGrid = [];
 	var vertLinesGrid = [];
 	var nextColor = 1;
-	var threshold = 25;
+	var threshold = 15;
 	
 	var allLinesFlat = $('.loop-line');
 	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
@@ -167,10 +168,9 @@ $(function() {
 			'olive',
 			'rebeccapurple',
 			'teal',
-			'indigo',
-			'mediumaquamarine',
-			'greenyellow',
-			'lightblue',
+			'slateblue',
+			//'lightblue',
+			//'yellow',
 		];
 		
 		for (var c = 1; c < nextColor; c++) {
