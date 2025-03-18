@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.03.18.0
+// @version        2025.03.18.1
 // @author         Stuart Orford
 //// @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
@@ -18,7 +18,7 @@ $(function() {
 		#puzzleContainerOverflowDiv {overflow: initial !important;}
 	</style>`).appendTo('head');
 	
-	var debug = false;
+	var debug = true;
 	
 	var numCols, numRows;
 	var horzLinesGrid = [];
@@ -30,6 +30,9 @@ $(function() {
 	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
 	var vertLinesFlat = allLinesFlat.filter('.loop-vertical');
 	
+	if (debug) console.log('horzLinesFlat', horzLinesFlat);
+	if (debug) console.log('vertLinesFlat', vertLinesFlat);
+	
 	indexLines();
 	countLines();
 	colorLines();
@@ -39,8 +42,8 @@ $(function() {
 	
 	function indexLines() {
 		
-		numCols = horzLinesFlat.filter('[style*="top: 0px"]') .length;
-		numRows = vertLinesFlat.filter('[style*="left: 0px"]').length;
+		numCols = horzLinesFlat.filter('[style*="top: 0px"], [style*="top: 1px"]') .length;
+		numRows = vertLinesFlat.filter('[style*="left: 0px"], [style*="left: 1px"]').length;
 		
 		for (var row = 0; row <= numRows; row++) {
 			horzLinesGrid[row] = [];
