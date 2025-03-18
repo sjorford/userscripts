@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.03.15.0
+// @version        2025.03.18.0
 // @author         Stuart Orford
 //// @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
+// @match          https://www.puzzle-shingoki.com/*
 // @grant          none
-//// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
 (function($) {
