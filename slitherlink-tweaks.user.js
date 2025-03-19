@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.03.18.1
+// @version        2025.03.19.0
 // @author         Stuart Orford
-//// @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
 // @grant          none
@@ -172,8 +171,8 @@ $(function() {
 			'rebeccapurple',
 			'teal',
 			'slateblue',
-			//'lightblue',
-			//'yellow',
+			'gold',
+			'indigo',
 		];
 		
 		for (var c = 1; c < nextColor; c++) {
