@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.03.19.0
+// @version        2025.03.22.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -11,13 +11,36 @@
 (function($) {
 $(function() {
 	
+	var debug = true;
+	
 	$(`<style>
 		#MainContainer {overflow: scroll !important;}
 		#puzzleContainer {margin-right: 10px !important;}
 		#puzzleContainerOverflowDiv {overflow: initial !important;}
 	</style>`).appendTo('head');
 	
-	var debug = true;
+	var colors = [
+		'blue',
+		'orange',
+		'hotpink',
+		'cornflowerblue',
+		'olive',
+		'rebeccapurple',
+		'teal',
+		'slateblue',
+		'burlywood',
+		'fuchsia',
+		'lightsteelblue',
+		'gold',
+		'indigo',
+	];
+	
+	var colorStyles = colors.map(color => `.cell-on.color-${color} {background-color: ${color};}`);
+	$('<style>\n' + colorStyles.join('\n') + '</style>').appendTo('head');
+	
+	
+	
+	
 	
 	var numCols, numRows;
 	var horzLinesGrid = [];
@@ -41,8 +64,20 @@ $(function() {
 	
 	function indexLines() {
 		
-		numCols = horzLinesFlat.filter('[style*="top: 0px"], [style*="top: 1px"]') .length;
-		numRows = vertLinesFlat.filter('[style*="left: 0px"], [style*="left: 1px"]').length;
+		//numCols = horzLinesFlat.filter('[style*="top: 0px"],  [style*="top: 1px"]') .length;
+		//numRows = vertLinesFlat.filter('[style*="left: 0px"], [style*="left: 1px"]').length;
+		
+		// Now with added algebra
+		var nh = horzLinesFlat.length;
+		var nv = vertLinesFlat.length;
+		var foo = nh - nv + 1;
+		numRows = Math.round(Math.sqrt((foo * foo + 4 * nv) / 4) - (foo / 2));
+		numCols = nh / (numRows + 1);
+		
+		console.log('numRows', numRows, 'numCols', numCols);
+		
+		
+		
 		
 		for (var row = 0; row <= numRows; row++) {
 			horzLinesGrid[row] = [];
@@ -162,24 +197,11 @@ $(function() {
 	function colorLines() {
 		if (debug) console.log('colorLines', nextColor);
 		
-		var colors = [
-			'blue',
-			'orange',
-			'hotpink',
-			'cornflowerblue',
-			'olive',
-			'rebeccapurple',
-			'teal',
-			'slateblue',
-			'gold',
-			'indigo',
-		];
-		
 		for (var c = 1; c < nextColor; c++) {
 			var lines = allLinesFlat.filter('.sjo-color-' + c);
 			if (lines.length >= threshold) {
 				var color = colors.shift();
-				lines.css("background-color", color);
+				lines.addClass('color-' + color);
 			}
 		}
 		
