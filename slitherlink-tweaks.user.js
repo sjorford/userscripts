@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.03.22.0
+// @version        2025.04.03.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -31,11 +31,13 @@ $(function() {
 		'burlywood',
 		'fuchsia',
 		'lightsteelblue',
-		'gold',
-		'indigo',
+		'#dc0',
+		'#0a5',
+		'#f33',
+		'yellow',
 	];
 	
-	var colorStyles = colors.map(color => `.cell-on.color-${color} {background-color: ${color};}`);
+	var colorStyles = colors.map(color => `.cell-on.color-${color.replace(/#/, '')} {background-color: ${color};}`);
 	$('<style>\n' + colorStyles.join('\n') + '</style>').appendTo('head');
 	
 	
@@ -46,7 +48,7 @@ $(function() {
 	var horzLinesGrid = [];
 	var vertLinesGrid = [];
 	var nextColor = 1;
-	var threshold = 15;
+	var threshold = 20;
 	
 	var allLinesFlat = $('.loop-line');
 	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
@@ -198,9 +200,10 @@ $(function() {
 		if (debug) console.log('colorLines', nextColor);
 		
 		for (var c = 1; c < nextColor; c++) {
+			if (colors.length == 0) break;
 			var lines = allLinesFlat.filter('.sjo-color-' + c);
 			if (lines.length >= threshold) {
-				var color = colors.shift();
+				var color = colors.shift().replace('#', '');
 				lines.addClass('color-' + color);
 			}
 		}
