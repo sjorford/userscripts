@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.04.03.0
+// @version        2025.04.04.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -11,7 +11,7 @@
 (function($) {
 $(function() {
 	
-	var debug = true;
+	var debug = false;
 	
 	$(`<style>
 		#MainContainer {overflow: scroll !important;}
@@ -19,7 +19,13 @@ $(function() {
 		#puzzleContainerOverflowDiv {overflow: initial !important;}
 	</style>`).appendTo('head');
 	
-	var colors = [
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Colour definitions
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	var minLength = 10;
+	
+	var colours = [
 		'blue',
 		'orange',
 		'hotpink',
@@ -37,178 +43,151 @@ $(function() {
 		'yellow',
 	];
 	
-	var colorStyles = colors.map(color => `.cell-on.color-${color.replace(/#/, '')} {background-color: ${color};}`);
-	$('<style>\n' + colorStyles.join('\n') + '</style>').appendTo('head');
+	var colourStyles = colours.map(colour => `.cell-on.sjo-colour-${colour.replace(/#/, '')} {background-color: ${colour};}`);
+	$('<style>\n' + colourStyles.join('\n') + '</style>').appendTo('head');
 	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Initialize grid
+	//////////////////////////////////////////////////////////////////////////////////////////
 	
+	var allNodes = $('.loop-dot');
+	var allCells = $('.loop-task-cell');
+	var allEdges = $('.loop-line');
+	var allHorzEdges = allEdges.filter('.loop-horizontal');
+	var allVertEdges = allEdges.filter('.loop-vertical');
 	
+	// Now with added algebra
+	var nh = allHorzEdges.length;
+	var nv = allVertEdges.length;
+	var foo = nh - nv + 1;
+	var numRows = Math.round(Math.sqrt((foo * foo + 4 * nv) / 4) - (foo / 2));
+	var numCols = nh / (numRows + 1);
+	if (debug) console.log('numRows', numRows, 'numCols', numCols);
 	
-	
-	var numCols, numRows;
-	var horzLinesGrid = [];
-	var vertLinesGrid = [];
-	var nextColor = 1;
-	var threshold = 20;
-	
-	var allLinesFlat = $('.loop-line');
-	var horzLinesFlat = allLinesFlat.filter('.loop-horizontal');
-	var vertLinesFlat = allLinesFlat.filter('.loop-vertical');
-	
-	if (debug) console.log('horzLinesFlat', horzLinesFlat);
-	if (debug) console.log('vertLinesFlat', vertLinesFlat);
-	
-	indexLines();
-	countLines();
-	colorLines();
-	
-	if (debug) console.log('numCols', numCols, 'horzLinesGrid', horzLinesGrid);
-	if (debug) console.log('numRows', numRows, 'vertLinesGrid', vertLinesGrid);
-	
-	function indexLines() {
-		
-		//numCols = horzLinesFlat.filter('[style*="top: 0px"],  [style*="top: 1px"]') .length;
-		//numRows = vertLinesFlat.filter('[style*="left: 0px"], [style*="left: 1px"]').length;
-		
-		// Now with added algebra
-		var nh = horzLinesFlat.length;
-		var nv = vertLinesFlat.length;
-		var foo = nh - nv + 1;
-		numRows = Math.round(Math.sqrt((foo * foo + 4 * nv) / 4) - (foo / 2));
-		numCols = nh / (numRows + 1);
-		
-		console.log('numRows', numRows, 'numCols', numCols);
-		
-		
-		
-		
-		for (var row = 0; row <= numRows; row++) {
-			horzLinesGrid[row] = [];
-			for (var col = 0; col < numCols; col++) {
-				horzLinesGrid[row][col] = horzLinesFlat.eq(row * numCols + col);
-			}
-		}
-		
-		for (var row = 0; row < numRows; row++) {
-			vertLinesGrid[row] = [];
-			for (var col = 0; col <= numCols; col++) {
-				vertLinesGrid[row][col] = vertLinesFlat.eq(row * (numCols + 1) + col);
-			}
-		}
-		
-	}
-	
-	function getHorzLineColor(row, col) {
-		if (row < 0 || row > numRows || col < 0 || col >= numCols) return null;
-		return horzLinesGrid[row][col].data('sjo-color');
-	}
-	
-	function getVertLineColor(row, col) {
-		if (row < 0 || row >= numRows || col < 0 || col > numCols) return null;
-		return vertLinesGrid[row][col].data('sjo-color');
-	}
-	
-	function countLines() {
-		
-		// NOTE: this does not reset the grid, so it can just run once
-		
-		var gridChanged;
-		
-		var numLoops = 0; // failsafe
-		
-		do {
-			numLoops++;
+	// Populate grid
+	var grid = [];
+	for (var i = 0; i <= numRows * 2; i++) {
+		grid[i] = [];
+		for (var j = 0; j <= numCols * 2; j++) {
 			
-			gridChanged = false;
-			
-			// Horizontal lines
-			for (var row = 0; row <= numRows; row++) {
-				for (var col = 0; col < numCols; col++) {
-					
-					var adjColors = [];
-					adjColors[0] = getHorzLineColor(row, col - 1);
-					adjColors[1] = getHorzLineColor(row, col + 1);
-					adjColors[2] = getVertLineColor(row - 1, col);
-					adjColors[3] = getVertLineColor(row - 1, col + 1);
-					adjColors[4] = getVertLineColor(row, col);
-					adjColors[5] = getVertLineColor(row, col + 1);
-					
-					var lineChanged = updateLine(horzLinesGrid[row][col], adjColors, row, col);
-					if (lineChanged) gridChanged = true;
-					
-				}
+			if (i % 2 == 0 && j % 2 == 0) {
+				var node = allNodes.eq(i / 2 * (numCols + 1) +  j / 2);
+				grid[i][j] = node.data({type: 'node'});
+				
+			} else if (i % 2 == 1 && j % 2 == 1) {
+				var cell = allCells.eq((i - 1) / 2 * numCols + (j - 1) / 2);
+				grid[i][j] = cell.data({type: 'cell'});
+				
+			} else if (i % 2 == 0 && j % 2 == 1) {
+				var edge = allHorzEdges.eq(i / 2 * numCols + (j - 1) / 2);
+				grid[i][j] = edge.data({type: 'edge', edgeType: 'horz'});
+				
+			} else if (i % 2 == 1 && j % 2 == 0) {
+				var edge = allVertEdges.eq((i - 1) / 2 * (numCols + 1) +  j / 2);
+				grid[i][j] = edge.data({type: 'edge', edgeType: 'vert'});
+				
 			}
 			
-			// Vertical lines
-			for (var row = 0; row < numRows; row++) {
-				for (var col = 0; col <= numCols; col++) {
-					
-					var adjColors = [];
-					adjColors[0] = getVertLineColor(row - 1, col);
-					adjColors[1] = getVertLineColor(row + 1, col);
-					adjColors[2] = getHorzLineColor(row, col - 1);
-					adjColors[3] = getHorzLineColor(row, col);
-					adjColors[4] = getHorzLineColor(row + 1, col - 1);
-					adjColors[5] = getHorzLineColor(row + 1, col);
-					
-					var lineChanged = updateLine(vertLinesGrid[row][col], adjColors, row, col);
-					if (lineChanged) gridChanged = true;
-					
-				}
-			}
+			grid[i][j].data({i: i, j: j});
 			
-		} while (gridChanged && numLoops < 1000);
-		
+		}
 	}
+	if (debug) console.log('grid', grid);
 	
-	function updateLine(line, adjColors, row, col) {
-		if (!line.hasClass('cell-on')) return;
-		
-		var curColor = line.data('sjo-color');
-		var lineChanged = false;
-		
-		// Find better color
-		for (var c in adjColors) {
-			if (curColor == null || (adjColors[c] != null && adjColors[c] < curColor)) {
-				curColor = adjColors[c];
-				lineChanged = true;
-			}
-		}
-		
-		// If still no color set, assign a new one
-		if (curColor == null) {
-			curColor = nextColor;
-			nextColor++;
-			lineChanged = true;
-		}
-		
-		if (lineChanged) {
-			line.data('sjo-color', curColor);
-			line.removeClass(function(index, className) {
-				var classes = className.split(' ');
-				for (var i in classes) {
-					if (classes[i].match(/^sjo-/)) return classes[i];
-				}
-				return '';
-			});
-			line.addClass('sjo-color-' + curColor);
-		}
-		
-		return lineChanged;
-	}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Helper functions
+	//////////////////////////////////////////////////////////////////////////////////////////
 	
-	function colorLines() {
-		if (debug) console.log('colorLines', nextColor);
+	grid.get = function(i, j) {
+		if (i < 0 || i > numRows * 2 || j < 0 || j > numCols  * 2) return null;
+		return grid[i][j];
+	};
+	
+	$.fn.getEdgesFromNode = function() {
+		var node = $(this);
+		if (node.data('type') !== 'node') return $();
+		var i = node.data('i');
+		var j = node.data('j');
+		//if (debug) console.log('getEdgesFromNode', 'node', node, 'i', i, 'j', j);
 		
-		for (var c = 1; c < nextColor; c++) {
-			if (colors.length == 0) break;
-			var lines = allLinesFlat.filter('.sjo-color-' + c);
-			if (lines.length >= threshold) {
-				var color = colors.shift().replace('#', '');
-				lines.addClass('color-' + color);
-			}
+		var edges = $();
+		edges = edges.add(grid.get(i - 1, j));
+		edges = edges.add(grid.get(i + 1, j));
+		edges = edges.add(grid.get(i, j - 1));
+		edges = edges.add(grid.get(i, j + 1));
+		
+		//if (debug) console.log('edges', edges);
+		return edges;
+	};
+	
+	$.fn.getNodesFromEdge = function() {
+		var edge = $(this);
+		if (edge.data('type') !== 'edge') return $();
+		var i = edge.data('i');
+		var j = edge.data('j');
+		var edgeType = edge.data('edgeType');
+		var nodes = $();
+		if (edgeType === 'horz') {
+			nodes = nodes.add(grid.get(i, j - 1));
+			nodes = nodes.add(grid.get(i, j + 1));
+		} else {
+			nodes = nodes.add(grid.get(i - 1, j));
+			nodes = nodes.add(grid.get(i + 1, j));
 		}
+		return nodes;
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Find snakes
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	var snakes = [];
+	
+	// Loop through nodes
+	if (debug) console.log('allNodes', allNodes);
+	allNodes.each((index, element) => {
+		var node = $(element);
 		
-	}
+		// Find nodes with one solid edge
+		var edges = node.getEdgesFromNode().filter('.cell-on');
+		if (edges.length == 1 && !edges.is('.sjo')) {
+			if (debug) console.log('new snake', node, edges);
+			
+			// Trace the whole snake
+			var lastEdge = edges;
+			var lastNode = node;
+			var loops = 0;
+			do {
+				loops++;
+				var nextNode = lastEdge.getNodesFromEdge().not(lastNode);
+				//if (debug) console.log('nextNode', nextNode);
+				var nextEdge = nextNode.getEdgesFromNode().filter('.cell-on').not(lastEdge);
+				//if (debug) console.log('nextEdge', nextEdge);
+				if (nextEdge.length !== 1) break;
+				edges = edges.add(nextEdge);
+				lastEdge = nextEdge;
+				lastNode = nextNode;
+			} while (loops < 1000); // failsafe
+			
+			if (debug) console.log('adding snake', 'length', edges.length, 'edges', edges);
+			edges.addClass('sjo');
+			snakes.push(edges);
+			
+		}
+				
+	});
+	
+	if (debug) console.log('snakes', snakes);
+
+	snakes.sort((a,b) => {
+		return b.length - a.length;
+	});
+	
+	$.each(snakes, (index, snake) => {
+		if (snake.length < minLength) return false;
+		var colour = colours.shift().replace('#', '');
+		snake.addClass('sjo-colour-' + colour);
+	})
 	
 });
 })(jQuery);
