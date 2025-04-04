@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.04.04.0
+// @version        2025.04.04.1
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -187,6 +187,7 @@ $(function() {
 		if (snake.length < minLength) return false;
 		var colour = colours.shift().replace('#', '');
 		snake.addClass('sjo-colour-' + colour);
+		if (colours.length === 0) return false;
 	})
 	
 });
