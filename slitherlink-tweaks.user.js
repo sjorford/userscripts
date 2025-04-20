@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.04.04.1
+// @version        2025.04.20.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -17,7 +17,31 @@ $(function() {
 		#MainContainer {overflow: scroll !important;}
 		#puzzleContainer {margin-right: 10px !important;}
 		#puzzleContainerOverflowDiv {overflow: initial !important;}
+		#sjoCheck {padding: 10px; margin-bottom: 1em; font-size: larger;}
 	</style>`).appendTo('head');
+	
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// Check solution
+	//////////////////////////////////////////////////////////////////////////////////////////
+	
+	$('<input id="sjoCheck" type="button" class="button" value="Check solution">').insertAfter('#topControls').click(doCheck);
+	
+	function doCheck() {
+		$('[name="ansH"]').val(Game.serializeSolution());
+		var submit = $('#btnReady')[0];
+		var data = $('#puzzleForm').serializeArray();
+		data.push({name: submit.name, value: submit.value});
+		console.log(data);
+		$.post('/', data, checkResult, 'html');
+	}
+	
+	function checkResult(data, textStatus, jqXHR) {
+		console.log(textStatus, data.substring(0, 100));
+		var match = data.match(/<div id="ajaxResponse" class="noprint">(.*?)<\/div>/);
+		console.log(match);
+		var html = match[1];
+		$('#ajaxResponse').html(html);
+	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Colour definitions
