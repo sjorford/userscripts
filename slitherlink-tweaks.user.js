@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.04.20.1
+// @version        2025.05.11.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
@@ -64,9 +64,10 @@ $(function() {
 		'burlywood',
 		'fuchsia',
 		'lightsteelblue',
-		'#dc0',
-		'#0a5',
-		'#f33',
+		'#dc0', // gold
+		'#0a5', // green
+		'#f33', // red
+		'lightgrey',
 		'yellow',
 	];
 	
