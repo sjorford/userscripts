@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name           Slitherlink tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.05.11.0
+// @version        2025.06.01.0
 // @author         Stuart Orford
+// @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
 // @grant          none
@@ -68,7 +69,7 @@ $(function() {
 		'#0a5', // green
 		'#f33', // red
 		'lightgrey',
-		'yellow',
+		//'yellow',
 	];
 	
 	var colourStyles = colours.map(colour => `.cell-on.sjo-colour-${colour.replace(/#/, '')} {background-color: ${colour};}`);
@@ -195,7 +196,7 @@ $(function() {
 				edges = edges.add(nextEdge);
 				lastEdge = nextEdge;
 				lastNode = nextNode;
-			} while (loops < 1000); // failsafe
+			} while (loops < 10000); // failsafe
 			
 			if (debug) console.log('adding snake', 'length', edges.length, 'edges', edges);
 			edges.addClass('sjo');
