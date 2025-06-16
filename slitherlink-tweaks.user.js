@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name           Slitherlink tweaks
+// @name           Puzzle Team tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.06.01.0
+// @version        2025.06.16.0
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
 // @match          https://www.puzzle-shingoki.com/*
+// @match          https://www.puzzle-lits.com/*
 // @grant          none
 // ==/UserScript==
 
@@ -21,31 +22,18 @@ $(function() {
 		#sjoCheck {padding: 10px; margin-bottom: 1em; font-size: larger;}
 	</style>`).appendTo('head');
 	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	// Check solution
-	//////////////////////////////////////////////////////////////////////////////////////////
+	if (window.location.hostname.match(/www.puzzle-(loop|masyu|shingoki).com/)) paintSnakes();
 	
-	// FIXME: breaks undo
-	/*
-	$('<input id="sjoCheck" type="button" class="button" value="Check solution">').insertAfter('#topControls').click(doCheck);
-	
-	function doCheck() {
-		$('[name="ansH"]').val(Game.serializeSolution());
-		var submit = $('#btnReady')[0];
-		var data = $('#puzzleForm').serializeArray();
-		data.push({name: submit.name, value: submit.value});
-		console.log(data);
-		$.post('/', data, checkResult, 'html');
+	if (window.location.hostname.match(/www.puzzle-lits.com/)) {
+		
+		$(`<style>
+			.cell.cell-on {background-color: #ccc; border-color: #ccc;}
+			.cell.cell-x {color: #777; font-size: 13px;}
+		</style>`).appendTo('head');
+		
 	}
 	
-	function checkResult(data, textStatus, jqXHR) {
-		console.log(textStatus, data.substring(0, 100));
-		var match = data.match(/<div id="ajaxResponse" class="noprint">(.*?)<\/div>/);
-		console.log(match);
-		var html = match[1];
-		$('#ajaxResponse').html(html);
-	}
-	*/
+	function paintSnakes() {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Colour definitions
@@ -218,6 +206,8 @@ $(function() {
 		snake.addClass('sjo-colour-' + colour);
 		if (colours.length === 0) return false;
 	})
+	
+	}
 	
 });
 })(jQuery);
