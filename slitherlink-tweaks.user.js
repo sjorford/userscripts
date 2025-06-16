@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Puzzle Team tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.06.16.1
+// @version        2025.06.16.2
 // @author         Stuart Orford
 // @match          https://www.puzzle-loop.com/*
 // @match          https://www.puzzle-masyu.com/*
@@ -32,31 +32,34 @@ $(function() {
 			.cell.cell-x {color: #777; font-size: 13px;}
 			#sjoCheckButton {display: block; width: 306px; margin: 10px auto; height: 45px; font-size: large;}
 			#sjoCheckFrame {display: none;}
+			.sjoLoading {font-size: 13px; font-weight: 700;}
 		</style>`).appendTo('head');
 		
 		var iframe, iframeDoc, timer;
 		
 		$('<input class="button" type="button" id="sjoCheckButton" value="   Check   ">').insertBefore('#btnReady').click(event => {
 			var url = $('a.on').attr('href');
-			console.log('url', url);
+			if (debug) console.log('url', url);
 			iframe = $(`<iframe id="sjoCheckFrame" src="${url}"></iframe>`).appendTo('body').on('load', iframeLoaded);
+			$('#ajaxResponse').html('<p class="sjoLoading">checking...</p>');
+			window.scrollTo(0, 0);
 		});
 		
 		function iframeLoaded() {
 			iframeDoc = iframe[0].contentDocument;
-			console.log('iframeLoaded', iframeDoc);
+			if (debug) console.log('iframeLoaded', iframeDoc);
 			$('#btnReady', iframeDoc).click();
 			timer = window.setInterval(checkMessage, 1000);
 		}
 		
 		function checkMessage() {
 			var message = $('#ajaxResponse p', iframeDoc).text().trim();
-			console.log('checkMessage', message);
+			if (debug) console.log('checkMessage', message);
 			if (message === '') return;
 			window.clearInterval(timer);
 			$('#ajaxResponse').html($('#ajaxResponse', iframeDoc).html());
-			window.scrollTo(0, 0);
-			$('iframe').remove();
+			document.focus; // FIXME
+			$('#sjoCheckFrame').remove();
 		}
 		
 	}
