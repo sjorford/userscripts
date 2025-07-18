@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.11.16.0
+// @version        2025.07.18.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -66,8 +66,12 @@ jQuery(function() {
 		'us_cities_official_2010_population': {
 			hints: ['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'FL', 'IN', 'CA', 'TX', 'OH', 'TX', 'NC', 'MI', 'TX', 'TN', 'MD', 'MA', 'WA', 'DC', 'TN', 'CO', 'KY', 'WI', 'OR', 'NV', 'OK', 'NM', 'AZ', 'CA', 'CA', 'CA', 'MO', 'AZ', 'VA', 'GA', 'CO', 'NE', 'NC', 'FL', 'OH', 'OK', 'CA', 'HI', 'MN', 'KS', 'TX', 'CA', 'LA', 'CA', 'FL', 'CO', 'CA', 'MO', 'PA', 'TX', 'CA', 'OH', 'KY', 'AK', 'CA', 'OH', 'MN', 'NJ', 'NC', 'NY', 'TX', 'NE', 'NV', 'IN', 'NJ', 'FL', 'CA', 'VA', 'FL', 'AZ', 'TX', 'WI', 'NC', 'TX', 'LA', 'NC', 'TX', 'AZ', 'NV', 'FL', 'VA', 'AZ', 'NV', 'TX', 'CA', 'CA', 'AL', 'NY', 'CA', 'WA', 'AZ', 'VA', 'AL', 'ID', 'VA', 'IA', 'CA', 'NC', 'LA', 'OH', 'WA', 'IL', 'CA', 'CA', 'NY', 'GA', 'AL', 'AR', 'CA', 'CA', 'TX', 'CA', 'GA', 'MI', 'UT', 'FL', 'MA', 'VA', 'AL', 'TN', 'RI', 'CA', 'TX', 'TX', 'MS', 'KS', 'CA', 'CA', 'TN', 'CA', 'FL', 'CA', 'FL', 'CA', 'WA', 'AZ', 'MO', 'CA', 'OR', 'FL', 'OR', 'FL', 'AZ', 'SD', 'MA', 'CA', 'IL', 'CA', 'CA', 'CA', 'CA', 'TX', 'IL', 'NJ', 'KS', 'CA', 'NY', 'CT', 'CA', 'CO', 'CA', 'CO', 'IL', 'OH', 'FL', 'CA', 'VA', 'TX', 'VA', 'CA', 'CA', 'GA', 'NC', 'CA', 'MI', 'TN', 'TX', 'TX', 'CT', 'MI', 'UT', 'SC', 'TX', 'KS', 'CA', 'IA', 'KS', 'NJ', 'TX', 'CT'],
 		},
-		'100_us_cities': {
-			hints: ['NY', 'CA', 'IL', 'TX', 'PA', 'AZ', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'CA', 'IN', 'OH', 'TX', 'NC', 'WA', 'CO', 'TX', 'MI', 'DC', 'MA', 'TN', 'TN', 'OR', 'OK', 'NV', 'MD', 'KY', 'WI', 'NM', 'AZ', 'CA', 'CA', 'MO', 'CA', 'AZ', 'GA', 'CO', 'VA', 'NC', 'NE', 'FL', 'CA', 'MN', 'OK', 'KS', 'LA', 'TX', 'OH', 'CA', 'FL', 'CO', 'HI', 'CA', 'CA', 'TX', 'CA', 'MO', 'KY', 'CA', 'PA', 'MN', 'AK', 'OH', 'NV', 'NC', 'TX', 'NJ', 'OH', 'NE', 'FL', 'CA', 'NJ', 'AZ', 'IN', 'NY', 'NC', 'FL', 'CA', 'TX', 'TX', 'WI', 'AZ', 'VA', 'NV', 'NC', 'AZ', 'FL', 'TX', 'AZ', 'TX', 'VA', 'NV', 'CA', 'LA', 'VA', 'ID', 'CA'],
+		'/DanW/100_us_cities': { // updated 2025-07-08
+			hints: ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'TX', 'CA', 'TX', 'FL', 'TX', 'TX', 'CA', 'OH', 'NC', 'IN', 'CA', 'WA', 'CO', 'OK', 'TN', 'DC', 'TX', 'NV', 'MA', 'MI', 'OR', 'KY', 'TN', 'MD', 'WI', 'NM', 'AZ', 'CA', 'CA', 'AZ', 'GA', 'MO', 'CO', 'NE', 'NC', 'FL', 'VA', 'CA', 'CA', 'MN', 'CA', 'OK', 'FL', 'TX', 'KS', 'CO', 'LA', 'OH', 'HI', 'CA', 'NV', 'FL', 'KY', 'CA', 'CA', 'TX', 'CA', 'OH', 'CA', 'NJ', 'MN', 'PA', 'NC', 'NC', 'NE', 'NJ', 'TX', 'AK', 'NV', 'MO', 'WI', 'AZ', 'AZ', 'NV', 'NY', 'CA', 'IN', 'TX', 'OH', 'FL', 'TX', 'TX', 'VA', 'AZ', 'NC', 'FL', 'AZ', 'TX', 'ID', 'VA', 'WA', 'VA', 'CA', 'AL'],
+		},
+		'/DanW/100_world_cities': { // updated 2025-07-18
+			hints: ['Japan', 'South Korea', 'Mexico', 'India', 'India', 'USA', 'Brazil', 'Philippines', 'USA', 'China', 'Japan', 'India', 'Pakistan', 'China', 'Indonesia', 'Egypt', 'Argentina', 'Russia', 'China', 'Bangladesh', 'Turkey', 'Brazil', 'Iran', 'UK', 'Nigeria', 'France', 'USA', 'China', 'China', 'Peru', 'Thailand', 'Colombia', 'DR Congo', 'Pakistan', 'Japan', 'USA', 'China', 'India', 'India', 'South Africa', 'India', 'USA', 'China', 'Taiwan', 'Iraq', 'China', 'USA', 'Spain', 'USA', 'Chile', 'Brazil', 'India', 'USA', 'USA', 'USA', 'Germany', 'Sudan', 'USA', 'Vietnam', 'Canada', 'China', 'China', 'USA', 'China', 'Saudi Arabia', 'Venezuela', 'Myanmar', 'China', 'India', 'Russia', 'Malaysia', 'China', 'Singapore', 'Mexico', 'Bangladesh', 'Egypt', 'USA', 'Australia', 'Algeria', 'China', 'Ivory Coast', 'Germany', 'Brazil', 'Spain', 'Mexico', 'China', 'India', 'China', 'Morocco', 'USA', 'Turkey', 'Australia', 'Brazil', 'Brazil', 'Greece', 'Canada', 'North Korea', 'South Korea', 'South Africa', 'Brazil',],
+			styles: `.d_value.wrong {background-color: pink;}`,
 		},
 		'us_cities_by_peak_rank': {
 			hints: ['NY', 'CA', 'IL', 'PA', 'MD', 'MA', 'LA', 'NY', 'TX', 'MI', 'MO', 'SC', 'OH', 'AZ', 'CA', 'OH', 'PA', 'TX', 'TX', 'MA', 'PA', 'CA', 'PA', 'NY', 'RI', 'DC', 'RI', 'NY', 'PA', 'CA', 'VA', 'MA', 'FL', 'IN', 'WI', 'NJ', 'KY', 'VA', 'MA', 'MA', 'PA', 'TX', 'TN', 'NH', 'MA', 'OH', 'MN', 'ME', 'TX', 'MA', 'NC', 'VA', 'CT', 'NY', 'NY', 'GA', 'MA', 'TX', 'WA', 'MO', 'NY', 'DC', 'CT', 'NE', 'VA', 'CO', 'MN', 'CT', 'PA', 'NY', 'OR', 'GA', 'MA', 'NY'],
@@ -82,7 +86,7 @@ jQuery(function() {
 			autofill: ['Washington', 'Adams', 'Jefferson', 'Madison', 'Monroe', 'Jackson', 'Van Buren', 'Harrison', 'Tyler', 'Polk', 'Taylor', 'Fillmore', 'Pierce', 'Buchanan', 'Lincoln', 'Johnson', 'Grant', 'Hayes', 'Garfield', 'Arthur', 'Cleveland', 'McKinley', 'Roosevelt', 'Taft', 'Wilson', 'Harding', 'Coolidge', 'Hoover', 'Truman', 'Eisenhower', 'Kennedy', 'Nixon', 'Ford', 'Carter', 'Reagan', 'Bush', 'Clinton', 'Obama', 'Trump', 'Biden',],
 			fn: () => {
 				$(`<style>#quiz-container #quiz-area {width: auto;}</style>`).appendTo('head');
-				$('#slot3,#slot7,#slot35,#slot36,#slot40,#slot53,#slot54,#slot70,#slot210,#slot211,#slot280,#slot281,#slot282,#slot283,#slot284,#slot285, #slot2,#slot6,#slot10').closest('tr').hide();
+				$('#slot3,#slot7,#slot35,#slot36,#slot40,#slot53,#slot54,#slot70,#slot210,#slot211,#slot284,#slot285, #slot2,#slot6,#slot10').closest('tr').hide();
 				$('.d_extra').each((i,e) => {
 					var d_extra = $(e);
 					d_extra.text(d_extra.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
