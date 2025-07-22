@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.12.07.0
+// @version        2025.07.22.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @match          https://steamcommunity.com/id/sjorford/games/*
@@ -14,7 +14,7 @@
 (function($) {
 $(function() {
 	
-	var debug = true;
+	var debug = false;
 	
 	$(`<style>
 	.sjo-wrapper {
@@ -39,18 +39,22 @@ $(function() {
 		games = $('span:contains("My Game Stats")');
 		if (debug) console.log('games', games);
 		if (games.length > 0) {
-			window.clearInterval(timer)
+			//window.clearInterval(timer)
 			addButtons();
 		}
 	}
 	
 	function addButtons() {
 		if (debug) console.log('addButtons');
-		var wrapper = games.parent('div').parent('div');
-		if (debug) console.log('wrapper', wrapper);
-		var template = wrapper.children('div').first();
+		var wrappers = games.parent('div').parent('div');
+		if (debug) console.log('wrappers', wrappers);
+		var template = wrappers.children('div').first();
 		var classes = template.attr('class');
-		$('<a class="sjo-extract" href="#">Extract stats</a>').addClass(classes).appendTo(wrapper).click(extractStats);
+		wrappers.each((i,e) => {
+			var wrapper = $(e);
+			if (wrapper.find('.sjo-extract').length > 0) return;
+			$('<a class="sjo-extract" href="#">Extract stats</a>').addClass(classes).appendTo(wrapper).click(extractStats);
+		});
 	}
 	
 	function extractStats(event) {
