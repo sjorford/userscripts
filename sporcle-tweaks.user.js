@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.07.18.0
+// @version        2025.07.31.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -95,7 +95,7 @@ jQuery(function() {
 					d_extra.next('.d_value').css({backgroundColor: ((party == 'Democratic' || party == 'Democratic & Populist') ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
 				});
 			}
-		}
+		},
 
 	};
 	
@@ -121,6 +121,99 @@ jQuery(function() {
 			
 		}
 	});
+	
+	clickToSort();
+	
+	function clickToSort() {
+		
+		// TODO: sort as new answers are entered
+		
+		$('.gametable-col th').click((event) => {
+			
+			var th = $(event.target);
+			var colno = th[0].cellIndex;
+			
+			var tables;
+			if (th.closest('td.gametable-col').is('.grouped-col')) {
+				// sort just this column
+				tables = th.closest('table.data');
+			} else {
+				// combine all columns
+				tables = th.closest('#gameTable').find('table.data');
+			}
+			var rows = tables.find('tr').not(':has(th)').toArray();
+			
+			if (th.is('.sjo-sorted')) {
+				
+				// put back in original slot order
+				rows.sort((rowA,rowB) => {
+					var slotA = $(rowA).find('td.d_value').attr('id').match(/\d+/)[0] - 0;
+					var slotB = $(rowB).find('td.d_value').attr('id').match(/\d+/)[0] - 0;
+					return slotA - slotB;
+				});
+
+				th.removeClass('sjo-sorted');
+				
+			} else {
+
+				rows.sort((rowA,rowB) => {
+					
+					var strA = rowA.cells[colno].innerText.trim();
+					var strB = rowB.cells[colno].innerText.trim();
+					
+					var numA = strA.replace(/,/g, '') - 0;
+					var numB = strB.replace(/,/g, '') - 0;
+					
+					var result;
+					
+					// sort blanks at the end
+					if (strA === '' && strB === '') {
+						result = 0;
+					} else if (strA === '') {
+						result = 1;
+					} else if (strB === '') {
+						result = -1;
+						
+					} else if (isNaN(numA) || isNaN(numB)) {
+						
+						// sort as strings
+						if (strA < strB) {
+							result = -1;
+						} else if (strA > strB) {
+							result = 1;
+						} else {
+							result = 0;
+						}
+						
+					} else {
+						
+						// sort as numbers
+						// TODO: allow sorting ascending and descending
+						result = numA - numB;
+						
+					}
+
+					return result;
+
+				});
+				
+				th.addClass('sjo-sorted');
+			
+			}
+			
+			// distribute sorted rows across columns
+			var numRowsTotal = rows.length;
+			var numRowsPerCol = Math.ceil(rows.length / tables.length);
+			tables.each((i,e) => {
+				var table = $(e);
+				var numRowsThisCol = (i == tables.length - 1) ? rows.length : numRowsPerCol;
+				var rowsThisCol = rows.splice(0, numRowsThisCol);
+				table.append(rowsThisCol);
+			});
+			
+		});
+		
+	}
 	
 	function trimAnswers(options) {
 		
