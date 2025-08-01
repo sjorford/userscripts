@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.07.31.0
+// @version        2025.08.01.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -41,13 +41,13 @@ jQuery(function() {
 			styles: `td.d_value {color: black; background-color: white; border-bottom: 1px solid black;}`
 		},
 		'/g/originalunmembers': {
-			unshuffleAnswers: true,
+			unRandomize: true,
 		},
 		'darinh/us-100k-cities-within-100miles-5-min-blitz': {
 			hints: ['TX*', 'OH', 'NM*', 'VA', 'PA', 'TX*', 'AK*', 'MI', 'CA', 'TX', 'CO', 'GA', 'GA', 'GA', 'CO', 'IL', 'TX', 'CA', 'MD', 'LA', 'TX', 'WA', 'CA', 'MT*', 'AL', 'ID*', 'MA', 'CT', 'TX', 'NY', 'MA', 'FL', 'CA', 'TX', 'NC', 'IA*', 'CO', 'AZ', 'SC', 'NC', 'TN', 'VA', 'IL', 'CA', 'OH', 'TN', 'FL', 'OH', 'CO', 'MO*', 'SC', 'GA', 'OH', 'CA', 'FL', 'CA', 'TX*', 'TX', 'CA', 'OH', 'TX', 'CO', 'IA*', 'MI', 'NC', 'TX*', 'IL', 'NJ', 'CA', 'PA', 'CA', 'OR', 'IN', 'WA', 'CA', 'ND*', 'NC', 'MI', 'CA', 'CO', 'FL', 'IN', 'TX', 'CA', 'CA', 'TX', 'FL', 'TX', 'AZ', 'AZ', 'TX', 'MI', 'WI*', 'NC', 'OR', 'VA', 'CT', 'CA', 'NV', 'FL', 'NC', 'FL', 'HI*', 'TX', 'AL', 'MO', 'IN', 'TX', 'MS*', 'FL', 'NJ', 'IL', 'KS', 'MO', 'TX', 'TN', 'LA', 'CO', 'MI', 'TX*', 'NV', 'KY', 'NE', 'AR*', 'CA', 'KY', 'MA', 'TX*', 'WI', 'NH', 'TX', 'TX', 'TN*', 'AZ', 'TX', 'FL', 'FL', 'TX*', 'WI', 'MN', 'FL', 'AL*', 'CA', 'AL', 'CA', 'TN', 'CA', 'IL', 'TN', 'CT', 'LA', 'NY', 'NJ', 'VA', 'VA', 'OK', 'NV', 'CA', 'CA', 'OK', 'KS', 'NE', 'FL', 'KS', 'FL', 'TX', 'NJ', 'FL', 'AZ', 'IL', 'PA', 'AZ', 'PA', 'TX', 'FL', 'OR', 'RI', 'UT', 'CO', 'NC', 'NV', 'CA', 'VA', 'CA', 'MN', 'NY', 'IL', 'CA', 'CA', 'OR', 'CA', 'UT', 'TX', 'CA', 'CA', 'CA', 'CA', 'CA', 'CA', 'GA', 'AZ', 'WA', 'LA*', 'SD*', 'IN', 'WA*', 'IL', 'MA', 'MO*', 'MO', 'MN', 'FL', 'CT', 'MI', 'CA', 'CA', 'AZ', 'NY', 'WA', 'FL*', 'FL', 'CA', 'AZ', 'CO', 'OH', 'KS', 'AZ', 'OK*', 'CA', 'WA', 'CA', 'CA', 'VA', 'CA', 'TX', 'MI', 'DC', 'CT', 'UT', 'UT', 'CO', 'TX', 'KS*', 'NC', 'NC', 'MA', 'NY',],
 		},
 		'/puckett86/state-by-city': {
-			unshuffleAnswers: true,
+			unRandomize: true,
 		},
 		'/puckett86/taking-up-lots-of-space': {
 			autofillForcedOrder: true,
@@ -104,12 +104,13 @@ jQuery(function() {
 			console.log(key, options);
 			if (options.enabled === false) return;
 			
-			if (options.moreColumns) moreColumns();
-			if (options.unshuffleAnswers) unshuffleAnswers();
-			if (options.autofill) autofill(options.autofill);
+			if (options.moreColumns)         moreColumns();
+			if (options.unshuffleAnswers)    unshuffleAnswers();
+			if (options.unRandomize)         unRandomize();
+			if (options.autofill)            autofill(options.autofill);
 			if (options.autofillForcedOrder) autofillForcedOrder();
-			if (options.trimAnswers) trimAnswers(options.trimAnswers);
-			if (options.hints) addHints(options.hints);
+			if (options.trimAnswers)         trimAnswers(options.trimAnswers);
+			if (options.hints)               addHints(options.hints);
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -211,6 +212,30 @@ jQuery(function() {
 				table.append(rowsThisCol);
 			});
 			
+		});
+		
+	}
+	
+	function unRandomize() {
+		
+		var tables = $('table.data');
+		var rows = tables.find('tr').not(':has(th)').toArray();
+		
+		// put back in original slot order
+		rows.sort((rowA,rowB) => {
+			var slotA = $(rowA).find('td.d_value').attr('id').match(/\d+/)[0] - 0;
+			var slotB = $(rowB).find('td.d_value').attr('id').match(/\d+/)[0] - 0;
+			return slotA - slotB;
+		});
+		
+		// distribute sorted rows across columns
+		var numRowsTotal = rows.length;
+		var numRowsPerCol = Math.ceil(rows.length / tables.length);
+		tables.each((i,e) => {
+			var table = $(e);
+			var numRowsThisCol = (i == tables.length - 1) ? rows.length : numRowsPerCol;
+			var rowsThisCol = rows.splice(0, numRowsThisCol);
+			table.append(rowsThisCol);
 		});
 		
 	}
