@@ -2,7 +2,7 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.07.22.0
+// @version        2025.08.01.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @match          https://steamcommunity.com/id/sjorford/games/*
@@ -14,7 +14,7 @@
 (function($) {
 $(function() {
 	
-	var debug = false;
+	var debug = true;
 	
 	$(`<style>
 	.sjo-wrapper {
@@ -90,9 +90,9 @@ $(function() {
 				var row = $(e);
 				var unlockText = $('.achieveUnlockTime', row).text().trim();
 				if (unlockText) {
-					var name = $('.achieveTxt h3', row).text();
-					var desc = $('.achieveTxt h5', row).text();
-					var img = $('.achieveImgHolder img', row).attr('src');
+					var name = $('.achieveTxt h3', row).text().trim();
+					var desc = $('.achieveTxt h5', row).text().trim();
+					var img = $('.achieveImgHolder img', row).attr('src').match(/[^\/]+$/)[0];
 					var unlock = unlockText.match(/^Unlocked (\d\d? [A-Z][a-z][a-z](?:, \d\d\d\d)?)/)[1];
 					myAchievements.push({name: name, desc: desc, img: img, unlock: unlock});
 				}
@@ -106,10 +106,10 @@ $(function() {
 			globalAchievements = [];
 			$('.achieveRow', doc).each((i,e) => {
 				var row = $(e);
-				var name = $('.achieveTxt h3', row).text();
-				var desc = $('.achieveTxt h5', row).text();
-				var img = $('.achieveImgHolder img', row).attr('src');
-				var percent = $('.achievePercent', row).text();
+				var name = $('.achieveTxt h3', row).text().trim();
+				var desc = $('.achieveTxt h5', row).text().trim();
+				var img = $('.achieveImgHolder img', row).attr('src').match(/[^\/]+$/)[0];
+				var percent = $('.achievePercent', row).text().trim();
 				globalAchievements.push({name: name, desc: desc, img: img, percent: percent});
 			});
 			if (myAchievements) outputTable();
