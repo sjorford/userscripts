@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.08.01.0
+// @version        2025.08.05.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -198,6 +198,7 @@ jQuery(function() {
 
 				});
 				
+				// FIXME: write to all columns
 				th.addClass('sjo-sorted');
 			
 			}
@@ -213,6 +214,8 @@ jQuery(function() {
 			});
 			
 		});
+		
+		$('#gameinput').focus();
 		
 	}
 	
@@ -335,35 +338,16 @@ jQuery(function() {
 		if (event.originalEvent.key === 'ArrowDown' ? $('#nextButton').click() : event.originalEvent.key === 'ArrowUp' ? $('#previousButton').click() : '');
 	});
 	
-	// Double-click headers to sort
-	// FIXME - broken when there are multiple answer groups
-	$('.data th').dblclick(event => {
-		return;
-		
-		var tables = $('.data');
-		var rows = tables.find('tr:has(td:visible)').not(':has(th)');
-		var numRows = tables.toArray().map(t => t.rows.length - 1);
-		
-		var header = $(event.target);
-		var col = header.prop('cellIndex');
-		var order = header.hasClass('sjo-ascending') ? -1 : 1;
-		tables.find(`tr:first-of-type th:nth-of-type(${col+1})`).toggleClass('sjo-ascending', order == 1);
-		
-		console.log(col, order, numRows, rows);
-		
-		var sortedRows = rows.toArray().sort((a,b) => (a.cells[col].innerText > b.cells[col].innerText) ? order : (a.cells[col].innerText < b.cells[col].innerText) ? -order : 0);
-		tables.each((i,e) => $(e).append(sortedRows.splice(0, numRows[i])));
-		
-	});
-	
 	// Click to retry value
 	$('.d_value').click(event => {
 		
 		var values = [];
 		$('.d_value').each((i,e) => {
 			if ($('.sjo-hint', e).length > 0) return;
-			var value = e.innerText.trim(); //.replace(/ \(.*?\)$/, '');
-			if (value != '') values.push(value);
+			var newValues = e.innerText.trim().replace(/\(.*?\)/g, '').split(', ').map(text => text.trim());
+			if (newValues.join('').length == 0) return;
+			console.log(newValues);
+			values = values.concat(newValues);
 		});
 		
 		window.setTimeout(enterValue, 0);
@@ -378,12 +362,6 @@ jQuery(function() {
 			window.setTimeout(enterValue, 0);
 		}
 		
-		/*
-		var value = event.target.innerText.trim();
-		if (value != '') {
-			var gameinput = $('#gameinput').focus().val(value).trigger($.Event("input"));
-		}
-		*/
 	});
 	
 	function autofill(answers) {
