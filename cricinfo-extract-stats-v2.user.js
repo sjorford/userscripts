@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           Cricinfo extract stats v2
-// @version        2025.08.04.0
+// @version        2025.08.05.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
@@ -28,6 +28,10 @@
 			.click(function() {
 				outputTable.selectRange();
 			});
+	var headerButton = $('<button>Show/hide headers</button>')
+			.insertBefore('.sjo-wrapper')
+			.wrap('<div></div>')
+			.click(() => $('.sjo-header').toggle());
 	var outputHeaders = [];
 	
 	// Get stats table
@@ -63,7 +67,7 @@
 		var a = titleRow.find('.data-link');
 		if (a.length > 0) {
 			if (a.attr('href').indexOf('/series/') >= 0) {
-				outputHeaders.push('ID', 'Host', 'Teams', 'Series', 'Season');
+				outputHeaders.push('ID', 'Series', 'Teams', 'Hosts', 'Trophy', 'Season');
 			} else {
 				outputHeaders.push('ID', 'Note');
 			}
@@ -78,7 +82,7 @@
 		var a = noteRow.find('.data-link');
 		if (a.length > 0) {
 			if (a.attr('href').indexOf('/series/') >= 0) {
-				outputHeaders.push('ID', 'Host', 'Teams', 'Series', 'Season');
+				outputHeaders.push('ID', 'Series', 'Teams', 'Hosts', 'Trophy', 'Season');
 			} else {
 				outputHeaders.push('ID', 'Note');
 			}
@@ -166,8 +170,9 @@
 				colFunctions.push(parsers.span);
 				break;
 				
+			case 'Team':
 			case 'Opposition':
-				outputHeaders.push('ID', 'Opposition');
+				outputHeaders.push('ID', colName);
 				colFunctions.push(parsers.teamID);
 				break;
 				
@@ -176,6 +181,15 @@
 				colFunctions.push(parsers.groundID);
 				break;
 				
+			case 'Overs':
+				outputHeaders.push('Overs', 'BPO');
+				colFunctions.push(parsers.overs);
+				break;
+				
+			case 'Score':
+				outputHeaders.push('Runs', 'W', 'D');
+				colFunctions.push(parsers.score);
+				break;
 				
 				
 				
@@ -290,8 +304,32 @@
 		parsers.score = (data) => {
 			return data.text.match(/^(\d+|T?DNB)(?:\/(\d+))?(d)?$/).slice(1);
 		};
-
+		
+		// Overs, including balls per over
+		parsers.overs = (data) => {
+			return data.text.match(/^(.+?)(?:x(.+))?$/).slice(1);
+		};
+		
+		
+		
+		
+		
+		
 		// TODO: Balls faced may be incomplete, indicated by "+"
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		return parsers;
 		
@@ -396,47 +434,59 @@
 		
 		var text = text.replace('[', '(').replace(']', ')');
 		var match = text.match(/(.+), (.+)$/);
-		var series = match[1].replace(', ', '/');
+		var seriesFull = match[1].replace(', ', '/');
 		var season = match[2].replace('-', ' to ').replace('/', '&ndash;');
 		
-		var hosts = [], teams = [], trophy = '';
-		
+		var hosts = [], teams = [], trophy = '', seriesShort = '';
 		match = null;
+		
 		if (!match) {
-			match = series.match(/^(.+?) in (.+?) Test (?:Match|Series)$/);
+			match = seriesFull.match(/^((.+?) in (.+?)) Test (?:Match|Series)$/);
 			if (match) {
-				teams = match[1].split('/')
-				hosts = match[2].split('/')
+				teams = [match[2]];
+				hosts = [match[3]];
+				seriesShort = match[3] + ' v ' + match[2];
 				if (teams.length == 1) teams = teams.concat(hosts);
 			}
 		}
 		
 		if (!match) {
-			match = series.match(/^(.+) \((.+?) in (.+?)\)$/);
+			match = seriesFull.match(/^(.+) \(((.+?) in (.+?))\)$/);
 			if (match) {
 				trophy = match[1];
-				teams = match[2].split('/')
-				hosts = match[3].split('/');
+				teams = match[3].split('/')
+				hosts = match[4].split('/');
+				console.log('teams', teams);
+				console.log('hosts', hosts);
+				if (teams.length > 1 || hosts.length > 1) {
+					seriesShort = trophy;
+				} else {
+					seriesShort = match[4] + ' v ' + match[3];
+				}
 				if (teams.length == 1) teams = teams.concat(hosts);
 			}
 		}
 		
 		if (!match) {
-			match = series.match(/^(.+?) v (.+?) Test (?:Match|Series) \(in (.+?)\)$/);
+			match = seriesFull.match(/^((.+?) v (.+?)) Test (?:Match|Series) \(in (.+?)\)$/);
 			if (match) {
-				teams = [match[1], match[2]];
-				hosts = match[3].split('/');
+				seriesShort = match[1];
+				teams = [match[2], match[3]];
+				hosts = match[4].split('/');
 			}
 		}
 		
 		if (!match) {
-			trophy = series;
+			trophy = seriesFull;
+			seriesShort = seriesFull;
 		}
 		
 		hosts = hosts.sort();
 		teams = teams.sort();
 		
-		return [hosts.join(', '), teams.join(', '), trophy, season];
+		seriesShort = seriesShort + ', ' + season;
+		
+		return [seriesShort, teams.join(', '), hosts.join(', '), trophy, season];
 		
 	}
 	
@@ -558,13 +608,6 @@
 						return [''].concat(text.split(' '));
 					} else {
 						return text.replace(' & ', ' ').split(' ');
-					}
-					
-				case 'overs':
-					if (text.match(/x/)) {
-						return text.split('x');
-					} else {
-						return [text, ''];
 					}
 					
 				case '':
