@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.08.05.0
+// @version        2025.08.14.0
 // @match          https://www.sporcle.com/games/*
 // @grant          none
 // ==/UserScript==
@@ -15,6 +15,7 @@ jQuery(function() {
 		#leaderboard-wrapper, #right-rail {display: none !important;}
 		#gameTable .gametable-col td {text-align: left;}
 		.sjo-hint {color: #bbb;}
+		#quiz-container #quiz-area {width: auto;}
 	</style>`).appendTo('head');
 	
 	$('.mainNav:has(:contains("Live Trivia")) .dropdown').remove();
@@ -344,7 +345,7 @@ jQuery(function() {
 		var values = [];
 		$('.d_value').each((i,e) => {
 			if ($('.sjo-hint', e).length > 0) return;
-			var newValues = e.innerText.trim().replace(/\(.*?\)/g, '').split(', ').map(text => text.trim());
+			var newValues = e.innerText.trim().replace(/\(.*?\)/g, '').replace(/ & /, ', ').split(', ').map(text => text.trim());
 			if (newValues.join('').length == 0) return;
 			console.log(newValues);
 			values = values.concat(newValues);
