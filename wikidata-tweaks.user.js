@@ -1,54 +1,98 @@
 ﻿// ==UserScript==
-// @name           Wikidata tweaks
+// @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
+// @name           Wikipedia tweaks
+// @version        2025.08.31.0
 // @namespace      sjorford@gmail.com
-// @version        2024.07.06.1
 // @author         Stuart Orford
-// @match          https://www.wikidata.org/wiki/Q*
+// @include        https://en.wikipedia.org/*
+// @run-at         document-end
 // @grant          none
 // ==/UserScript==
 
-(function () {
-	var timer = window.setInterval(function() {
-		if (jQuery) {
-			window.clearInterval(timer);
-			
-			var $ = jQuery;
-			
-			$(`<style>
-				#sjo-wikipedia a {
-					background-image: url(//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Wikipedia-logo.png/35px-Wikipedia-logo.png);
-					background-size: 20px;
-					padding-left: 23px;
-				}
-				#sjo-dc a {
-					background-image: url(https://dc-shared-frontend-assets.s3.eu-west-2.amazonaws.com/images/logo_icon.svg);
-					background-size: 20px;
-					padding-left: 23px;
-				}
-				.sjo-dc-logo {
-					position: absolute; bottom: 10px; left: 10px; height: 50px;
-				}
-			</style>`).appendTo('head');
-			
-			$('div.wikibase-sitelinkgroupview:contains("(0 entries)")').not(':contains("Wikipedia")').hide();
-			
-			var enwiki = $('.wikibase-sitelinkview-enwiki a');
-			if (enwiki.length > 0) {
-				$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${enwiki.attr('href')}" title="${enwiki.text()}"><span>Wikipedia</span></a></li>`)
-					.insertBefore('#ca-watch');
-			}
-			
-			var dclinks = $('#P6465 .wikibase-statementview:not(.wb-deprecated) .wikibase-statementview-mainsnak a.wb-external-id');
-			console.log(dclinks);
-			if (dclinks.length == 1) {
-				$(`<li id="sjo-dc" class="mw-list-item"><a href="${dclinks.attr('href')}" title="${dclinks.text()}"><span>Democracy Club</span></a></li>`)
-					.insertBefore('#ca-watch');
-				
-			}
-			
-			$('<img class="sjo-dc-logo" src="https://dc-shared-frontend-assets.s3.eu-west-2.amazonaws.com/images/logo_icon.svg">')
-				.appendTo('#P6465 .wikibase-statementgroupview-property');
-			
+window.setTimeout(onready, 500);
+
+function onready() {
+$(function() {
+	
+	console.log('Wikipedia tweaks');
+	
+	// ************************************************
+	/*
+	var infoboxWrapper = $('.content-table-wrapper').first();
+	$('th').filter((i,e) => e.innerText.trim() === 'GAv' || e.innerText.trim() === 'GD')
+		.closest('table').filter((i,e) => $('tr', e).length > 15)
+		.closest('.content-table-wrapper')
+		.insertAfter(infoboxWrapper);
+	*/
+	// ************************************************
+		
+	$(`<style>
+		
+		/* th > div.plainlinks.hlist.navbar-mini {display: none;} */
+		#pt-userpage, #pt-mytalk, #pt-sandbox, #pt-mycontris, #pt-watchlist {display: none;}
+		/* #mw-page-header-links, .mw-editsection {display: none;} */
+		
+		#ca-history a {
+			text-indent: inherit;
+			width: auto;
+			padding: 0 2px 0 20px;
 		}
-	}, 100);
-})();
+		
+		/* bug in Timeless skin? */
+		.toccolours {display: table-cell;}
+		
+		.mw-category-group h3 {display: none;}
+		.read-more-container {display: none;}
+		
+		#sjo-wikidata a {
+			background-image: url(https://www.wikidata.org/static/favicon/wikidata.ico);
+			background-size: 15px;
+			padding-left: 20px;
+			background-position-y: center;
+		}
+		
+		/* fix for Timeless skin bug? */
+		.sidebar-chunk:has(.sidebar-inner > :not(.emptyPortlet)),
+		#other-languages:has(#p-lang) {
+			display: inline-block;
+		}
+		
+	</style>`).appendTo('head');
+	
+	// Hide long references lists
+	$('.reflist').each((index, reflist) => {
+		if ($('li', reflist).length > 20) {
+			$(reflist).hide();
+			var wrapper = $('<span class="sjo-reflist-wrapper"></span>').insertBefore(reflist);
+			$(`<a class="sjo-reflist-button sjo-reflist-button-expand sjo-reflist-button-${index}">[Expand]</a>`).appendTo(wrapper);
+			$(`<a class="sjo-reflist-button sjo-reflist-button-collapse sjo-reflist-button-${index}">[Collapse]</a>`).appendTo(wrapper).hide();
+		}
+	});
+	
+	$('.sjo-reflist-button').click(event => {
+		var wrapper = $(event.target).closest('.sjo-reflist-wrapper');
+		wrapper.find('.sjo-reflist-button').toggle();
+		wrapper.next('.reflist').toggle();
+	});
+	
+	$('.reference a').click(() => {
+		$('.reflist').show();
+		$('.sjo-reflist-button-expand').hide();
+		$('.sjo-reflist-button-collapse').show();
+	});
+	
+	var wikidataLink = $('#t-wikibase a');
+	if (wikidataLink.length > 0) {
+		
+		var wikidataURL = wikidataLink.attr('href')
+							.replace(/\/wiki\/Special:EntityPage\/Q/, '/wiki/Q');
+		var wikidataID = wikidataURL.match(/Q\d+/)[0];
+		wikidataLink.attr('href', wikidataURL).text('Wikidata: ' + wikidataID);
+		
+		$(`<li id="sjo-wikidata" class="mw-list-item"><a href="${wikidataURL}" title="${wikidataID}"><span>Wikidata</span></a></li>`)
+			.insertBefore('#ca-watch');
+		
+	}
+	
+});
+};
