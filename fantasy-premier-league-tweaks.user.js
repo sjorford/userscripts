@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.09.04.0
+// @version        2025.09.27.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/*
 // @grant          none
@@ -19,6 +19,7 @@ $(function() {
 			font-size: small; background-color: white; border: 1px solid black;
 			overflow: scroll; z-index: 9999999;
 		}
+        .znn3xb3:nth-of-type(2) {font-weight: bold;}
 	</style>`).appendTo('head');
 	
 	if (window.location.pathname == '/player-list') {
