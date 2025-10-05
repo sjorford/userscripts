@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract
 // @namespace      sjorford@gmail.com
-// @version        2025.09.28.3
+// @version        2025.10.05.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -57,7 +57,7 @@
 					teamsMap[team.id] = team.name;
 				});
 				
-				var maxWeek = Math.max(...data.events.filter(week => week.finished == true && week.data_checked == true).map(week => week.id));
+				var maxWeek = Math.max(...data.events.filter(week => week.finished == true || week.data_checked == true || week.is_current == true).map(week => week.id));
 				
 				var players = data.elements; //.filter(player => player.total_points != 0);
 				var count = 0;
