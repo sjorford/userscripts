@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2025.10.25.1
+// @version        2025.10.25.2
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -48,18 +48,15 @@
 			function extractPage() {
 				
 				var page = window.location.pathname;
-				console.log(page);
 				if (pages.indexOf(page) >= 0) return;
 				if (!page.match(/^\/entry\/\d+\/event\/\d+/)) return;
 				
 				var manager = $('h2._1iy1znb1 ~ div').text().trim();
-				console.log(manager);
 				if (manager == '') return;
 				
 				var pick = 0;
 				
 				$('#root picture > source ~ img[src*="shirts"]').each((i,e) => {
-					console.log(i,e);
 					
 					pick++;
 					
@@ -67,12 +64,13 @@
 					var club = img.attr('alt').trim();
 					var footer = img.closest('picture').next('div');
 					var player = footer.children('span').text().trim();
+					var captain = img.closest('button').next('div').has('svg[aria-label="Captain"]').length > 0;
 					
 					var outputRow = $('<tr></tr>').appendTo(table);
 					$('<td></td>').appendTo(outputRow).text(manager);
 					$('<td></td>').appendTo(outputRow).text(player);
 					$('<td></td>').appendTo(outputRow).text(club);
-					$('<td></td>').appendTo(outputRow).text(pick <= 11 ? '●' : '-');
+					$('<td></td>').appendTo(outputRow).text(captain ? '✪' : pick <= 11 ? '●' : '-');
 					
 				});
 				
