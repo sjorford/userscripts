@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name           Fantasy Premier League extract
+// @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2025.10.05.0
+// @version        2025.10.25.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
