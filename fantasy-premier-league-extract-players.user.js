@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2025.10.26.0
+// @version        2025.10.26.1
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -44,8 +44,8 @@
 		
 		function extract() {
 			
-			var table = $('<table class="sjo-table"></table>')
-					.appendTo('body').wrap('<div class="sjo-wrapper"></div>')
+			var wrapper = $('<div class="sjo-wrapper"></div>').appendTo('body');
+			var table = $('<table class="sjo-table"></table>').appendTo(wrapper)
 					.click(event => table.selectRange());
 			
 			$.get('/api/bootstrap-static/', processPlayerList);
@@ -98,7 +98,8 @@
 							$('<td></td>').appendTo(outputRow).text(weekPoints === undefined ? '' : weekPoints[week]);
 						}
 						
-						//if (count >= 5) return;
+						wrapper.prop('scrollTop', wrapper.prop('scrollHeight'));
+						
 						nextPlayer();
 						
 					}
