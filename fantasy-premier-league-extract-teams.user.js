@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2025.10.25.2
+// @version        2025.10.26.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
