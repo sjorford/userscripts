@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2025.10.26.0
+// @version        2025.10.26.1
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -42,6 +42,8 @@
 					.click(event => table.selectRange());
 			
 			var pages = [];
+			var rowsPerPage = 60;
+			var row = 0;
 			
 			var timer = window.setInterval(extractPage, 100);
 			
@@ -58,6 +60,7 @@
 				
 				$('#root picture > source ~ img[src*="shirts"]').each((i,e) => {
 					
+					row++;
 					pick++;
 					
 					var img = $(e);
@@ -67,6 +70,7 @@
 					var captain = img.closest('button').next('div').has('svg[aria-label="Captain"]').length > 0;
 					
 					var outputRow = $('<tr></tr>').appendTo(table);
+					$('<td></td>').appendTo(outputRow).text(row);
 					$('<td></td>').appendTo(outputRow).text(manager);
 					$('<td></td>').appendTo(outputRow).text(player);
 					$('<td></td>').appendTo(outputRow).text(club);
@@ -75,6 +79,12 @@
 				});
 				
 				wrapper.prop('scrollTop', wrapper.prop('scrollHeight'));
+				
+				while (row % rowsPerPage > 0) {
+					row++;
+					var outputRow = $('<tr></tr>').appendTo(table);
+					$('<td></td>').appendTo(outputRow).text(row);
+				}
 				
 				pages.push(page);
 				
