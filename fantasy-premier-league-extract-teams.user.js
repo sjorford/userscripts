@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2025.10.26.1
+// @version        2025.10.27.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -74,7 +74,7 @@
 					$('<td></td>').appendTo(outputRow).text(manager);
 					$('<td></td>').appendTo(outputRow).text(player);
 					$('<td></td>').appendTo(outputRow).text(club);
-					$('<td></td>').appendTo(outputRow).text(captain ? '✪' : pick <= 11 ? '●' : '-');
+					$('<td></td>').appendTo(outputRow).text((captain && pick <= 11) ? '✪' : (pick <= 11) ? '●' : '-');
 					
 				});
 				
