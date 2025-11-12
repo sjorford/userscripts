@@ -15,7 +15,7 @@
 (function($) {
 $(function() {
 	
-	var debug = true;
+	var debug = false;
 	
 	$(`<style>
 	.sjo-wrapper {
@@ -28,6 +28,7 @@ $(function() {
 		font-size: 9pt;
 		z-index: 9999;
 		overflow: scroll;
+		color: black;
 	}
 	</style>`).appendTo('head');
 	
@@ -47,9 +48,9 @@ $(function() {
 	
 	function addButtons() {
 		if (debug) console.log('addButtons');
-		var wrappers = games.parent('div').parent('div');
+		var wrappers = games.parent('button').parent('div');
 		if (debug) console.log('wrappers', wrappers);
-		var template = wrappers.children('div').first();
+		var template = wrappers.children('button').first();
 		var classes = template.attr('class');
 		wrappers.each((i,e) => {
 			var wrapper = $(e);
