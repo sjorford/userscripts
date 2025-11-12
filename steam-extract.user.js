@@ -2,12 +2,13 @@
 // @name           Steam extract
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.08.01.0
+// @version        2025.11.12.0
 // @match          https://steamcommunity.com/profiles/76561198057191932/games/*
 // @match          https://steamcommunity.com/profiles/76561198057191932/games?*
 // @match          https://steamcommunity.com/id/sjorford/games/*
 // @match          https://steamcommunity.com/id/sjorford/games?*
 // @grant          none
+// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
