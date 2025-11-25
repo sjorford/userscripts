@@ -2,7 +2,7 @@
 // @name           Legislation.gov.uk tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.11.14.0
+// @version        2025.11.20.0
 // @match          https://www.legislation.gov.uk/*
 // @grant          none
 // ==/UserScript==
@@ -23,8 +23,12 @@ $(function() {
 	});
 	
 	// Refill search boxes
-	var type = window.location.pathname.match(/[^\/]+/)[0];
-	$('select#type').val(type);
+	var parts = window.location.pathname.replace(/^\//, '').split('/');
+	if (parts[0]) $('select#type').val(parts[0]);
+	if (parts[1] && parts[1] != '*') $('input#year').val(parts[1]);
+	if (parts[2]) $('input#number').val(parts[2]);
+	var params = new URLSearchParams(window.location.search);
+	params.forEach((val, key) => $('input#' + key).val(val));
 	
 	// Open options menus
 	$('#openingOptions .expandCollapseLink:not(.close)').click();
