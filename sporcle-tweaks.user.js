@@ -2,8 +2,8 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.08.14.0
-// @match          https://www.sporcle.com/games/*
+// @version        2025.11.12.0
+// @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
 
@@ -16,6 +16,7 @@ jQuery(function() {
 		#gameTable .gametable-col td {text-align: left;}
 		.sjo-hint {color: #bbb;}
 		#quiz-container #quiz-area {width: auto;}
+		#acrostic-game-container #full-play-area #clue-area .subclue {height: auto;}
 	</style>`).appendTo('head');
 	
 	$('.mainNav:has(:contains("Live Trivia")) .dropdown').remove();
