@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2025.12.10.0
+// @version        2025.12.28.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -77,7 +77,7 @@
 						var totalPoints = 0;
 						
 						for (var week = 1; week <= maxWeek; week++) {
-							var weekData = data.history.filter(history => history.round == week);
+							var weekData = data.history.filter(history => history.round == week && history.minutes > 0);
 							if (weekData.length > 0) {
 								weekPoints[week] = weekData[0].total_points;
 								totalPoints += weekData[0].total_points;
