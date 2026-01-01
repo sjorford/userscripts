@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2025.12.10.0
+// @version        2026.01.01.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -52,7 +52,7 @@
 					.click(event => table.selectRange());
 			
 			var pages = [];
-			var rowsPerPage = 60;
+			var rowsPerPage = 90;
 			var row = 0;
 			
 			// Check for team page load
