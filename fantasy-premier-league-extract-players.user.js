@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2025.12.28.0
+// @version        2026.01.05.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -57,7 +57,8 @@
 					teamsMap[team.id] = team.name;
 				});
 				
-				var maxWeek = Math.max(...data.events.filter(week => week.finished == true || week.data_checked == true || week.is_current == true).map(week => week.id));
+				//var maxWeek = Math.max(...data.events.filter(week => week.finished == true || week.data_checked == true || week.is_current == true).map(week => week.id));
+				var maxWeek = 38;
 				
 				var players = data.elements; //.filter(player => player.total_points != 0);
 				var count = 0;
@@ -92,12 +93,13 @@
 						$('<td></td>').appendTo(outputRow).text(posMap[player.element_type]);
 						$('<td></td>').appendTo(outputRow).text(player.now_cost / 10);
 						$('<td></td>').appendTo(outputRow).text(totalPoints);
-						$('<td></td>').appendTo(outputRow).text(player.news == '' ? '' : player.news);
-						$('<td></td>').appendTo(outputRow).text(player.news == '' ? '' : player.news_added.substr(0, 10));
 						
 						for (var week = 1; week <= maxWeek; week++) {
 							$('<td></td>').appendTo(outputRow).text(weekPoints === undefined ? '' : weekPoints[week]);
 						}
+						
+						$('<td></td>').appendTo(outputRow).text(player.news == '' ? '' : player.news_added.substr(0, 10));
+						$('<td></td>').appendTo(outputRow).text(player.news == '' ? '' : player.news);
 						
 						wrapper.prop('scrollTop', wrapper.prop('scrollHeight'));
 						
