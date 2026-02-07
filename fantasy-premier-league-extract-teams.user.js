@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2026.01.01.0
+// @version        2026.02.07.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -64,7 +64,7 @@
 				if (pages.indexOf(page) >= 0) return;
 				if (!page.match(/^\/entry\/\d+\/event\/\d+/)) return;
 				
-				var manager = $('h2._1iy1znb1 ~ div').text().trim();
+				var manager = $('div._1wjcr1t2').text().trim();
 				if (manager == '') return;
 				
 				// Check gameweek
