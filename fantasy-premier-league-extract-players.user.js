@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2026.01.07.0
+// @version        2026.02.08.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -32,13 +32,14 @@
 		
 		function check() {
 			
-			var reset = $('span:contains("Reset")');
-			if (reset.length == 0) return;
+			var buttonTemplate = $('[aria-label="Filter by Reset, none selected"]');
+			if (buttonTemplate.length == 0) return;
 			window.clearInterval(timer);
 			
-			var button = $('<button class="u523kl2 u523kl1 u523kl0 u523kl5" data-rac="" type="button" tabindex="0" data-react-aria-pressable="true" aria-label="Extract" id="sjo-extract"><span class="t2sh1k0">Extract</span></button>')
+			var button = $(`<button class="${buttonTemplate.attr('class')}" data-rac="" type="button" tabindex="0" data-react-aria-pressable="true" aria-label="Extract" id="sjo-extract">
+							<span class="${buttonTemplate.children('span').first().attr('class')}">Extract</span></button>`)
 					.click(extract);
-			reset.closest('div').append(button);
+			buttonTemplate.closest('div').append(button);
 			
 		}
 		
