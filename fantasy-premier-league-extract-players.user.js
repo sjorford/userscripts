@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2026.02.08.0
+// @version        2026.02.19.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
 // @grant          none
@@ -75,16 +75,17 @@
 					
 					function processPlayerHistory(data) {
 						
-						var weekPoints = [];
+						var weekPoints = Array(maxWeek).fill(null, 1, maxWeek);
 						var totalPoints = null;
 						
 						for (var week = 1; week <= maxWeek; week++) {
 							var weekData = data.history.filter(history => history.round == week && history.minutes > 0);
-							if (weekData.length > 0) {
-								weekPoints[week] = weekData[0].total_points;
+							$.each(weekData, (i,wd) => {
+								if (weekPoints[week] === null) weekPoints[week] = 0;
 								if (totalPoints === null) totalPoints = 0;
-								totalPoints += weekData[0].total_points;
-							}
+								weekPoints[week] += wd.total_points;
+								totalPoints += wd.total_points;
+							});
 						}
 						
 						var outputRow = $('<tr></tr>').appendTo(table);
