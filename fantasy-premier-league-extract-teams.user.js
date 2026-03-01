@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2026.02.09.0
+// @version        2026.03.01.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -43,7 +43,7 @@
 			
 			// Add week selector
 			var week = $('a[href*="/entry/"]').attr('href').match(/\d{2}$/)[0];
-			var weekInput = $(`<input id="sjo-week" type="number" value="${week}">`).insertAfter('#sjo-button')
+			var weekInput = $(`<input id="sjo-week" type="number" value="${week}">`).insertAfter('#sjo-extract')
 					.on('change', event => week = weekInput.val());
 			
 			// Add output table
@@ -68,8 +68,9 @@
 				if (manager == '') return;
 				
 				// Check gameweek
-				var teamWeek = $('h2:contains("Gameweek")').text().trim().match(/[123]?\d$/)[0];
-				if (teamWeek != week) return;
+				var teamWeek = page.match(/\/event\/(\d+)/);
+				if (!teamWeek) return;
+				if (teamWeek[1] != week) return;
 				
 				var pick = 0;
 				var captain = 0;
