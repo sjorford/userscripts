@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           archive.is
 // @namespace      sjorford@gmail.com
-// @version        2025.05.25.0
+// @version        2026.03.05.0
 // @author         Stuart Orford
 // @match          https://www.ft.com/*
 // @grant          none
@@ -12,7 +12,7 @@
 $(function() {
 	
 	if ($('#charge-button').length > 0) {
-		window.location = `https://archive.is/search/?q=${encodeURIComponent(window.location.href)}`
+		window.location = `https://archive.is/search/?q=${encodeURIComponent(window.location.href.replace(/\?.+/, ''))}`
 	}
 	
 });
