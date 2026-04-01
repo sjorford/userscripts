@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Cricinfo extract archive
 // @namespace      sjorford@gmail.com
-// @version        2026.04.01.0
+// @version        2026.04.01.1
 // @author         Stuart Orford
 // @match          https://www.espncricinfo.com/ci/engine/series/index.html?season=*;view=season
 // @grant          none
@@ -36,12 +36,15 @@ $(function() {
 		
 		if (debug) window.clearInterval(timer);
 		
+		blocks.addClass('sjo-done');
+		
 		blocks.each((i,e) => {
 			if (debug) console.log(i,e);
 			
 			var season  = $('.active .year').text().trim();
 			var series  = $(e).closest('.series-summary-block').find('.teams').text().trim();
-			var country = $(e).closest('.series-summary-block').find('.date-location').text().match(/\(in (.+)\)/)[1];
+			var countryMatch = $(e).closest('.series-summary-block').find('.date-location').text().match(/\(in (.+)\)/);
+			var country = countryMatch ? countryMatch[1] : '';
 			if (debug) console.log(season, series, country);
 			
 			var [, seriesID, matchID] = $('.match-articles a', e).first().attr('href').match(/\/series\/(\d+)\/scorecard\/(\d+)/);
@@ -76,14 +79,7 @@ $(function() {
 			
 		});
 		
-		blocks.addClass('sjo-done');
-		
-		
-		
 	}
-	
-	
-	
 	
 });
 })(jQuery);
