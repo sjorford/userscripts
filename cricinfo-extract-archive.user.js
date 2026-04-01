@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           Cricinfo extract archive
 // @namespace      sjorford@gmail.com
-// @version        2026.04.01.1
+// @version        2026.04.01.2
 // @author         Stuart Orford
 // @match          https://www.espncricinfo.com/ci/engine/series/index.html?season=*;view=season
 // @grant          none
@@ -63,9 +63,9 @@ $(function() {
 			
 			var outputRow = $('<tr></tr>').appendTo(table);
 			$('<td></td>').appendTo(outputRow).text(season);
+			$('<td></td>').appendTo(outputRow).text(country);
 			$('<td></td>').appendTo(outputRow).text(seriesID);
 			$('<td></td>').appendTo(outputRow).text(series);
-			$('<td></td>').appendTo(outputRow).text(country);
 			$('<td></td>').appendTo(outputRow).text(matchID);
 			$('<td></td>').appendTo(outputRow).text(date);
 			$('<td></td>').appendTo(outputRow).text(group);
@@ -78,6 +78,8 @@ $(function() {
 			$('<td></td>').appendTo(outputRow).text(result);
 			
 		});
+		
+		wrapper.prop('scrollTop', wrapper.prop('scrollHeight'));
 		
 	}
 	
