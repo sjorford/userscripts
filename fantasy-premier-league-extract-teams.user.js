@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2026.03.01.0
+// @version        2026.04.25.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -28,7 +28,7 @@
 		
 		function check() {
 			
-			var buttonTemplate = $('[aria-label="Filter by Reset, none selected"]');
+			var buttonTemplate = $('[aria-label="Reset filters"]');
 			if (buttonTemplate.length == 0) return;
 			window.clearInterval(timer);
 			
