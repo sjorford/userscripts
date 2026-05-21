@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           completionist.me extract
 // @namespace      sjorford@gmail.com
-// @version        2023.09.27.1
+// @version        2026.05.21.0
 // @author         Stuart Orford
 // @match          https://completionist.me/steam/profile/76561198057191932/apps?*
 // @grant          none
@@ -50,16 +50,17 @@ $(function() {
 			stats.last     = cells.eq(headings['Last Unlock'])   .text().trim().substr(0, 10);
 			stats.playtime = cells.eq(headings['Total Playtime']).text().trim();
 			
+			if (stats.name.match(/ Demo$/)) return;
+			
 			if (stats.playtime) {
-				var hrs  = (stats.playtime.match(/(?:(\d+)h)/) || [,'0'])[1];
-				var mins = (stats.playtime.match(/(?:(\d+)m)/) || [,'00'])[1];
-				mins = ('00' + mins).substr(-2);
-				stats.playtime = hrs + ':' + mins + ':00';
+				var match = stats.playtime.match(/(?:([\d,]+)h)? *(?:(\d+)m)?/);
+				var hours = !match ? '0' : !match[1] ? '0' : match[1].replace(/,/, '');
+				var minutes = !match ? '0' : !match[2] ? '0' : match[2];
+				stats.playtime = hours + ':' + minutes.padStart(2, '0');
 			}
 			
 			var achText = cells.eq(headings['Achievements']).text().replace(/\s+/g, ' ').trim();
 			if (achText) {
-				console.log(achText);
 				if ($(e).is('.status-completed')) {
 					stats.achDone = stats.achTotal = achText.match(/^\d+$/)[0];
 				} else {
@@ -67,7 +68,7 @@ $(function() {
 					if (!stats.achDone) stats.achDone = 0;
 				}
 			}
-
+			
 			var row = $('<tr></tr>').appendTo(outputTable);
 			
 			$('<td></td>').appendTo(row).text(stats.name);
@@ -76,14 +77,14 @@ $(function() {
 			$('<td></td>').appendTo(row).text(stats.achDone);
 			$('<td></td>').appendTo(row).text(stats.achTotal);
 			$('<td></td>').appendTo(row).text(stats.playtime);
-
+			
 		});
 		
 		page++;
 		if (page > maxPage) return;
 		
 		download();
-																
+		
 	}
 	
 });
