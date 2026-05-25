@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2026.04.25.0
+// @version        2026.05.25.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
 // @grant          none
@@ -56,6 +56,7 @@
 			var row = 0;
 			
 			// Check for team page load
+			// TODO: load all pages automatically
 			var timer = window.setInterval(extractPage, 100);
 			
 			function extractPage() {
@@ -87,6 +88,7 @@
 					var name = footer.children('span').text().trim();
 					
 					// Get captaincy flag
+					// FIXME: check if captain has minutes - needs an extra page retrieval
 					var svg = img.closest('button').next('div').find('svg');
 					if (pick <= 11 && svg.length > 0) {
 						if (svg.has('> circle ~ path').length > 0) {
