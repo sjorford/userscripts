@@ -1,14 +1,17 @@
 ﻿// ==UserScript==
 // @id             cricinfo-extract-stats@espncricinfo.com@sjorford@gmail.com
 // @name           Cricinfo extract stats
-// @version        2024.09.28.0
+// @version        2026.06.26.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://stats.espncricinfo.com/ci/engine/stats/index.html?*
 // @include        https://stats.espncricinfo.com/ci/content/records/*
 // @include        https://stats.espncricinfo.com/*/engine/records/*
 // @include        https://stats.espncricinfo.com/*/engine/player/*
-// @include        https://stats.espnscrum.com/*
+// @include        https://stats.cricinfo.com/ci/engine/stats/index.html?*
+// @include        https://stats.cricinfo.com/ci/content/records/*
+// @include        https://stats.cricinfo.com/*/engine/records/*
+// @include        https://stats.cricinfo.com/*/engine/player/*
 // @run-at         document-end
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @grant          none
