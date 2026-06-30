@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2018.12.03.0
+// @version        2026.06.30.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -13,6 +13,8 @@
 var jQ = $.noConflict();
 
 jQ(function() {
+	
+	var debug = false;
 	
 	var $ = jQ;
 	
@@ -73,13 +75,16 @@ jQ(function() {
 		"Port Moresby": "Papua New Guinea",
 	};
 	
-	var eventsFull = $('div[itemtype="http://schema.org/SportsEvent"]')
+	var eventsFull = $('div[itemtype="http://schema.org/SportsEvent"]');
+	if (debug) console.log('eventsFull', eventsFull);
 	var eventsBrief = $('tr').filter(
 		(i, tr) => {
 			var x = $(tr).find('*').toArray().map(e => e.tagName.toLowerCase()).join(' ');
 			return x == 'td a span img td a td span span img a td a a';
 		});
+	if (debug) console.log('eventsBrief', eventsBrief);
 	var eventsCards = $('.vevent');
+	if (debug) console.log('eventsCards', eventsCards);
 	var everything = eventsFull.add(eventsBrief).add(eventsCards);
 	
 	if (everything.length > 1) {
@@ -88,7 +93,9 @@ jQ(function() {
 			.not(':has([id^=Matchday_])')
 			.not(':has(span[id*="_vs_"], span[id*="_v_"])')
 			.not(':has(span[id^="First_Leg"], span[id^="Second_Leg"], span[id^="First_leg"], span[id^="Second_leg"], span[id^="Replay"])');
+		if (debug) console.log('headings', headings);
 		var dateRows = eventsBrief.prev('tr').not(eventsBrief);
+		if (debug) console.log('dateRows', dateRows);
 		everything = everything.add(headings).add(dateRows);
 		
 		var div = $('<div class="sjodiv" style="position: absolute; background-color: white; border: 1px solid black; font-size: 9pt; overflow: scroll;" />').hide().appendTo('body');
@@ -102,7 +109,7 @@ jQ(function() {
 		$(window).resize(resizeExtract);
 		resizeExtract();
 
-		var openButton = $('<a href="#">Extract matches</a>').appendTo('#p-cactions ul.menu').wrap('<li></li>').click(showData);
+		var openButton = $('<a href="#">Extract matches</a>').appendTo('#p-cactions ul').wrap('<li></li>').click(showData);
 		$('#p-cactions').removeClass('emptyPortlet');
 
 		var addBreak = false;
