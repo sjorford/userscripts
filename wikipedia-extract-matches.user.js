@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-extract-matches@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia extract matches
-// @version        2026.06.30.0
+// @version        2026.06.30.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/wiki/*
@@ -300,7 +300,7 @@ jQ(function() {
 	}
 	
 	function parseScore(scoreText) {
-		var scoreParts = scoreText.trim().match(/^(\d+)\s*[-\u2013\u2212]\s*(\d+)(\s*\((a\.e\.t\.|aet|a\.s\.d\.e\.t\.|asdet)\))?(\s*\((\d+)\s*[-\u2013\u2212]\s*(\d+)\s*(p|pens?)\.?\))?/);
+		var scoreParts = scoreText.trim().match(/^(\d+)\s*[-\u2013\u2212]\s*(\d+)(\s*\((a\.e\.t\.|aet|a\.s\.d\.e\.t\.|asdet|a\.e\.t\.\/g\.g\.)\))?(\s*\((\d+)\s*[-\u2013\u2212]\s*(\d+)\s*(p|pens?)\.?\))?/);
 		var score = {};
 		if (scoreParts) {
 			score.F = scoreParts[1];
