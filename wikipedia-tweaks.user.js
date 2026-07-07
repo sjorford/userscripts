@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2026.07.07.0
+// @version        2026.07.07.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -41,6 +41,8 @@ $(function() {
 			background-position-y: center;
 		}
 		
+		.sjo-wikidata {font-size: 12pt; right: 0px; position: absolute; padding: 0.75em 2em;}
+		
 	</style>`).appendTo('head');
 	
 	// Hide long references lists
@@ -67,15 +69,11 @@ $(function() {
 	
 	var wikidataLink = $('#t-wikibase a');
 	if (wikidataLink.length > 0) {
-		
-		var wikidataURL = wikidataLink.attr('href')
-							.replace(/\/wiki\/Special:EntityPage\/Q/, '/wiki/Q');
+		var wikidataURL = wikidataLink.attr('href').replace(/\/wiki\/Special:EntityPage\/Q/, '/wiki/Q');
 		var wikidataID = wikidataURL.match(/Q\d+/)[0];
-		wikidataLink.attr('href', wikidataURL).text('Wikidata: ' + wikidataID);
-		
-		$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${wikidataURL}" title="${wikidataID}"><span>Wikidata</span></a></li>`)
-			.insertBefore('#ca-watch');
-		
+		wikidataLink.attr('href', wikidataURL);
+		$('<span class="sjo-wikidata"></span>').text(wikidataID).appendTo('#firstHeading');
+		$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${wikidataURL}" title="${wikidataID}"><span>Wikidata</span></a></li>`).insertBefore('#ca-watch');
 	}
 	
 });
