@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2024.07.12.0
+// @version        2026.07.07.0
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -44,7 +44,7 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	// Hide long references lists
-	$('.reflist').each((index, reflist) => {
+	$('.references').each((index, reflist) => {
 		if ($('li', reflist).length > 20) {
 			$(reflist).hide();
 			var wrapper = $('<span class="sjo-reflist-wrapper"></span>').insertBefore(reflist);
