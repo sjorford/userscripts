@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           englandstats.com extract
 // @namespace      sjorford@gmail.com
-// @version        2026.07.06.0
+// @version        2026.07.12.0
 // @author         Stuart Orford
 // @match          https://www.englandstats.com/matches.php?mid=*
 // @grant          none
@@ -86,7 +86,7 @@
 			var playerName = playerLink.text().trim();
 			
 			var playerInfo = playerLink.closest('.tooltip').find('.tooltiptext');
-			var playerInfoParts = playerInfo.text().match(/^(.+), (\d+)\w\w of \d+ caps\s*(\d+) years, (\d+) days\s*(.+)$/);
+			var playerInfoParts = playerInfo.text().match(/^(.+), (\d+)\w\w of \d+ caps\s*(\d+) years, (\d+) days\s*(.*)$/);
 			if (debug) console.log(playerInfo.text(), playerInfoParts);
 			var clubName   = playerInfoParts[1];
 			var capNo      = playerInfoParts[2];
@@ -109,11 +109,15 @@
 			var subImageOn = playerRow.find('.time[alt="On"]');
 			if (subImageOn.length > 0) {
 				isSub = true;
-				subTimeOn = subImageOn.next('.tooltip').text().trim().match(/^(HT'|\d+'|\d+'\+\d+')/)[1].replace(/'/g, '');
+				if (debug) console.log(subImageOn, subImageOn.next('.tooltip'), subImageOn.next('.tooltip').text());
+				var subTimeOnText = subImageOn.next('.tooltip').text() || subImageOn.closest('.info').text();
+				subTimeOn = subTimeOnText.trim().match(/^(HT'?|\d+'|\d+'\+\d+')/)[1].replace(/'/g, '');
 			}
 			var subImageOff = playerRow.find('.time[alt="Off"]');
 			if (subImageOff.length > 0) {
-				subTimeOff = subImageOff.next('.tooltip').text().trim().match(/^(HT'|\d+'|\d+'\+\d+')/)[1].replace(/'/g, '');
+				if (debug) console.log(subImageOff, subImageOff.next('.tooltip'), subImageOff.next('.tooltip').text());
+				var subTimeOffText = subImageOff.next('.tooltip').text() || subImageOff.closest('.info').text();
+				subTimeOff = subTimeOffText.trim().match(/^(HT'?|\d+'|\d+'\+\d+')/)[1].replace(/'/g, '');
 			}
 			
 			var cards = '';
