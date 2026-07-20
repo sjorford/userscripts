@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name           englandstats.com extract
 // @namespace      sjorford@gmail.com
-// @version        2026.07.12.0
+// @version        2026.07.20.0
 // @author         Stuart Orford
 // @match          https://www.englandstats.com/matches.php?mid=*
 // @grant          none
@@ -75,6 +75,17 @@
 			'Right Attacking Midfielder': 'RAM',
 		};
 		
+		var clubFullNames = {
+			'Leverkusen'   : 'Bayer Leverkusen',
+			'Man City'     : 'Manchester City',
+			'Man Utd'      : 'Manchester United',
+			'Newcastle Utd': 'Newcastle United',
+			'Notts Forest' : 'Nottingham Forest',
+			'Palace'       : 'Crystal Palace',
+			'Spurs'        : 'Tottenham Hotspur',
+			'No Club': '?',
+		};
+		
 		$('.player-row a[href*="player.php?pid="]').each((i,e) => {
 			
 			var playerLink = $(e);
@@ -93,6 +104,7 @@
 			var ageYears   = playerInfoParts[3];
 			var ageDays    = playerInfoParts[4];
 			var position   = playerInfoParts[5];
+			clubName = clubFullNames[clubName] || clubName;
 			position = positionCodes[position] || position;
 			
 			var isCaptain = false;
