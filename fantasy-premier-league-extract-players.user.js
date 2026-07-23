@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract players
 // @namespace      sjorford@gmail.com
-// @version        2026.05.24.0
+// @version        2026.07.23.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/statistics
+// @match          https://fantasy.premierleague.com/en/statistics
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.4.1.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -17,6 +18,16 @@
 			2: 'DF', 
 			3: 'MF', 
 			4: 'FW',
+		};
+		
+		var teamNamesMap = {
+			"Brighton"     : 'Brighton & Hove Albion',
+			"Leeds"        : 'Leeds United',
+			"Man City"     : 'Manchester City',
+			"Man Utd"      : 'Manchester United',
+			"Newcastle"    : 'Newcastle United',
+			"Nott'm Forest": 'Nottingham Forest',
+			"Spurs"        : 'Tottenham Hotspur',
 		};
 		
 		$(`<style>
@@ -55,7 +66,11 @@
 				
 				var teamsMap = {};
 				$.each(data.teams, (i,team) => {
-					teamsMap[team.id] = team.name;
+					if (teamNamesMap[team.name]) {
+						teamsMap[team.id] = teamNamesMap[team.name];
+					} else {
+						teamsMap[team.id] = team.name;
+					}
 				});
 				
 				//var maxWeek = Math.max(...data.events.filter(week => week.finished == true || week.data_checked == true || week.is_current == true).map(week => week.id));
