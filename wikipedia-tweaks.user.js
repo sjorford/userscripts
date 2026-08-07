@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @id             wikipedia-tweaks@wikipedia.org@sjorford@gmail.com
 // @name           Wikipedia tweaks
-// @version        2026.07.07.1
+// @version        2026.08.07.1
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @include        https://en.wikipedia.org/*
@@ -58,11 +58,11 @@ $(function() {
 	$('.sjo-reflist-button').click(event => {
 		var wrapper = $(event.target).closest('.sjo-reflist-wrapper');
 		wrapper.find('.sjo-reflist-button').toggle();
-		wrapper.next('.reflist').toggle();
+		wrapper.next('.references').toggle();
 	});
 	
 	$('.reference a').click(() => {
-		$('.reflist').show();
+		$('.references').show();
 		$('.sjo-reflist-button-expand').hide();
 		$('.sjo-reflist-button-collapse').show();
 	});
@@ -72,7 +72,7 @@ $(function() {
 		var wikidataURL = wikidataLink.attr('href').replace(/\/wiki\/Special:EntityPage\/Q/, '/wiki/Q');
 		var wikidataID = wikidataURL.match(/Q\d+/)[0];
 		wikidataLink.attr('href', wikidataURL);
-		$('<span class="sjo-wikidata"></span>').text(wikidataID).appendTo('#firstHeading');
+		$('<span class="sjo-wikidata"></span>').text(wikidataID).appendTo('#firstHeading').before('\n');
 		$(`<li id="sjo-wikipedia" class="mw-list-item"><a href="${wikidataURL}" title="${wikidataID}"><span>Wikidata</span></a></li>`).insertBefore('#ca-watch');
 	}
 	
