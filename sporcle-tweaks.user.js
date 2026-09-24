@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2025.11.12.0
+// @version        2026.09.24.0
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -425,6 +425,30 @@ jQuery(function() {
 					
 				}
 			}
+		}
+		
+	}
+	
+	allowPaste();
+	
+	function allowPaste() {
+		
+		var gameinput = $('#gameinput');
+		gameinput.on('paste', pasteEvent);
+		
+		function pasteEvent(event) {
+			
+			var data = event.originalEvent.clipboardData.getData('text');
+			var answers = data.split(/[\r\n]+/)
+			window.setTimeout(tryNextAnswer, 0)
+
+			function tryNextAnswer() {
+				if (answers.length == 0) return;
+				var nextAnswer = answers.shift();
+				gameinput.val(nextAnswer).trigger($.Event("input"));
+				window.setTimeout(tryNextAnswer, 0)
+			}
+			
 		}
 		
 	}
