@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2026.09.24.0
+// @version        2026.09.24.1
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -440,6 +440,7 @@ jQuery(function() {
 			
 			var data = event.originalEvent.clipboardData.getData('text');
 			var answers = data.split(/[\r\n]+/)
+			if (answers.length <= 1) return;
 			window.setTimeout(tryNextAnswer, 0)
 
 			function tryNextAnswer() {
