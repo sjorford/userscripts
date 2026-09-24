@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name           Fantasy Premier League extract teams
 // @namespace      sjorford@gmail.com
-// @version        2026.05.25.0
+// @version        2026.08.30.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/leagues/*
+// @match          https://fantasy.premierleague.com/en/leagues/*
 // @grant          none
 // @require        https://code.jquery.com/jquery-3.4.1.min.js
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -11,6 +12,16 @@
 
 (function($) {
 	$(function() {
+		
+		var teamNamesMap = {
+			"Brighton"     : 'Brighton & Hove Albion',
+			"Leeds"        : 'Leeds United',
+			"Man City"     : 'Manchester City',
+			"Man Utd"      : 'Manchester United',
+			"Newcastle"    : 'Newcastle United',
+			"Nott'm Forest": 'Nottingham Forest',
+			"Spurs"        : 'Tottenham Hotspur',
+		};
 		
 		$(`<style>
 			.sjo-teams-wrapper {
@@ -42,7 +53,7 @@
 		function extract() {
 			
 			// Add week selector
-			var week = $('a[href*="/entry/"]').attr('href').match(/\d{2}$/)[0];
+			var week = $('a[href*="/entry/"]').attr('href').match(/\d{1,2}$/)[0];
 			var weekInput = $(`<input id="sjo-week" type="number" value="${week}">`).insertAfter('#sjo-extract')
 					.on('change', event => week = weekInput.val());
 			
@@ -63,7 +74,7 @@
 				
 				var page = window.location.pathname;
 				if (pages.indexOf(page) >= 0) return;
-				if (!page.match(/^\/entry\/\d+\/event\/\d+/)) return;
+				if (!page.match(/\/entry\/\d+\/event\/\d+/)) return;
 				
 				var manager = $('div._1wjcr1t2').text().trim();
 				if (manager == '') return;
@@ -84,6 +95,7 @@
 					
 					var img = $(e);
 					var club = img.attr('alt').trim();
+					club = teamNamesMap[club] || club;
 					var footer = img.closest('picture').next('div');
 					var name = footer.children('span').text().trim();
 					
