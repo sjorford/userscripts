@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2026.09.24.1
+// @version        2026.09.29.0
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -97,6 +97,10 @@ jQuery(function() {
 					d_extra.next('.d_value').css({backgroundColor: ((party == 'Democratic' || party == 'Democratic & Populist') ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
 				});
 			}
+		},
+		'/jcgamer107/all_fbs_teams': {
+			hints: ['MA', 'CA', 'SC', 'NC', 'FL', 'GA', 'KY', 'FL', 'NC', 'NC', 'PA', 'TX', 'CA', 'NY', 'VA', 'VA', 'NC', 'IL', 'IN', 'IA', 'MD', 'MI', 'MI', 'MN', 'NE', 'IL', 'OH', 'OR', 'PA', 'IN', 'NJ', 'CA', 'CA', 'WA', 'WI', 'AZ', 'AZ', 'TX', 'UT', 'FL', 'OH', 'COL', 'TX', 'IA', 'KS', 'KS', 'OK', 'TX', 'TX', 'UT', 'WV', 'AL', 'AR', 'AL', 'FL', 'GA', 'KY', 'LA', 'MS', 'MS', 'MO', 'OK', 'SC', 'TN', 'TX', 'TX', 'TN', 'OH', 'IN', 'OH', 'NY', 'MI', 'MI', 'OH', 'MA', 'OH', 'OH', 'CA', 'OH', 'MI', 'NY', 'AL', 'NC', 'NC', 'FL', 'TN', 'MD', 'TX', 'TX', 'FL', 'PA', 'TX', 'LA', 'OK', 'NC', 'SC', 'GA', 'GA', 'VA', 'WV', 'VA', 'AR', 'LA', 'LA', 'LA', 'AL', 'MS', 'AL', 'DE', 'FL', 'FL', 'GA', 'VA', 'TN', 'MO', 'NM', 'TX', 'KY', 'COL', 'HI', 'NV', 'NM', 'ND', 'IL', 'CA', 'TX', 'NV', 'WY', 'ID', 'COL', 'CA', 'CA', 'TX', 'UT', 'OR', 'WA', 'CT', 'IN'],
+			styles: `.sjo-hint {color: #777}`,
 		},
 
 	};
