@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2026.09.29.0
+// @version        2026.09.29.1
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -34,9 +34,9 @@ jQuery(function() {
 		},
 		'/Bumble/worldcupteams': {
 			styles: `
-			th.h_name,  td.d_name  {width: 15%;} 
-			th.h_value, td.d_value {width: 55%;} 
-			th.h_extra, td.d_extra {width: 30%;}`
+			th.h_name,  td.d_name  {width: 15% !important;} 
+			th.h_value, td.d_value {width: 55% !important;} 
+			th.h_extra, td.d_extra {width: 30% !important;}`
 		},
 		'/ateweston85/european-cup--champions-league-semi-finalists': {
 			moreColumns: true, 
