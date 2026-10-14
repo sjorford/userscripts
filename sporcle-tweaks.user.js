@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2026.09.29.1
+// @version        2026.10.14.0
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -14,7 +14,7 @@ jQuery(function() {
 		#bg-temp.shifted {margin-top: auto;}
 		#leaderboard-wrapper, #right-rail {display: none !important;}
 		#gameTable .gametable-col td {text-align: left;}
-		.sjo-hint {color: #bbb;}
+		.sjo-hint {color: #bbb; width: 1%;}
 		#quiz-container #quiz-area {width: auto;}
 		#acrostic-game-container #full-play-area #clue-area .subclue {height: auto;}
 	</style>`).appendTo('head');
@@ -99,7 +99,8 @@ jQuery(function() {
 			}
 		},
 		'/jcgamer107/all_fbs_teams': {
-			hints: ['MA', 'CA', 'SC', 'NC', 'FL', 'GA', 'KY', 'FL', 'NC', 'NC', 'PA', 'TX', 'CA', 'NY', 'VA', 'VA', 'NC', 'IL', 'IN', 'IA', 'MD', 'MI', 'MI', 'MN', 'NE', 'IL', 'OH', 'OR', 'PA', 'IN', 'NJ', 'CA', 'CA', 'WA', 'WI', 'AZ', 'AZ', 'TX', 'UT', 'FL', 'OH', 'COL', 'TX', 'IA', 'KS', 'KS', 'OK', 'TX', 'TX', 'UT', 'WV', 'AL', 'AR', 'AL', 'FL', 'GA', 'KY', 'LA', 'MS', 'MS', 'MO', 'OK', 'SC', 'TN', 'TX', 'TX', 'TN', 'OH', 'IN', 'OH', 'NY', 'MI', 'MI', 'OH', 'MA', 'OH', 'OH', 'CA', 'OH', 'MI', 'NY', 'AL', 'NC', 'NC', 'FL', 'TN', 'MD', 'TX', 'TX', 'FL', 'PA', 'TX', 'LA', 'OK', 'NC', 'SC', 'GA', 'GA', 'VA', 'WV', 'VA', 'AR', 'LA', 'LA', 'LA', 'AL', 'MS', 'AL', 'DE', 'FL', 'FL', 'GA', 'VA', 'TN', 'MO', 'NM', 'TX', 'KY', 'COL', 'HI', 'NV', 'NM', 'ND', 'IL', 'CA', 'TX', 'NV', 'WY', 'ID', 'COL', 'CA', 'CA', 'TX', 'UT', 'OR', 'WA', 'CT', 'IN'],
+			hints: ['MA', 'CA', 'SC', 'NC', 'FL', 'GA', 'KY', 'FL', 'NC', 'NC', 'PA', 'TX', 'CA', 'NY', 'VA', 'VA', 'NC', 'IL', 'IN', 'IA', 'MD', 'MI', 'MI', 'MN', 'NE', 'IL', 'OH', 'OR', 'PA', 'IN', 'NJ', 'CA', 'CA', 'WA', 'WI', 'AZ', 'AZ', 'TX', 'UT', 'FL', 'OH', 'CO', 'TX', 'IA', 'KS', 'KS', 'OK', 'TX', 'TX', 'UT', 'WV', 'AL', 'AR', 'AL', 'FL', 'GA', 'KY', 'LA', 'MS', 'MS', 'MO', 'OK', 'SC', 'TN', 'TX', 'TX', 'TN', 'OH', 'IN', 'OH', 'NY', 'MI', 'MI', 'OH', 'MA', 'OH', 'OH', 'CA', 'OH', 'MI', 'NY', 'AL', 'NC', 'NC', 'FL', 'TN', 'MD', 'TX', 'TX', 'FL', 'PA', 'TX', 'LA', 'OK', 'NC', 'SC', 'GA', 'GA', 'VA', 'WV', 'VA', 'AR', 'LA', 'LA', 'LA', 'AL', 'MS', 'AL', 'DE', 'FL', 'FL', 'GA', 'VA', 'TN', 'MO', 'NM', 'TX', 'KY', 'CO', 'HI', 'NV', 'NM', 'ND', 'IL', 'CA', 'TX', 'NV', 'WY', 'ID', 'CO', 'CA', 'CA', 'TX', 'UT', 'OR', 'WA', 'CT', 'IN'],
+			hintPosition: 'after',
 			styles: `.sjo-hint {color: #777}`,
 		},
 
@@ -116,7 +117,7 @@ jQuery(function() {
 			if (options.autofill)            autofill(options.autofill);
 			if (options.autofillForcedOrder) autofillForcedOrder();
 			if (options.trimAnswers)         trimAnswers(options.trimAnswers);
-			if (options.hints)               addHints(options.hints);
+			if (options.hints)               addHints(options);
 			
 			if (options.styles) $(`<style>${options.styles}</style>`).appendTo('head');
 			
@@ -336,8 +337,12 @@ jQuery(function() {
 		}
 	}
 	
-	function addHints(hints) {
-		$('.d_value').each((index, element) => $(`<span class="sjo-hint">${hints[index]}</span>`).appendTo(element));
+	function addHints(options) {
+		if (options.hintPosition == 'after') {
+			$('.d_value').each((index, element) => $(`<td class="sjo-hint">${options.hints[index]}</td>`).insertAfter(element));
+		} else {
+			$('.d_value').each((index, element) => $(`<span class="sjo-hint">${options.hints[index]}</span>`).appendTo(element));
+		}
 	}
 	
 	$('body').on('keypress', '#gameinput', event => {
