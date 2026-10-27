@@ -2,7 +2,7 @@
 // @name           Sporcle tweaks
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2026.10.14.0
+// @version        2026.10.27.0
 // @match          https://www.sporcle.com/*
 // @grant          none
 // ==/UserScript==
@@ -94,13 +94,13 @@ jQuery(function() {
 					d_extra.text(d_extra.text().trim().replace(/^(?:Winning|Losing) (?:Vice )?President \((.+)\)$/, '$1') 
 							  + (d_extra.text().match(/Vice President/) ? ' (VP)' : ''));
 					var party = d_extra.text().match(/^(.*?)(\(|$)/)[1].trim();
-					d_extra.next('.d_value').css({backgroundColor: ((party == 'Democratic' || party == 'Democratic & Populist') ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')})
+					d_extra.next('.d_value').css({backgroundColor: ((party == 'Democratic' || party == 'Democratic & Populist') ? '#aaf' : party == 'Republican' ? '#f77' : '#ccc')});
 				});
 			}
 		},
 		'/jcgamer107/all_fbs_teams': {
 			hints: ['MA', 'CA', 'SC', 'NC', 'FL', 'GA', 'KY', 'FL', 'NC', 'NC', 'PA', 'TX', 'CA', 'NY', 'VA', 'VA', 'NC', 'IL', 'IN', 'IA', 'MD', 'MI', 'MI', 'MN', 'NE', 'IL', 'OH', 'OR', 'PA', 'IN', 'NJ', 'CA', 'CA', 'WA', 'WI', 'AZ', 'AZ', 'TX', 'UT', 'FL', 'OH', 'CO', 'TX', 'IA', 'KS', 'KS', 'OK', 'TX', 'TX', 'UT', 'WV', 'AL', 'AR', 'AL', 'FL', 'GA', 'KY', 'LA', 'MS', 'MS', 'MO', 'OK', 'SC', 'TN', 'TX', 'TX', 'TN', 'OH', 'IN', 'OH', 'NY', 'MI', 'MI', 'OH', 'MA', 'OH', 'OH', 'CA', 'OH', 'MI', 'NY', 'AL', 'NC', 'NC', 'FL', 'TN', 'MD', 'TX', 'TX', 'FL', 'PA', 'TX', 'LA', 'OK', 'NC', 'SC', 'GA', 'GA', 'VA', 'WV', 'VA', 'AR', 'LA', 'LA', 'LA', 'AL', 'MS', 'AL', 'DE', 'FL', 'FL', 'GA', 'VA', 'TN', 'MO', 'NM', 'TX', 'KY', 'CO', 'HI', 'NV', 'NM', 'ND', 'IL', 'CA', 'TX', 'NV', 'WY', 'ID', 'CO', 'CA', 'CA', 'TX', 'UT', 'OR', 'WA', 'CT', 'IN'],
-			hintPosition: 'after',
+			byslot: true,
 			styles: `.sjo-hint {color: #777}`,
 		},
 
@@ -338,11 +338,18 @@ jQuery(function() {
 	}
 	
 	function addHints(options) {
+		var cells = $('.d_value');
+		$.each(options.hints, (i, hint) => {
+			var cell = options.byslot ? cells.filter(`#slot${i}`) : cells[i];
+			$(`<span class="sjo-hint">${hint}</span>`).appendTo(cell);
+		});
+		/*
 		if (options.hintPosition == 'after') {
 			$('.d_value').each((index, element) => $(`<td class="sjo-hint">${options.hints[index]}</td>`).insertAfter(element));
 		} else {
 			$('.d_value').each((index, element) => $(`<span class="sjo-hint">${options.hints[index]}</span>`).appendTo(element));
 		}
+		*/
 	}
 	
 	$('body').on('keypress', '#gameinput', event => {
