@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Fantasy Premier League tweaks
 // @namespace      sjorford@gmail.com
-// @version        2025.09.27.0
+// @version        2026.11.06.0
 // @author         Stuart Orford
 // @match          https://fantasy.premierleague.com/*
 // @grant          none
@@ -13,6 +13,8 @@
 $(function() {
 	
 	$(`<style>
+		html {overflow: scroll !important;}
+		#overlay-portal {display: none !important;}
 		body {padding-bottom: 10rem;}
 		.sjo-wrapper {
 			position: fixed; right: 0px; top: 0px; height: 100%; width: 30em;
